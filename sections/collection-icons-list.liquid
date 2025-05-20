@@ -24,7 +24,8 @@
       </div>
     {%- endunless -%}
 
-    <ul class="collection-icons-list__container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" role="list">
+    <collection-menu-selector>
+      <ul class="collection-icons-list__container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" role="list" data-collection-selector>
       {%- for block in section.blocks -%}
         <li class="collection-icons-list__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" 
             {{ block.shopify_attributes }}
@@ -32,7 +33,7 @@
               data-cascade
               style="--animation-order: {{ forloop.index }};"
             {% endif %}>
-          <a href="{{ block.settings.collection.url }}" class="collection-icons-list__link">
+          <a href="{{ block.settings.collection.url }}" class="collection-icons-list__link" data-collection-id="{{ block.settings.collection.id }}" data-menu-handle="{{ block.settings.menu.handle }}" {% if block.settings.menu != blank %}data-has-menu="true"{% endif %}>
             <div class="collection-icons-list__icon-wrapper">
               {%- if block.settings.icon != blank -%}
                 <img src="{{ block.settings.icon | img_url: '100x' }}" 

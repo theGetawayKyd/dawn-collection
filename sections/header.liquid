@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="{{ 'component-mega-menu.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- endif -%}
 
+<script src="{{ 'collection-menu-selector.js' | asset_url }}" defer="defer"></script>
+
 
 <style>
   header-drawer {
@@ -142,6 +144,21 @@
     margin-top: 0.3rem;
   }
   
+  /* Collection Menu Styles */
+  .header-collection-menu {
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+  }
+  
+  .header-collection-menu.hidden {
+    display: none;
+  }
+  
+  .collection-icons-list__link.active .collection-icons-list__icon-wrapper {
+    background-color: rgba(var(--color-foreground), 0.08);
+  }
+  
   @media screen and (min-width: 750px) {
     .header-collection-icons .collection-icons-list__container {
       justify-content: center;
@@ -265,6 +282,78 @@
         endif
       endif
     %}
+    
+    {%- if section.settings.show_collection_icons and section.settings.collection_icons_menu != blank -%}
+      <header-collection-menu>
+        {%- for link in section.settings.collection_icons_menu.links -%}
+          {%- if link.type == 'collection_link' and link.object.id != blank -%}
+            {%- for block in section.blocks -%}
+              {%- if block.settings.collection != blank and block.settings.collection.id == link.object.id and block.settings.menu != blank -%}
+                <div class="header-collection-menu hidden" data-collection-id="{{ link.object.id }}" data-collection-menu>
+                  <nav class="header__inline-menu">
+                    <ul class="list-menu list-menu--inline" role="list">
+                      {%- for menu_link in block.settings.menu.links -%}
+                        <li>
+                          {%- if menu_link.links != blank -%}
+                            <header-menu>
+                              <details id="Details-HeaderMenu-Collection-{{ link.object.id }}-{{ forloop.index }}">
+                                <summary
+                                  id="HeaderMenu-Collection-{{ link.object.id }}-{{ menu_link.handle }}"
+                                  class="header__menu-item list-menu__item link focus-inset"
+                                >
+                                  <span>
+                                    {{- menu_link.title | escape -}}
+                                  </span>
+                                  {{- 'icon-caret.svg' | inline_asset_content -}}
+                                </summary>
+                                <ul
+                                  id="HeaderMenu-MenuList-Collection-{{ link.object.id }}-{{ forloop.index }}"
+                                  class="header__submenu list-menu list-menu--disclosure color-{{ section.settings.menu_color_scheme }} gradient caption-large motion-reduce global-settings-popup"
+                                  role="list"
+                                  tabindex="-1"
+                                >
+                                  {%- for childlink in menu_link.links -%}
+                                    <li>
+                                      <a
+                                        id="HeaderMenu-Collection-{{ link.object.id }}-{{ menu_link.handle }}-{{ childlink.handle }}"
+                                        href="{{ childlink.url }}"
+                                        class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"
+                                        {% if childlink.current %}
+                                          aria-current="page"
+                                        {% endif %}
+                                      >
+                                        {{ childlink.title | escape }}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </details>
+                            </header-menu>
+                          {%- else -%}
+                            <a
+                              id="HeaderMenu-Collection-{{ link.object.id }}-{{ menu_link.handle }}"
+                              href="{{ menu_link.url }}"
+                              class="header__menu-item list-menu__item link link--text focus-inset"
+                              {% if menu_link.current %}
+                                aria-current="page"
+                              {% endif %}
+                            >
+                              <span>
+                                {{- menu_link.title | escape -}}
+                              </span>
+                            </a>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </nav>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </header-collection-menu>
+    {%- endif -%}
 
     {%- if section.settings.logo_position == 'middle-center' -%}
       {%- if request.page_type == 'index' -%}
