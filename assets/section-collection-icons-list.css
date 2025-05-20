@@ -21,7 +21,7 @@
 
 .collection-icons-list__item {
   flex: 0 0 auto;
-  text-align: center;
+  text-align: right;
 }
 
 .collection-icons-list__link {
