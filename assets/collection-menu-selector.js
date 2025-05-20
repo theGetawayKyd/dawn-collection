@@ -91,11 +91,86 @@ customElements.define('collection-menu-selector', CollectionMenuSelector);
 class HeaderCollectionMenu extends HTMLElement {
   constructor() {
     super();
+    this.createMenuContainers();
     this.menuContainers = this.querySelectorAll('[data-collection-menu]');
     this.initializeMenu();
 
     // Listen for collection selection changes
     document.addEventListener('collection:selected', this.handleCollectionChange.bind(this));
+  }
+  
+  createMenuContainers() {
+    console.log('Creating menu containers in header');
+    // Find all collection links with menus
+    const collectionLinks = document.querySelectorAll('.collection-icons-list__link[data-has-menu="true"]');
+    console.log('Found collection links with menus:', collectionLinks.length);
+    
+    // Clear any existing menu containers
+    this.innerHTML = '';
+    
+    // Create a menu container for each collection that has a menu
+    collectionLinks.forEach(link => {
+      const collectionId = link.dataset.collectionId;
+      const menuHandle = link.dataset.menuHandle;
+      
+      if (!collectionId || !menuHandle) {
+        console.log('Missing data attributes for link:', link);
+        return;
+      }
+      
+      console.log(`Creating menu container for collection ${collectionId} with menu ${menuHandle}`);
+      
+      // Create the menu container
+      const menuContainer = document.createElement('div');
+      menuContainer.className = 'header-collection-menu hidden';
+      menuContainer.dataset.collectionId = collectionId;
+      menuContainer.dataset.collectionMenu = '';
+      menuContainer.dataset.menuHandle = menuHandle;
+      
+      // Fetch the menu content
+      this.fetchMenuContent(menuHandle, menuContainer);
+      
+      // Add to the header
+      this.appendChild(menuContainer);
+    });
+  }
+  
+  fetchMenuContent(menuHandle, container) {
+    // Create the menu structure
+    const menuLinks = window.linklists && window.linklists[menuHandle] ? window.linklists[menuHandle].links : [];
+    
+    if (!menuLinks || menuLinks.length === 0) {
+      console.log(`No links found for menu handle: ${menuHandle}`);
+      return;
+    }
+    
+    console.log(`Found ${menuLinks.length} links for menu handle: ${menuHandle}`);
+    
+    // Create the menu HTML
+    const nav = document.createElement('nav');
+    nav.className = 'header__inline-menu';
+    
+    const ul = document.createElement('ul');
+    ul.className = 'list-menu list-menu--inline';
+    ul.setAttribute('role', 'list');
+    
+    menuLinks.forEach(link => {
+      const li = document.createElement('li');
+      
+      const a = document.createElement('a');
+      a.href = link.url;
+      a.className = 'header__menu-item list-menu__item link link--text focus-inset';
+      
+      const span = document.createElement('span');
+      span.textContent = link.title;
+      
+      a.appendChild(span);
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    
+    nav.appendChild(ul);
+    container.appendChild(nav);
   }
 
   initializeMenu() {
