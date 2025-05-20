@@ -13,9 +13,18 @@ class CollectionMenuSelector extends HTMLElement {
   }
 
   initializeDefaultCollection() {
+    console.log('Available collection links:', Array.from(this.links).map(link => {
+      return {
+        id: link.dataset.collectionId,
+        menuHandle: link.dataset.menuHandle,
+        hasMenu: link.dataset.hasMenu
+      };
+    }));
+    
     // If no collection is selected, select the first one
     if (!localStorage.getItem('selectedCollectionId') && this.links.length > 0) {
       const firstCollectionId = this.links[0].dataset.collectionId;
+      console.log('Setting default collection ID:', firstCollectionId);
       localStorage.setItem('selectedCollectionId', firstCollectionId);
 
       // Add active class to the first collection
@@ -24,6 +33,7 @@ class CollectionMenuSelector extends HTMLElement {
       // Dispatch event to notify the header
       this.dispatchCollectionChangeEvent(firstCollectionId);
     } else if (localStorage.getItem('selectedCollectionId')) {
+      console.log('Found stored collection ID:', localStorage.getItem('selectedCollectionId'));
       // If a collection is already selected, highlight it
       const selectedId = localStorage.getItem('selectedCollectionId');
       const selectedLink = Array.from(this.links).find((link) => link.dataset.collectionId === selectedId);
@@ -39,6 +49,15 @@ class CollectionMenuSelector extends HTMLElement {
 
     const link = event.currentTarget;
     const collectionId = link.dataset.collectionId;
+    const menuHandle = link.dataset.menuHandle;
+    const hasMenu = link.dataset.hasMenu;
+
+    console.log('Collection clicked:', {
+      collectionId,
+      menuHandle,
+      hasMenu,
+      linkElement: link
+    });
 
     // Remove active class from all links
     this.links.forEach((link) => link.classList.remove('active'));
@@ -48,7 +67,7 @@ class CollectionMenuSelector extends HTMLElement {
 
     // Save selected collection to localStorage
     localStorage.setItem('selectedCollectionId', collectionId);
-    console.log(collectionId);
+    console.log('Saved collection ID to localStorage:', collectionId);
 
     // Dispatch event to notify the header
     this.dispatchCollectionChangeEvent(collectionId);
@@ -80,12 +99,22 @@ class HeaderCollectionMenu extends HTMLElement {
   }
 
   initializeMenu() {
+    console.log('HeaderCollectionMenu - Available menus:', Array.from(this.menuContainers).map(container => {
+      return {
+        id: container.dataset.collectionId,
+        element: container
+      };
+    }));
+    
     const selectedCollectionId = localStorage.getItem('selectedCollectionId');
+    console.log('HeaderCollectionMenu - Retrieved collection ID from localStorage:', selectedCollectionId);
+    
     if (selectedCollectionId) {
       this.showMenu(selectedCollectionId);
     } else if (this.menuContainers.length > 0) {
       // Show the first menu by default
       const firstMenuId = this.menuContainers[0].dataset.collectionId;
+      console.log('HeaderCollectionMenu - No stored ID, using first menu:', firstMenuId);
       this.showMenu(firstMenuId);
     }
   }
@@ -96,6 +125,8 @@ class HeaderCollectionMenu extends HTMLElement {
   }
 
   showMenu(collectionId) {
+    console.log('HeaderCollectionMenu - Attempting to show menu for collection ID:', collectionId);
+    
     // Hide all menus
     this.menuContainers.forEach((container) => {
       container.classList.add('hidden');
@@ -106,8 +137,14 @@ class HeaderCollectionMenu extends HTMLElement {
       (container) => container.dataset.collectionId === collectionId
     );
 
+    console.log('HeaderCollectionMenu - Found menu?', selectedMenu ? 'Yes' : 'No', 
+                selectedMenu ? `(ID: ${selectedMenu.dataset.collectionId})` : '');
+
     if (selectedMenu) {
       selectedMenu.classList.remove('hidden');
+      console.log('HeaderCollectionMenu - Menu displayed for collection ID:', collectionId);
+    } else {
+      console.log('HeaderCollectionMenu - No menu found for collection ID:', collectionId);
     }
   }
 }
