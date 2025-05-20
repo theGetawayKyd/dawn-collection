@@ -1,0 +1,87 @@
+.collection-icons-list {
+  position: relative;
+}
+
+.collection-icons-list__container {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 1rem 0;
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+  scrollbar-width: none;  /* Hide scrollbar for Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.collection-icons-list__container::-webkit-scrollbar {
+  display: none;
+}
+
+.collection-icons-list__item {
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.collection-icons-list__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease-in-out;
+}
+
+.collection-icons-list__link:hover {
+  transform: translateY(-5px);
+}
+
+.collection-icons-list__icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: rgba(var(--color-foreground), 0.04);
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+
+.collection-icons-list__icon {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.collection-icons-list__icon-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.collection-icons-list__text {
+  font-size: 1.4rem;
+  line-height: 1.2;
+  margin-top: 0.5rem;
+}
+
+@media screen and (min-width: 750px) {
+  .collection-icons-list__container {
+    justify-content: center;
+    padding: 1.5rem 0;
+    gap: 3rem;
+  }
+  
+  .collection-icons-list__icon-wrapper {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .collection-icons-list__text {
+    font-size: 1.6rem;
+  }
+}
