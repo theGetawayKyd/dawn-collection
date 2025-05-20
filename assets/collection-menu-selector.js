@@ -7,7 +7,7 @@ class CollectionMenuSelector extends HTMLElement {
   }
 
   setupEventListeners() {
-    this.links.forEach(link => {
+    this.links.forEach((link) => {
       link.addEventListener('click', this.handleCollectionClick.bind(this));
     });
   }
@@ -17,19 +17,17 @@ class CollectionMenuSelector extends HTMLElement {
     if (!localStorage.getItem('selectedCollectionId') && this.links.length > 0) {
       const firstCollectionId = this.links[0].dataset.collectionId;
       localStorage.setItem('selectedCollectionId', firstCollectionId);
-      
+
       // Add active class to the first collection
       this.links[0].classList.add('active');
-      
+
       // Dispatch event to notify the header
       this.dispatchCollectionChangeEvent(firstCollectionId);
     } else if (localStorage.getItem('selectedCollectionId')) {
       // If a collection is already selected, highlight it
       const selectedId = localStorage.getItem('selectedCollectionId');
-      const selectedLink = Array.from(this.links).find(link => 
-        link.dataset.collectionId === selectedId
-      );
-      
+      const selectedLink = Array.from(this.links).find((link) => link.dataset.collectionId === selectedId);
+
       if (selectedLink) {
         selectedLink.classList.add('active');
       }
@@ -38,22 +36,23 @@ class CollectionMenuSelector extends HTMLElement {
 
   handleCollectionClick(event) {
     event.preventDefault();
-    
+
     const link = event.currentTarget;
     const collectionId = link.dataset.collectionId;
-    
+
     // Remove active class from all links
-    this.links.forEach(link => link.classList.remove('active'));
-    
+    this.links.forEach((link) => link.classList.remove('active'));
+
     // Add active class to clicked link
     link.classList.add('active');
-    
+
     // Save selected collection to localStorage
     localStorage.setItem('selectedCollectionId', collectionId);
-    
+    console.log(collectionId);
+
     // Dispatch event to notify the header
     this.dispatchCollectionChangeEvent(collectionId);
-    
+
     // Navigate to the collection page
     window.location.href = link.getAttribute('href');
   }
@@ -61,7 +60,7 @@ class CollectionMenuSelector extends HTMLElement {
   dispatchCollectionChangeEvent(collectionId) {
     const event = new CustomEvent('collection:selected', {
       detail: { collectionId },
-      bubbles: true
+      bubbles: true,
     });
     this.dispatchEvent(event);
   }
@@ -75,11 +74,11 @@ class HeaderCollectionMenu extends HTMLElement {
     super();
     this.menuContainers = this.querySelectorAll('[data-collection-menu]');
     this.initializeMenu();
-    
+
     // Listen for collection selection changes
     document.addEventListener('collection:selected', this.handleCollectionChange.bind(this));
   }
-  
+
   initializeMenu() {
     const selectedCollectionId = localStorage.getItem('selectedCollectionId');
     if (selectedCollectionId) {
@@ -90,23 +89,23 @@ class HeaderCollectionMenu extends HTMLElement {
       this.showMenu(firstMenuId);
     }
   }
-  
+
   handleCollectionChange(event) {
     const { collectionId } = event.detail;
     this.showMenu(collectionId);
   }
-  
+
   showMenu(collectionId) {
     // Hide all menus
-    this.menuContainers.forEach(container => {
+    this.menuContainers.forEach((container) => {
       container.classList.add('hidden');
     });
-    
+
     // Show the selected menu
     const selectedMenu = Array.from(this.menuContainers).find(
-      container => container.dataset.collectionId === collectionId
+      (container) => container.dataset.collectionId === collectionId
     );
-    
+
     if (selectedMenu) {
       selectedMenu.classList.remove('hidden');
     }
