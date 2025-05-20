@@ -17,14 +17,14 @@
         "collection_DfDwB4": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "hms",
             "icon": "shopify://shop_images/HMS_noMS.svg"
           }
         },
         "collection_Ujaf8C": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "schroth",
             "icon": "shopify://shop_images/SSP_Gold.svg"
           }
         },
