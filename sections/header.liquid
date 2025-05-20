@@ -285,7 +285,7 @@
     
     {%- if section.settings.show_collection_icons and section.settings.collection_icons_menu != blank -%}
       <header-collection-menu>
-        {%- for link in section.settings.collection_icons_menu.links -%}
+        {%- for link in linklists[section.settings.collection_icons_menu].links -%}
           {%- if link.type == 'collection_link' and link.object.id != blank -%}
             {%- for block in section.blocks -%}
               {%- if block.settings.collection != blank and block.settings.collection.id == link.object.id and block.settings.menu != blank -%}
@@ -470,7 +470,7 @@
     <div class="header-collection-icons color-{{ section.settings.color_scheme }} gradient">
       <div class="page-width">
         <ul class="collection-icons-list__container" role="list">
-          {%- for link in section.settings.collection_icons_menu.links -%}
+          {%- for link in linklists[section.settings.collection_icons_menu].links -%}
             <li class="collection-icons-list__item">
               <a href="{{ link.url }}" class="collection-icons-list__link">
                 <div class="collection-icons-list__icon-wrapper">
@@ -781,10 +781,10 @@
       "label": "Show collection icons"
     },
     {
-      "type": "link_list",
+      "type": "text",
       "id": "collection_icons_menu",
-      "label": "Collection menu",
-      "info": "Create a menu with collection links to display with icons"
+      "label": "Collection menu handle",
+      "info": "Enter the handle of the menu containing collection links"
     },
     {
       "type": "header",
