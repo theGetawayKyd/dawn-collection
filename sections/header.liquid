@@ -117,14 +117,15 @@
     align-items: center;
     width: 40px;
     height: 40px;
-    background-color: rgba(var(--color-foreground), 0.04);
+    background-color: transparent;
     margin-bottom: 0.5rem;
   }
   
   .header-collection-icons .collection-icons-list__icon {
-    /* object-fit: cover; */
-    width: 100%;
+    width: auto;
     height: 100%;
+    max-width: 100%;
+    object-fit: contain;
   }
   
   .header-collection-icons .collection-icons-list__icon-placeholder {
@@ -388,8 +389,6 @@
                     <img src="{{ link.object.featured_image | img_url: '100x' }}" 
                          alt="{{ link.title | escape }}"
                          loading="lazy"
-                         width="40"
-                         height="40"
                          class="collection-icons-list__icon">
                   {% else %}
                     <div class="collection-icons-list__icon-placeholder">
