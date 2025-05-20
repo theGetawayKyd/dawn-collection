@@ -18,42 +18,48 @@
           "type": "collection",
           "settings": {
             "collection": "hms",
-            "icon": "shopify://shop_images/HMS_noMS.svg"
+            "icon": "shopify://shop_images/HMS_noMS.svg",
+            "menu": "main-menu"
           }
         },
         "collection_Ujaf8C": {
           "type": "collection",
           "settings": {
             "collection": "schroth",
-            "icon": "shopify://shop_images/SSP_Gold.svg"
+            "icon": "shopify://shop_images/SSP_Gold.svg",
+            "menu": "schroth"
           }
         },
         "collection_TpWPpd": {
           "type": "collection",
           "settings": {
             "collection": "",
-            "icon": "shopify://shop_images/SCHUBERTH_Logo-V_4C_P_M.svg"
+            "icon": "shopify://shop_images/SCHUBERTH_Logo-V_4C_P_M.svg",
+            "menu": ""
           }
         },
         "collection_RfzyiP": {
           "type": "collection",
           "settings": {
             "collection": "",
-            "icon": "shopify://shop_images/TK-RA-O-Green-P-L_2013.svg"
+            "icon": "shopify://shop_images/TK-RA-O-Green-P-L_2013.svg",
+            "menu": ""
           }
         },
         "collection_KHtTcg": {
           "type": "collection",
           "settings": {
             "collection": "",
-            "icon": "shopify://shop_images/logo-cobra_67b32e83-6b2c-4717-98b2-113500e0ba7e.svg"
+            "icon": "shopify://shop_images/logo-cobra_67b32e83-6b2c-4717-98b2-113500e0ba7e.svg",
+            "menu": ""
           }
         },
         "collection_BrLWHx": {
           "type": "collection",
           "settings": {
             "collection": "",
-            "icon": "shopify://shop_images/RACECOM.svg"
+            "icon": "shopify://shop_images/RACECOM.svg",
+            "menu": ""
           }
         }
       },
