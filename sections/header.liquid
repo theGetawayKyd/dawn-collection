@@ -73,76 +73,7 @@
     }
   }
   
-  /* Collection Icons in Header */
-  .header-collection-icons {
-    padding: 0.5rem 0;
-    border-top: 1px solid rgba(var(--color-foreground), 0.08);
-  }
-  
-  .header-collection-icons .collection-icons-list__container {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding: 0.5rem 0;
-    gap: 2rem;
-    list-style: none;
-    margin: 0;
-    -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
-    scrollbar-width: none;  /* Hide scrollbar for Firefox */
-  }
-  
-  .header-collection-icons .collection-icons-list__container::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .header-collection-icons .collection-icons-list__item {
-    flex: 0 0 auto;
-    text-align: center;
-  }
-  
-  .header-collection-icons .collection-icons-list__link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  .header-collection-icons .collection-icons-list__link:hover {
-    transform: translateY(-3px);
-  }
-  
-  .header-collection-icons .collection-icons-list__icon-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    background-color: transparent;
-    margin-bottom: 0.5rem;
-  }
-  
-  .header-collection-icons .collection-icons-list__icon {
-    width: auto;
-    height: 100%;
-    max-width: 100%;
-    object-fit: contain;
-  }
-  
-  .header-collection-icons .collection-icons-list__icon-placeholder {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-  }
-  
-  .header-collection-icons .collection-icons-list__text {
-    font-size: 1.2rem;
-    line-height: 1.2;
-    margin-top: 0.3rem;
-  }
+
   
   /* Collection Menu Styles */
   .header-collection-menu {
@@ -159,22 +90,7 @@
     background-color: rgba(var(--color-foreground), 0.08);
   }
   
-  @media screen and (min-width: 750px) {
-    .header-collection-icons .collection-icons-list__container {
-      justify-content: center;
-      padding: 0.5rem 0;
-      gap: 3rem;
-    }
-    
-    .header-collection-icons .collection-icons-list__icon-wrapper {
-      width: 50px;
-      height: 50px;
-    }
-    
-    .header-collection-icons .collection-icons-list__text {
-      font-size: 1.3rem;
-    }
-  }
+
 </style>
 
 {%- style -%}
@@ -283,77 +199,9 @@
       endif
     %}
     
-    {%- if section.settings.show_collection_icons and section.settings.collection_icons_menu != blank -%}
-      <header-collection-menu>
-        {%- for link in linklists[section.settings.collection_icons_menu].links -%}
-          {%- if link.type == 'collection_link' and link.object.id != blank -%}
-            {%- for block in section.blocks -%}
-              {%- if block.settings.collection != blank and block.settings.collection.id == link.object.id and block.settings.menu != blank -%}
-                <div class="header-collection-menu hidden" data-collection-id="{{ link.object.id }}" data-collection-menu>
-                  <nav class="header__inline-menu">
-                    <ul class="list-menu list-menu--inline" role="list">
-                      {%- for menu_link in block.settings.menu.links -%}
-                        <li>
-                          {%- if menu_link.links != blank -%}
-                            <header-menu>
-                              <details id="Details-HeaderMenu-Collection-{{ link.object.id }}-{{ forloop.index }}">
-                                <summary
-                                  id="HeaderMenu-Collection-{{ link.object.id }}-{{ menu_link.handle }}"
-                                  class="header__menu-item list-menu__item link focus-inset"
-                                >
-                                  <span>
-                                    {{- menu_link.title | escape -}}
-                                  </span>
-                                  {{- 'icon-caret.svg' | inline_asset_content -}}
-                                </summary>
-                                <ul
-                                  id="HeaderMenu-MenuList-Collection-{{ link.object.id }}-{{ forloop.index }}"
-                                  class="header__submenu list-menu list-menu--disclosure color-{{ section.settings.menu_color_scheme }} gradient caption-large motion-reduce global-settings-popup"
-                                  role="list"
-                                  tabindex="-1"
-                                >
-                                  {%- for childlink in menu_link.links -%}
-                                    <li>
-                                      <a
-                                        id="HeaderMenu-Collection-{{ link.object.id }}-{{ menu_link.handle }}-{{ childlink.handle }}"
-                                        href="{{ childlink.url }}"
-                                        class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"
-                                        {% if childlink.current %}
-                                          aria-current="page"
-                                        {% endif %}
-                                      >
-                                        {{ childlink.title | escape }}
-                                      </a>
-                                    </li>
-                                  {%- endfor -%}
-                                </ul>
-                              </details>
-                            </header-menu>
-                          {%- else -%}
-                            <a
-                              id="HeaderMenu-Collection-{{ link.object.id }}-{{ menu_link.handle }}"
-                              href="{{ menu_link.url }}"
-                              class="header__menu-item list-menu__item link link--text focus-inset"
-                              {% if menu_link.current %}
-                                aria-current="page"
-                              {% endif %}
-                            >
-                              <span>
-                                {{- menu_link.title | escape -}}
-                              </span>
-                            </a>
-                          {%- endif -%}
-                        </li>
-                      {%- endfor -%}
-                    </ul>
-                  </nav>
-                </div>
-              {%- endif -%}
-            {%- endfor -%}
-          {%- endif -%}
-        {%- endfor -%}
-      </header-collection-menu>
-    {%- endif -%}
+    <header-collection-menu>
+      <!-- Collection-specific menus will be displayed here -->
+    </header-collection-menu>
 
     {%- if section.settings.logo_position == 'middle-center' -%}
       {%- if request.page_type == 'index' -%}
@@ -466,33 +314,7 @@
     </div>
   </header>
 
-  {% if section.settings.show_collection_icons and section.settings.collection_icons_menu != blank %}
-    <div class="header-collection-icons color-{{ section.settings.color_scheme }} gradient">
-      <div class="page-width">
-        <ul class="collection-icons-list__container" role="list">
-          {%- for link in linklists[section.settings.collection_icons_menu].links -%}
-            <li class="collection-icons-list__item">
-              <a href="{{ link.url }}" class="collection-icons-list__link">
-                <div class="collection-icons-list__icon-wrapper">
-                  {% if link.object.featured_image %}
-                    <img src="{{ link.object.featured_image | img_url: '100x' }}" 
-                         alt="{{ link.title | escape }}"
-                         loading="lazy"
-                         class="collection-icons-list__icon">
-                  {% else %}
-                    <div class="collection-icons-list__icon-placeholder">
-                      <span class="icon icon-circle">{% render 'icon-circle' %}</span>
-                    </div>
-                  {% endif %}
-                </div>
-                <span class="collection-icons-list__text">{{ link.title }}</span>
-              </a>
-            </li>
-          {%- endfor -%}
-        </ul>
-      </div>
-    </div>
-  {% endif %}
+
 </{{ header_tag }}>
 
 {%- if settings.cart_type == "notification" -%}
@@ -770,22 +592,7 @@
       "label": "t:sections.header.settings.menu_color_scheme.label",
       "default": "scheme-1"
     },
-    {
-      "type": "header",
-      "content": "Collection Icons"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_collection_icons",
-      "default": false,
-      "label": "Show collection icons"
-    },
-    {
-      "type": "text",
-      "id": "collection_icons_menu",
-      "label": "Collection menu handle",
-      "info": "Enter the handle of the menu containing collection links"
-    },
+
     {
       "type": "header",
       "content": "t:sections.header.settings.header__utilities.content"
