@@ -41,7 +41,8 @@
         "collection_DfDwB4": {
           "type": "collection",
           "settings": {
-            "collection": ""
+            "collection": "",
+            "icon": "shopify://shop_images/HMS_noMS.svg"
           }
         },
         "collection_Ujaf8C": {
