@@ -50,7 +50,6 @@
                 src="{{ block.settings.image | image_url }}"
                 alt="{{ block.settings.image.alt | escape }}"
                 loading="lazy"
-                style="height: {{ block.settings.image_height | default: 30 }}px; width: auto;"
               >
             {%- else -%}
               <span class="brand-controller__brand-text">{{ block.settings.title | escape }}</span>
@@ -124,26 +123,7 @@
           "id": "image",
           "label": "Brand logo"
         },
-        {
-          "type": "range",
-          "id": "image_width",
-          "min": 30,
-          "max": 200,
-          "step": 10,
-          "unit": "px",
-          "label": "Image width",
-          "default": 100
-        },
-        {
-          "type": "range",
-          "id": "image_height",
-          "min": 20,
-          "max": 100,
-          "step": 5,
-          "unit": "px",
-          "label": "Image height",
-          "default": 30
-        },
+
         {
           "type": "url",
           "id": "link",
