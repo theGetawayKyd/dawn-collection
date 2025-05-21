@@ -1,0 +1,35 @@
+{% comment %}
+  Renders a menu specific to a collection
+  
+  Accepts:
+  - menu: {Object} Menu object from Shopify
+  
+  Usage:
+  {% render 'collection-specific-menu', menu: collection.metafields.custom.menu %}
+{% endcomment %}
+
+{%- if menu != blank -%}
+  <nav class="collection-specific-menu">
+    <ul class="collection-specific-menu__list list-unstyled">
+      {%- for link in linklists[menu].links -%}
+        <li class="collection-specific-menu__item">
+          <a href="{{ link.url }}" class="collection-specific-menu__link{% if link.active %} collection-specific-menu__link--active{% endif %}">
+            {{ link.title }}
+          </a>
+          
+          {%- if link.links.size > 0 -%}
+            <ul class="collection-specific-menu__dropdown list-unstyled">
+              {%- for child_link in link.links -%}
+                <li class="collection-specific-menu__dropdown-item">
+                  <a href="{{ child_link.url }}" class="collection-specific-menu__dropdown-link{% if child_link.active %} collection-specific-menu__dropdown-link--active{% endif %}">
+                    {{ child_link.title }}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+{%- endif -%}

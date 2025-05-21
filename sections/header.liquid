@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="{{ 'component-mega-menu.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- endif -%}
 
-<script src="{{ 'collection-menu-selector.js' | asset_url }}" defer="defer"></script>
+<!-- Collection-specific menu is now handled server-side -->
 
 
 <style>
@@ -199,9 +199,7 @@
       endif
     %}
     
-    <header-collection-menu>
-      <!-- Collection-specific menus will be displayed here -->
-    </header-collection-menu>
+    <!-- Collection-specific menu is now rendered in collection.liquid template -->
 
     {%- if section.settings.logo_position == 'middle-center' -%}
       {%- if request.page_type == 'index' -%}

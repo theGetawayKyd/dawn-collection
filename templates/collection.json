@@ -1,5 +1,13 @@
 {
   "sections": {
+    "collection_menu": {
+      "type": "collection-specific-menu-section",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_top": 12,
+        "padding_bottom": 12
+      }
+    },
     "banner": {
       "type": "main-collection-banner",
       "settings": {
@@ -26,6 +34,7 @@
     }
   },
   "order": [
+    "collection_menu",
     "banner",
     "product-grid"
   ]
