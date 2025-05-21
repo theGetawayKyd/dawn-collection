@@ -24,11 +24,12 @@
         "brand_3HXiyw": {
           "type": "brand",
           "settings": {
-            "title": "Brand name",
+            "title": "HMS",
+            "image": "shopify://shop_images/HMS_noMS.svg",
             "image_width": 100,
             "image_height": 30,
             "link": "",
-            "is_active": false
+            "is_active": true
           }
         },
         "brand_9he3mG": {
