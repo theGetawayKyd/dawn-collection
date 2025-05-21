@@ -85,6 +85,9 @@
                   <a 
                     href="{{ block.settings.link }}" 
                     class="brand-controller__brand-link{% if block.settings.is_active %} brand-controller__brand-link--active{% endif %}" 
+                    data-brand-id="{{ block.id }}" 
+                    data-brand-title="{{ block.settings.title | escape }}" 
+                    data-prevent-navigation="{{ block.settings.prevent_navigation }}" 
                     {{ block.shopify_attributes }}
                   >
                     {%- if block.settings.image != blank -%}
@@ -109,7 +112,87 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Initialize brand controller functionality
+    initBrandController();
+  });
+
+  function initBrandController() {
     const dropdownToggle = document.querySelector('.brand-controller__dropdown-toggle');
+    const brandLinks = document.querySelectorAll('.brand-controller__brand-link');
+    
+    // Check if there's a stored active brand in session storage
+    const storedActiveBrand = sessionStorage.getItem('activeBrand');
+    
+    // If we have a stored brand and it's not already active, activate it
+    if (storedActiveBrand) {
+      let brandFound = false;
+      
+      // Check if any of our current brands match the stored one
+      brandLinks.forEach(link => {
+        const brandId = link.getAttribute('data-brand-id');
+        if (brandId === storedActiveBrand) {
+          brandFound = true;
+          // Only update if it's not already active
+          if (!link.classList.contains('brand-controller__brand-link--active')) {
+            // Remove active class from all links
+            brandLinks.forEach(l => {
+              l.classList.remove('brand-controller__brand-link--active');
+              l.closest('.brand-controller__brand-item')?.classList.remove('brand-controller__brand-item--active');
+            });
+            
+            // Add active class to this link
+            link.classList.add('brand-controller__brand-link--active');
+            link.closest('.brand-controller__brand-item')?.classList.add('brand-controller__brand-item--active');
+            
+            // Update dropdown toggle content if it exists
+            updateDropdownToggle(link);
+          }
+        }
+      });
+      
+      // If the stored brand isn't found in the current page, just keep the session storage
+      // It might be used on other pages
+    }
+    
+    // Add click event listeners to brand links
+    brandLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        // Only prevent default if we're just switching brands without navigation
+        if (this.getAttribute('data-prevent-navigation') === 'true') {
+          e.preventDefault();
+        }
+        
+        const brandId = this.getAttribute('data-brand-id');
+        
+        // Store the selected brand in session storage
+        sessionStorage.setItem('activeBrand', brandId);
+        
+        // Broadcast the brand change event for other components to listen for
+        const brandChangeEvent = new CustomEvent('brandChange', {
+          detail: {
+            brandId: brandId,
+            brandTitle: this.getAttribute('data-brand-title'),
+            brandUrl: this.getAttribute('href')
+          }
+        });
+        document.dispatchEvent(brandChangeEvent);
+        
+        // Remove active class from all links
+        brandLinks.forEach(link => {
+          link.classList.remove('brand-controller__brand-link--active');
+          link.closest('.brand-controller__brand-item')?.classList.remove('brand-controller__brand-item--active');
+        });
+        
+        // Add active class to this link
+        this.classList.add('brand-controller__brand-link--active');
+        this.closest('.brand-controller__brand-item')?.classList.add('brand-controller__brand-item--active');
+        
+        // Update dropdown toggle
+        updateDropdownToggle(this);
+      });
+    });
+    
+    // Dropdown toggle functionality for mobile
     if (dropdownToggle) {
       dropdownToggle.addEventListener('click', function() {
         const brandsList = document.querySelector('.brand-controller__brands-list');
@@ -131,7 +214,35 @@
         }
       });
     }
-  });
+  }
+  
+  // Helper function to update the dropdown toggle content
+  function updateDropdownToggle(activeBrandLink) {
+    const dropdownToggle = document.querySelector('.brand-controller__dropdown-toggle');
+    if (!dropdownToggle) return;
+    
+    const currentBrandElement = dropdownToggle.querySelector('.brand-controller__current-brand');
+    if (!currentBrandElement) return;
+    
+    // Clone the content from the active brand link
+    const brandContent = activeBrandLink.cloneNode(true);
+    
+    // Clear the current content
+    currentBrandElement.innerHTML = '';
+    
+    // If there's an image, use it
+    const brandImage = brandContent.querySelector('img');
+    if (brandImage) {
+      brandImage.classList.add('brand-controller__current-brand-image');
+      currentBrandElement.appendChild(brandImage);
+    } else {
+      // Otherwise use the text
+      const brandText = brandContent.querySelector('.brand-controller__brand-text');
+      if (brandText) {
+        currentBrandElement.appendChild(brandText);
+      }
+    }
+  }
 </script>
 
 {% schema %}
@@ -207,7 +318,15 @@
         {
           "type": "url",
           "id": "link",
-          "label": "Link"
+          "label": "Brand page URL",
+          "info": "The page that this brand links to"
+        },
+        {
+          "type": "checkbox",
+          "id": "prevent_navigation",
+          "label": "Prevent navigation",
+          "default": false,
+          "info": "If checked, clicking this brand will only switch the active brand without navigating to the link"
         },
         {
           "type": "checkbox",
