@@ -7,7 +7,7 @@
   endif
 -%}
 
-<div class="brand-controller color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} brand-controller--border-bottom{% endif %}">
+<div class="brand-controller{% if section.settings.show_line_separator %} brand-controller--border-bottom{% endif %}">
   <div class="page-width brand-controller__grid{% if announcement_bar %} brand-controller__grid--with-announcement{% endif %}">
     {%- if announcement_bar -%}
       <div
@@ -47,13 +47,10 @@
             {%- if block.settings.image != blank -%}
               {%- assign image_size = block.settings.image_width | append: 'x' -%}
               <img 
-                srcset="{{ block.settings.image | image_url: width: block.settings.image_width }}"
-                src="{{ block.settings.image | image_url: width: block.settings.image_width }}"
+                src="{{ block.settings.image | image_url }}"
                 alt="{{ block.settings.image.alt | escape }}"
                 loading="lazy"
-                width="{{ block.settings.image.width }}"
-                height="{{ block.settings.image_height | default: 30 }}"
-                style="height: {{ block.settings.image_height | default: 30 }}px;"
+                style="height: {{ block.settings.image_height | default: 30 }}px; width: auto;"
               >
             {%- else -%}
               <span class="brand-controller__brand-text">{{ block.settings.title | escape }}</span>
