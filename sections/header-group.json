@@ -46,7 +46,8 @@
         "brand_cBi7Dq": {
           "type": "brand",
           "settings": {
-            "title": "Brand name",
+            "title": "Schuberth",
+            "image": "shopify://shop_images/SCHUBERTH_Logo-V_4C_P_M.svg",
             "image_width": 100,
             "image_height": 30,
             "link": "",
