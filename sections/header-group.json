@@ -25,8 +25,10 @@
           "type": "brand",
           "settings": {
             "title": "HMS",
+            "handle": "",
             "image": "shopify://shop_images/HMS_noMS.svg",
             "link": "shopify://collections/hms",
+            "menu": "",
             "prevent_navigation": false,
             "is_active": true
           }
@@ -35,8 +37,10 @@
           "type": "brand",
           "settings": {
             "title": "Schroth",
+            "handle": "ssp",
             "image": "shopify://shop_images/SSP_Gold.svg",
             "link": "shopify://pages/schroth-racing",
+            "menu": "ssp-menu",
             "prevent_navigation": false,
             "is_active": false
           }
@@ -45,8 +49,10 @@
           "type": "brand",
           "settings": {
             "title": "Schuberth",
+            "handle": "",
             "image": "shopify://shop_images/SCHUBERTH_Logo-V_4C_P_M.svg",
             "link": "shopify://pages/schuberth-racing",
+            "menu": "",
             "prevent_navigation": false,
             "is_active": false
           }
