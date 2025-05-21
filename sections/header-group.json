@@ -35,7 +35,8 @@
         "brand_9he3mG": {
           "type": "brand",
           "settings": {
-            "title": "Brand name",
+            "title": "Schroth",
+            "image": "shopify://shop_images/SSP_Gold.svg",
             "image_width": 100,
             "image_height": 30,
             "link": "",
