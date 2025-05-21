@@ -27,7 +27,7 @@
           "settings": {
             "collection": "schroth",
             "icon": "shopify://shop_images/SSP_Gold.svg",
-            "menu": "schroth"
+            "menu": "schroth-menu"
           }
         },
         "collection_TpWPpd": {
