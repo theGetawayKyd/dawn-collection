@@ -5,11 +5,32 @@
   if section.blocks.size > 0 and section.settings.show_announcement
     assign announcement_bar = true
   endif
+  
+  # Determine active brand based on current page/collection
+  assign active_brand_handle = ''
+  
+  # Check if we're on a page with a brand metafield
+  if request.page_type == 'page' and page.metafields.brand.handle != blank
+    assign active_brand_handle = page.metafields.brand.handle
+  # Check if we're on a collection with a brand metafield
+  elsif request.page_type == 'collection' and collection.metafields.brand.handle != blank
+    assign active_brand_handle = collection.metafields.brand.handle
+  # Check if we're on a product with a brand metafield
+  elsif request.page_type == 'product' and product.metafields.brand.handle != blank
+    assign active_brand_handle = product.metafields.brand.handle
+  endif
+  
+  # Check if we have brands
   assign has_brands = false
   for block in section.blocks
     if block.type == 'brand'
       assign has_brands = true
-      break
+      
+      # If we have an active brand handle, check if this block matches
+      if active_brand_handle != blank and block.settings.handle == active_brand_handle
+        assign block.settings.is_active = true
+        assign block.settings.menu = active_brand_menu
+      endif
     endif
   endfor
 -%}
@@ -87,6 +108,8 @@
                     class="brand-controller__brand-link{% if block.settings.is_active %} brand-controller__brand-link--active{% endif %}" 
                     data-brand-id="{{ block.id }}" 
                     data-brand-title="{{ block.settings.title | escape }}" 
+                    data-brand-handle="{{ block.settings.handle }}"
+                    data-brand-menu="{{ block.settings.menu }}"
                     data-prevent-navigation="{{ block.settings.prevent_navigation }}" 
                     {{ block.shopify_attributes }}
                   >
@@ -310,16 +333,27 @@
           "info": "Used when no image is uploaded"
         },
         {
+          "type": "text",
+          "id": "handle",
+          "label": "Brand handle",
+          "info": "Unique identifier for this brand, used to match with page/collection metafields"
+        },
+        {
           "type": "image_picker",
           "id": "image",
           "label": "Brand logo"
         },
-
         {
           "type": "url",
           "id": "link",
           "label": "Brand page URL",
           "info": "The page that this brand links to"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Brand menu",
+          "info": "Menu to display when this brand is active"
         },
         {
           "type": "checkbox",
