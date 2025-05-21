@@ -26,9 +26,8 @@
           "settings": {
             "title": "HMS",
             "image": "shopify://shop_images/HMS_noMS.svg",
-            "image_width": 100,
-            "image_height": 30,
-            "link": "",
+            "link": "shopify://collections/hms",
+            "prevent_navigation": false,
             "is_active": true
           }
         },
@@ -37,9 +36,8 @@
           "settings": {
             "title": "Schroth",
             "image": "shopify://shop_images/SSP_Gold.svg",
-            "image_width": 100,
-            "image_height": 30,
-            "link": "",
+            "link": "shopify://pages/schroth-racing",
+            "prevent_navigation": false,
             "is_active": false
           }
         },
@@ -48,9 +46,8 @@
           "settings": {
             "title": "Schuberth",
             "image": "shopify://shop_images/SCHUBERTH_Logo-V_4C_P_M.svg",
-            "image_width": 100,
-            "image_height": 30,
-            "link": "",
+            "link": "shopify://pages/schuberth-racing",
+            "prevent_navigation": false,
             "is_active": false
           }
         }
@@ -64,6 +61,7 @@
       "name": "Brand Controller",
       "settings": {
         "show_announcement": true,
+        "dropdown_label": "Our Brands",
         "color_scheme": "",
         "show_line_separator": true
       }
