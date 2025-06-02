@@ -106,6 +106,45 @@
         {%- endif -%}
       </div>
     {%- endif -%}
+    
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'brand_list' -%}
+        <div class="brand-controller__brand-list-container{% if block.settings.use_carousel %} brand-controller__brand-list-container--carousel{% endif %}" {{ block.shopify_attributes }}>
+          <ul class="brand-controller__brand-list">
+            {%- if brands.size > 0 -%}
+              {%- for brand in brands -%}
+                <li class="brand-controller__brand-list-item{% if brand == active_brand_metaobject %} brand-controller__brand-list-item--active{% endif %}">
+                  <a href="{{ brand.link.value }}" class="brand-controller__brand-list-link">
+                    {%- if brand.image.reference != blank -%}
+                      <div class="brand-controller__brand-list-image-wrapper">
+                        <img 
+                          src="{{ brand.image.reference | image_url: width: block.settings.logo_width }}"
+                          alt="{{ brand.title.value | escape }}"
+                          loading="lazy"
+                          width="{{ block.settings.logo_width }}"
+                          height="{{ brand.image.reference.height | divided_by: brand.image.reference.width | times: block.settings.logo_width | round }}"
+                          class="brand-controller__brand-list-image"
+                        >
+                      </div>
+                    {%- endif -%}
+                    
+                    {%- if block.settings.show_titles -%}
+                      <span class="brand-controller__brand-list-title">{{ brand.title.value }}</span>
+                    {%- endif -%}
+                  </a>
+                </li>
+              {%- endfor -%}
+            {%- else -%}
+              <li class="brand-controller__brand-list-item">
+                <div class="brand-controller__brand-list-placeholder">
+                  <p>No brand metaobjects found. Please create Brand metaobjects to see them here.</p>
+                </div>
+              </li>
+            {%- endif -%}
+          </ul>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
 
     {%- if has_brands -%}
       <div class="brand-controller__brands-container">
@@ -365,6 +404,41 @@
       ]
     },
     {
+      "type": "brand_list",
+      "name": "Brand List",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "This block automatically displays all brand metaobjects in a horizontal list."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_titles",
+          "label": "Show brand titles",
+          "default": false,
+          "info": "Display brand names below the logos"
+        },
+        {
+          "type": "range",
+          "id": "logo_width",
+          "min": 50,
+          "max": 200,
+          "step": 10,
+          "unit": "px",
+          "label": "Logo width",
+          "default": 120
+        },
+        {
+          "type": "checkbox",
+          "id": "use_carousel",
+          "label": "Use carousel for mobile",
+          "default": true,
+          "info": "Enables horizontal scrolling on mobile devices"
+        }
+      ]
+    },
+    {
       "type": "brand",
       "name": "Brand",
       "settings": [
@@ -423,13 +497,7 @@
           "type": "announcement"
         },
         {
-          "type": "brand"
-        },
-        {
-          "type": "brand"
-        },
-        {
-          "type": "brand"
+          "type": "brand_list"
         }
       ]
     }
