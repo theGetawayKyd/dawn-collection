@@ -130,6 +130,12 @@
 %}
 
 <{{ header_tag }} {% if header_tag == 'sticky-header' %}data-sticky-type="{{ section.settings.sticky_header_type }}"{% endif %} class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
+  <!-- DEBUG INFO -->
+  <div style="background: #f0f0f0; padding: 10px; margin: 10px; border: 1px solid #ccc; font-size: 12px;">
+    <p>Page Type: {{ request.page_type }}</p>
+    <p>Active Brand Menu: {{ active_brand_menu }}</p>
+    <p>Default Menu: {{ section.settings.menu }}</p>
+  </div>
 
   {%- liquid
     assign social_links = false
