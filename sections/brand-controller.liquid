@@ -27,8 +27,18 @@
   
   
   # Get all brand metaobjects
-  assign brands = metaobjects.brand
-  assign all_brand_metaobjects = metaobjects.brand
+  # In Shopify, we need to query metaobjects using the correct definition type
+  
+  # Get all brand metaobjects using the standard Shopify syntax
+  assign brands = metaobjects.brands
+  
+  # If that doesn't work, try with singular form
+  if brands == blank or brands.size == 0
+    assign brands = metaobjects.brand
+  endif
+  
+  # Store for reference
+  assign all_brand_metaobjects = brands
   
   # Check if we have any brands
   assign has_brands = false
@@ -110,6 +120,25 @@
     {%- for block in section.blocks -%}
       {%- if block.type == 'brand_list' -%}
         <div class="brand-controller__brand-list-container{% if block.settings.use_carousel %} brand-controller__brand-list-container--carousel{% endif %}" {{ block.shopify_attributes }}>
+          <!-- Debug info -->
+          <div style="background: #f5f5f5; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd;">
+            <h4>Metaobject Debug Info</h4>
+            <p><strong>Brand definition type:</strong> {{ brand_definition_type }}</p>
+            <p><strong>Metaobjects.brand:</strong> {{ metaobjects.brand | json }}</p>
+            <p><strong>Metaobjects[brand]:</strong> {{ metaobjects[brand_definition_type] | json }}</p>
+            <p><strong>Metaobjects[brand].nodes:</strong> {{ metaobjects[brand_definition_type].nodes | json }}</p>
+            <p><strong>Brands variable:</strong> {{ brands | json }}</p>
+            <p><strong>Brands size:</strong> {{ brands.size }}</p>
+            <p><strong>Has brands:</strong> {{ has_brands }}</p>
+            <hr>
+            <p><strong>All available metaobject types:</strong></p>
+            <ul>
+              {% for metaobject_type in metaobjects %}
+                <li>{{ metaobject_type | json }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          
           <ul class="brand-controller__brand-list">
             {%- if brands.size > 0 -%}
               {%- for brand in brands -%}
