@@ -125,49 +125,64 @@
             {%- comment -%}Use shop.metaobjects.brand.values based on Shopify Community solution{%- endcomment -%}
             {%- for brand in shop.metaobjects.brand.values -%}
               <li class="brand-controller__brand-list-item{% if brand.id == active_brand_metaobject.id %} brand-controller__brand-list-item--active{% endif %}">
-                <a href="{{ brand.link.value }}" class="brand-controller__brand-list-link">
-                  {%- if brand.image.reference != blank -%}
+                <a href="{% if brand.link != blank %}{{ brand.link }}{% else %}#{% endif %}" class="brand-controller__brand-list-link">
+                  {%- if brand.image != blank -%}
                     <div class="brand-controller__brand-list-image-wrapper">
                       <img 
-                        src="{{ brand.image.reference | image_url: width: block.settings.logo_width }}"
-                        alt="{{ brand.title.value | escape }}"
+                        src="{{ brand.image | image_url: width: block.settings.logo_width }}"
+                        alt="{{ brand.title | escape }}"
                         loading="lazy"
                         width="{{ block.settings.logo_width }}"
-                        height="{{ brand.image.reference.height | divided_by: brand.image.reference.width | times: block.settings.logo_width | round }}"
+                        height="{{ brand.image.height | divided_by: brand.image.width | times: block.settings.logo_width | round }}"
                         class="brand-controller__brand-list-image"
                       >
+                    </div>
+                  {%- else -%}
+                    <div class="brand-controller__brand-list-image-wrapper brand-controller__brand-list-image-wrapper--placeholder">
+                      <div class="brand-controller__brand-list-image-placeholder" style="width: {{ block.settings.logo_width }}px; height: {{ block.settings.logo_width | times: 0.6 | round }}px;">
+                        {{ brand.title | escape | first | upcase }}
+                      </div>
                     </div>
                   {%- endif -%}
                   
                   {%- if block.settings.show_titles -%}
-                    <span class="brand-controller__brand-list-title">{{ brand.title.value }}</span>
+                    <span class="brand-controller__brand-list-title">{{ brand.title }}</span>
                   {%- endif -%}
                 </a>
               </li>
             {%- else -%}
-              {%- comment -%}Try capitalized Brand if lowercase brand doesn't work{%- endcomment -%}
-              {%- for brand in shop.metaobjects.Brand.values -%}
-                <li class="brand-controller__brand-list-item{% if brand.id == active_brand_metaobject.id %} brand-controller__brand-list-item--active{% endif %}">
-                  <a href="{{ brand.link.value }}" class="brand-controller__brand-list-link">
-                    {%- if brand.image.reference != blank -%}
-                      <div class="brand-controller__brand-list-image-wrapper">
-                        <img 
-                          src="{{ brand.image.reference | image_url: width: block.settings.logo_width }}"
-                          alt="{{ brand.title.value | escape }}"
-                          loading="lazy"
-                          width="{{ block.settings.logo_width }}"
-                          height="{{ brand.image.reference.height | divided_by: brand.image.reference.width | times: block.settings.logo_width | round }}"
-                          class="brand-controller__brand-list-image"
-                        >
-                      </div>
-                    {%- endif -%}
-                    
-                    {%- if block.settings.show_titles -%}
-                      <span class="brand-controller__brand-list-title">{{ brand.title.value }}</span>
-                    {%- endif -%}
-                  </a>
-                </li>
-              {%- endfor -%}
+              {%- comment -%}Try capitalized Brand as fallback{%- endcomment -%}
+              {%- assign brands_count = shop.metaobjects.Brand.values | size | default: 0 -%}
+              {%- if brands_count > 0 -%}
+                {%- for brand in shop.metaobjects.Brand.values -%}
+                  <li class="brand-controller__brand-list-item{% if brand.id == active_brand_metaobject.id %} brand-controller__brand-list-item--active{% endif %}">
+                    <a href="{% if brand.link != blank %}{{ brand.link }}{% else %}#{% endif %}" class="brand-controller__brand-list-link">
+                      {%- if brand.image != blank -%}
+                        <div class="brand-controller__brand-list-image-wrapper">
+                          <img 
+                            src="{{ brand.image | image_url: width: block.settings.logo_width }}"
+                            alt="{{ brand.title }}"
+                            loading="lazy"
+                            width="{{ block.settings.logo_width }}"
+                            height="{{ brand.image.height | divided_by: brand.image.width | times: block.settings.logo_width | round }}"
+                            class="brand-controller__brand-list-image"
+                          >
+                        </div>
+                      {%- else -%}
+                        <div class="brand-controller__brand-list-image-wrapper brand-controller__brand-list-image-wrapper--placeholder">
+                          <div class="brand-controller__brand-list-image-placeholder" style="width: {{ block.settings.logo_width }}px; height: {{ block.settings.logo_width | times: 0.6 | round }}px;">
+                            {{ brand.title | first | upcase }}
+                          </div>
+                        </div>
+                      {%- endif -%}
+                      
+                      {%- if block.settings.show_titles -%}
+                        <span class="brand-controller__brand-list-title">{{ brand.title }}</span>
+                      {%- endif -%}
+                    </a>
+                  </li>
+                {%- endfor -%}
+              {%- endif -%}
             {%- endfor -%}
           </ul>
         </div>
