@@ -122,14 +122,9 @@
 
           
           <ul class="brand-controller__brand-list">
-            {%- comment -%}Try both lowercase and capitalized brand metaobject types{%- endcomment -%}
-            {%- assign brand_metaobjects = metaobjects.Brand -%}
-            {%- if brand_metaobjects.size == 0 -%}
-              {%- assign brand_metaobjects = metaobjects.brand -%}
-            {%- endif -%}
-            
-            {%- for brand in brand_metaobjects -%}
-              <li class="brand-controller__brand-list-item{% if brand == active_brand_metaobject %} brand-controller__brand-list-item--active{% endif %}">
+            {%- comment -%}Use shop.metaobjects.brand.values based on Shopify Community solution{%- endcomment -%}
+            {%- for brand in shop.metaobjects.brand.values -%}
+              <li class="brand-controller__brand-list-item{% if brand.id == active_brand_metaobject.id %} brand-controller__brand-list-item--active{% endif %}">
                 <a href="{{ brand.link.value }}" class="brand-controller__brand-list-link">
                   {%- if brand.image.reference != blank -%}
                     <div class="brand-controller__brand-list-image-wrapper">
@@ -149,6 +144,30 @@
                   {%- endif -%}
                 </a>
               </li>
+            {%- else -%}
+              {%- comment -%}Try capitalized Brand if lowercase brand doesn't work{%- endcomment -%}
+              {%- for brand in shop.metaobjects.Brand.values -%}
+                <li class="brand-controller__brand-list-item{% if brand.id == active_brand_metaobject.id %} brand-controller__brand-list-item--active{% endif %}">
+                  <a href="{{ brand.link.value }}" class="brand-controller__brand-list-link">
+                    {%- if brand.image.reference != blank -%}
+                      <div class="brand-controller__brand-list-image-wrapper">
+                        <img 
+                          src="{{ brand.image.reference | image_url: width: block.settings.logo_width }}"
+                          alt="{{ brand.title.value | escape }}"
+                          loading="lazy"
+                          width="{{ block.settings.logo_width }}"
+                          height="{{ brand.image.reference.height | divided_by: brand.image.reference.width | times: block.settings.logo_width | round }}"
+                          class="brand-controller__brand-list-image"
+                        >
+                      </div>
+                    {%- endif -%}
+                    
+                    {%- if block.settings.show_titles -%}
+                      <span class="brand-controller__brand-list-title">{{ brand.title.value }}</span>
+                    {%- endif -%}
+                  </a>
+                </li>
+              {%- endfor -%}
             {%- endfor -%}
           </ul>
         </div>

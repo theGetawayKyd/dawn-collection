@@ -149,7 +149,51 @@
   
   <h3>Alternative Access Methods</h3>
   
-  <h4>1. Global Metaobjects</h4>
+  <h4>1. Shop Metaobjects (Key Solution from Community Post)</h4>
+  <pre>
+    {%- capture shop_metaobjects -%}
+      {% if shop.metaobjects.brand %}
+        Brand metaobjects found via shop.metaobjects.brand!
+        Count: {{ shop.metaobjects.brand.size }}
+        
+        {% for brand in shop.metaobjects.brand.values %}
+          Brand ID: {{ brand.id }}
+          Brand Handle: {{ brand.handle }}
+          Title: {{ brand.title.value }}
+          Brand Handle: {{ brand.brand_handle.value }}
+          Menu Handle: {{ brand.menu_handle.value }}
+          Has Image: {% if brand.image.reference %}Yes{% else %}No{% endif %}
+          Link: {{ brand.link.value }}
+          Is Active: {{ brand.is_active.value }}
+          ---
+        {% endfor %}
+      {% else %}
+        No brand metaobjects found via shop.metaobjects.brand
+      {% endif %}
+      
+      {% if shop.metaobjects.Brand %}
+        Brand metaobjects found via shop.metaobjects.Brand!
+        Count: {{ shop.metaobjects.Brand.size }}
+        
+        {% for brand in shop.metaobjects.Brand.values %}
+          Brand ID: {{ brand.id }}
+          Brand Handle: {{ brand.handle }}
+          Title: {{ brand.title.value }}
+          Brand Handle: {{ brand.brand_handle.value }}
+          Menu Handle: {{ brand.menu_handle.value }}
+          Has Image: {% if brand.image.reference %}Yes{% else %}No{% endif %}
+          Link: {{ brand.link.value }}
+          Is Active: {{ brand.is_active.value }}
+          ---
+        {% endfor %}
+      {% else %}
+        No brand metaobjects found via shop.metaobjects.Brand
+      {% endif %}
+    {%- endcapture -%}
+    {{ shop_metaobjects | strip }}
+  </pre>
+  
+  <h4>2. Global Metaobjects</h4>
   <pre>
     {%- capture global_metaobjects -%}
       {% for type in metaobjects %}
@@ -163,31 +207,14 @@
     {{ global_metaobjects | strip }}
   </pre>
   
-  <h4>2. Direct Brand Definition Access</h4>
+  <h4>3. Shop Metaobject Types</h4>
   <pre>
-    {%- capture direct_definition_access -%}
-      Brand Definition Type: {{ metaobjects.brand.type }}
-      Brand Definition Handle: {{ metaobjects.brand.handle }}
-      Brand Definition Size: {{ metaobjects.brand.size }}
-      
-      Brand Definition Type (capitalized): {{ metaobjects.Brand.type }}
-      Brand Definition Handle (capitalized): {{ metaobjects.Brand.handle }}
-      Brand Definition Size (capitalized): {{ metaobjects.Brand.size }}
-    {%- endcapture -%}
-    {{ direct_definition_access | strip }}
-  </pre>
-  
-  <h4>3. All Metaobject Entries</h4>
-  <pre>
-    {%- capture all_entries -%}
-      {% for entry in all_metaobjects %}
-        Entry ID: {{ entry.id }}
-        Entry Type: {{ entry.type }}
-        Entry Handle: {{ entry.handle }}
-        ---
+    {%- capture shop_metaobject_types -%}
+      {% for type in shop.metaobjects %}
+        Type: {{ type }}
       {% endfor %}
     {%- endcapture -%}
-    {{ all_entries | strip }}
+    {{ shop_metaobject_types | strip }}
   </pre>
 </div>
 {% endif %}
