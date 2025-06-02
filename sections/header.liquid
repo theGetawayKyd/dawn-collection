@@ -135,16 +135,18 @@
   if active_brand_handle != blank or true
     # Check for brand metaobjects with matching handle or active flag
     for brand in metaobjects.brand
-      if active_brand_handle != blank and brand.handle.value == active_brand_handle
+      if active_brand_handle != blank and brand.brand_handle.value == active_brand_handle
         # Found matching brand by handle
         if brand.menu_handle.value != blank
-          assign active_brand_menu = brand.menu_handle.value
+          # Convert menu handle to actual menu object
+          assign active_brand_menu = linklists[brand.menu_handle.value]
         endif
         break
       elsif brand.is_active.value == true
         # Found explicitly active brand
         if brand.menu_handle.value != blank
-          assign active_brand_menu = brand.menu_handle.value
+          # Convert menu handle to actual menu object
+          assign active_brand_menu = linklists[brand.menu_handle.value]
         endif
         break
       endif
@@ -158,12 +160,22 @@
     <h4 style="margin-top: 0;">Brand Menu Debug</h4>
     <p>Page Type: {{ request.page_type }}</p>
     <p>Active Brand Handle: {{ active_brand_handle }}</p>
-    <p>Page Brand Menu: {% if request.page_type == 'page' %}{{ page.metafields.brand.menu }}{% else %}Not on page{% endif %}</p>
-    <p>Collection Brand Menu: {% if request.page_type == 'collection' %}{{ collection.metafields.brand.menu }}{% else %}Not on collection{% endif %}</p>
-    <p>Product Brand Menu: {% if request.page_type == 'product' %}{{ product.metafields.brand.menu }}{% else %}Not on product{% endif %}</p>
     <p>Header Default Menu: {{ section.settings.menu }}</p>
     <p>Final Active Brand Menu: {{ active_brand_menu }}</p>
     <p>Menu Links: {% if active_brand_menu.links != blank %}{{ active_brand_menu.links.size }}{% else %}None{% endif %}</p>
+    
+    <h5>Brand Metaobjects:</h5>
+    <ul>
+    {% for brand in metaobjects.brand %}
+      <li>
+        Brand Handle: {{ brand.brand_handle.value }}<br>
+        Menu Handle: {{ brand.menu_handle.value }}<br>
+        Is Active: {{ brand.is_active.value }}
+      </li>
+    {% else %}
+      <li>No brand metaobjects found</li>
+    {% endfor %}
+    </ul>
   </div>
 
   {%- liquid
