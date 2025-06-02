@@ -117,11 +117,6 @@
   # Default menu from header settings
   assign active_brand_menu = section.settings.menu
   
-  # Check for active brand menu in theme settings
-  if settings.active_brand_menu != blank
-    assign active_brand_menu = settings.active_brand_menu
-  endif
-  
   # Get active brand handle from metafields (if available)
   assign active_brand_handle = ''
   
@@ -135,6 +130,26 @@
   elsif request.page_type == 'product' and product.metafields.brand.handle != blank
     assign active_brand_handle = product.metafields.brand.handle
   endif
+  
+  # Look for brand metaobject with matching handle or is_active flag
+  if active_brand_handle != blank or true
+    # Check for brand metaobjects with matching handle or active flag
+    for brand in metaobjects.brand
+      if active_brand_handle != blank and brand.handle.value == active_brand_handle
+        # Found matching brand by handle
+        if brand.menu.value != blank
+          assign active_brand_menu = brand.menu.value
+        endif
+        break
+      elsif brand.is_active.value == true
+        # Found explicitly active brand
+        if brand.menu.value != blank
+          assign active_brand_menu = brand.menu.value
+        endif
+        break
+      endif
+    endfor
+  endif
 %}
 
 <{{ header_tag }} {% if header_tag == 'sticky-header' %}data-sticky-type="{{ section.settings.sticky_header_type }}"{% endif %} class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
@@ -143,7 +158,9 @@
     <h4 style="margin-top: 0;">Brand Menu Debug</h4>
     <p>Page Type: {{ request.page_type }}</p>
     <p>Active Brand Handle: {{ active_brand_handle }}</p>
-    <p>Theme Settings Brand Menu: {{ settings.active_brand_menu }}</p>
+    <p>Page Brand Menu: {% if request.page_type == 'page' %}{{ page.metafields.brand.menu }}{% else %}Not on page{% endif %}</p>
+    <p>Collection Brand Menu: {% if request.page_type == 'collection' %}{{ collection.metafields.brand.menu }}{% else %}Not on collection{% endif %}</p>
+    <p>Product Brand Menu: {% if request.page_type == 'product' %}{{ product.metafields.brand.menu }}{% else %}Not on product{% endif %}</p>
     <p>Header Default Menu: {{ section.settings.menu }}</p>
     <p>Final Active Brand Menu: {{ active_brand_menu }}</p>
     <p>Menu Links: {% if active_brand_menu.links != blank %}{{ active_brand_menu.links.size }}{% else %}None{% endif %}</p>
