@@ -87,7 +87,7 @@
     {%- endif -%}
     
     {%- for block in section.blocks -%}
-      {%- if block.type == 'brand_list' and brands.size > 0 -%}
+      {%- if block.type == 'brand_list' -%}
         <div class="brand-controller__brand-list-container{% if block.settings.use_carousel %} brand-controller__brand-list-container--carousel{% endif %}" {{ block.shopify_attributes }}>
           <ul class="brand-controller__brand-list">
             {%- for brand in brands -%}
