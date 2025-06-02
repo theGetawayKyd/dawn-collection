@@ -39,19 +39,10 @@
             "text": "Announce something here",
             "link": ""
           }
-        },
-        "brand_list_cX6DzW": {
-          "type": "brand_list",
-          "settings": {
-            "show_titles": false,
-            "logo_width": 120,
-            "use_carousel": true
-          }
         }
       },
       "block_order": [
-        "announcement_mArnbR",
-        "brand_list_cX6DzW"
+        "announcement_mArnbR"
       ],
       "name": "Brand Controller",
       "settings": {
