@@ -25,10 +25,10 @@
           "type": "brand",
           "settings": {
             "title": "HMS",
-            "handle": "",
+            "handle": "hms",
             "image": "shopify://shop_images/HMS_noMS.svg",
             "link": "shopify://collections/hms",
-            "menu": "",
+            "menu": "hms-menu",
             "prevent_navigation": false,
             "is_active": true
           }
@@ -49,7 +49,7 @@
           "type": "brand",
           "settings": {
             "title": "Schuberth",
-            "handle": "",
+            "handle": "sbt",
             "image": "shopify://shop_images/SCHUBERTH_Logo-V_4C_P_M.svg",
             "link": "shopify://pages/schuberth-racing",
             "menu": "",
