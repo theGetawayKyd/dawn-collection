@@ -39,7 +39,7 @@
             "title": "Schroth",
             "handle": "ssp",
             "image": "shopify://shop_images/SSP_Gold.svg",
-            "link": "shopify://pages/schroth-racing",
+            "link": "shopify://collections/schroth-racing",
             "menu": "ssp-menu",
             "prevent_navigation": false,
             "is_active": false
@@ -62,7 +62,7 @@
           "settings": {
             "title": "Takata",
             "handle": "tak",
-            "link": "",
+            "link": "shopify://collections/takata",
             "menu": "",
             "prevent_navigation": false,
             "is_active": false
