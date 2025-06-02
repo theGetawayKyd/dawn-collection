@@ -137,14 +137,14 @@
     for brand in metaobjects.brand
       if active_brand_handle != blank and brand.handle.value == active_brand_handle
         # Found matching brand by handle
-        if brand.menu.value != blank
-          assign active_brand_menu = brand.menu.value
+        if brand.menu_handle.value != blank
+          assign active_brand_menu = brand.menu_handle.value
         endif
         break
       elsif brand.is_active.value == true
         # Found explicitly active brand
-        if brand.menu.value != blank
-          assign active_brand_menu = brand.menu.value
+        if brand.menu_handle.value != blank
+          assign active_brand_menu = brand.menu_handle.value
         endif
         break
       endif
