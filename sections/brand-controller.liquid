@@ -27,9 +27,6 @@
   
   # Get all brand metaobjects
   assign brands = metaobjects.brand
-
-metaobjects.brand
-
   assign all_brand_metaobjects = metaobjects.brand
   
   # Check if we have any brands
@@ -50,12 +47,13 @@ metaobjects.brand
     endfor
   endif
   
-  # If no brand is explicitly marked as active, try to match by handle
-  if found_active_brand == false and active_brand_handle != blank
-    for block in section.blocks
-      if block.type == 'brand' and block.settings.handle == active_brand_handle
+  # If no brand matched by handle, check for explicitly active brand
+  if found_active_brand == false
+    for brand in brands
+      if brand.is_active.value == true
         assign found_active_brand = true
-        assign active_brand_menu_handle = block.settings.menu
+        assign active_brand_metaobject = brand
+        assign active_brand_menu_handle = brand.menu_handle.value
         break
       endif
     endfor
@@ -72,31 +70,52 @@ metaobjects.brand
 
   <div class="page-width brand-controller__grid{% if announcement_bar %} brand-controller__grid--with-announcement{% endif %}">
     {%- if announcement_bar -%}
-      <div
-        class="brand-controller__announcement"
-        role="region"
-        aria-label="{{ 'sections.header.announcement' | t }}"
-        {{ section.blocks.first.shopify_attributes }}
-      >
-        {%- if section.blocks.first.settings.text != blank -%}
-          {%- if section.blocks.first.settings.link != blank -%}
-            <a
-              href="{{ section.blocks.first.settings.link }}"
-              class="brand-controller__announcement-link link link--text focus-inset animate-arrow"
-            >
-          {%- endif -%}
-          <p class="brand-controller__message h5">
-            <span>{{ section.blocks.first.settings.text | escape }}</span>
-            {%- if section.blocks.first.settings.link != blank -%}
-              {{- 'icon-arrow.svg' | inline_asset_content -}}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'announcement' -%}
+          <div class="brand-controller__announcement" {{ block.shopify_attributes }}>
+            {%- if block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}" class="brand-controller__announcement-link link link--text focus-inset animate-arrow">
+                <span>{{ block.settings.text | escape }}</span>
+                <span class="icon-wrap">&nbsp;{% render 'icon-arrow' %}</span>
+              </a>
+            {%- else -%}
+              <p class="brand-controller__announcement-text">{{ block.settings.text | escape }}</p>
             {%- endif -%}
-          </p>
-          {%- if section.blocks.first.settings.link != blank -%}
-            </a>
-          {%- endif -%}
+          </div>
         {%- endif -%}
-      </div>
+      {%- endfor -%}
     {%- endif -%}
+    
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'brand_list' and brands.size > 0 -%}
+        <div class="brand-controller__brand-list-container{% if block.settings.use_carousel %} brand-controller__brand-list-container--carousel{% endif %}" {{ block.shopify_attributes }}>
+          <ul class="brand-controller__brand-list">
+            {%- for brand in brands -%}
+              <li class="brand-controller__brand-list-item{% if brand == active_brand_metaobject %} brand-controller__brand-list-item--active{% endif %}">
+                <a href="{{ brand.link.value }}" class="brand-controller__brand-list-link">
+                  {%- if brand.image.reference != blank -%}
+                    <div class="brand-controller__brand-list-image-wrapper">
+                      <img 
+                        src="{{ brand.image.reference | image_url: width: block.settings.logo_width }}"
+                        alt="{{ brand.title.value | escape }}"
+                        loading="lazy"
+                        width="{{ block.settings.logo_width }}"
+                        height="{{ brand.image.reference.height | divided_by: brand.image.reference.width | times: block.settings.logo_width | round }}"
+                        class="brand-controller__brand-list-image"
+                      >
+                    </div>
+                  {%- endif -%}
+                  
+                  {%- if block.settings.show_titles -%}
+                    <span class="brand-controller__brand-list-title">{{ brand.title.value }}</span>
+                  {%- endif -%}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
 
     {%- if has_brands -%}
       <div class="brand-controller__brands-container">
@@ -349,6 +368,41 @@ metaobjects.brand
       ]
     },
     {
+      "type": "brand_list",
+      "name": "Brand List",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "This block automatically displays all brand metaobjects in a horizontal list."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_titles",
+          "label": "Show brand titles",
+          "default": false,
+          "info": "Display brand names below the logos"
+        },
+        {
+          "type": "range",
+          "id": "logo_width",
+          "min": 50,
+          "max": 200,
+          "step": 10,
+          "unit": "px",
+          "label": "Logo width",
+          "default": 120
+        },
+        {
+          "type": "checkbox",
+          "id": "use_carousel",
+          "label": "Use carousel for mobile",
+          "default": true,
+          "info": "Enables horizontal scrolling on mobile devices"
+        }
+      ]
+    },
+    {
       "type": "brand",
       "name": "Brand (Legacy)",
       "info": "NOTE: Brands are now managed through metaobjects. This block type is kept for backward compatibility.",
@@ -412,13 +466,7 @@ metaobjects.brand
           "type": "announcement"
         },
         {
-          "type": "brand"
-        },
-        {
-          "type": "brand"
-        },
-        {
-          "type": "brand"
+          "type": "brand_list"
         }
       ]
     }
