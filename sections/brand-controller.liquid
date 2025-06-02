@@ -5,6 +5,8 @@
   .brand-controller {
     position: relative;
     border-bottom: 1px solid rgba(var(--color-foreground), 0.08);
+    background-color: #000;
+    color: #fff;
   }
   
   .brand-controller__grid {
@@ -77,8 +79,13 @@
     flex-direction: column;
     align-items: center;
     text-decoration: none;
-    color: inherit;
+    color: #fff;
     padding: 0.5rem;
+  }
+  
+  /* Active brand link color */
+  .brand-controller__brand-list-item--active .brand-controller__brand-list-link {
+    color: #000;
   }
   
   /* Image */
@@ -265,7 +272,7 @@
             {%- comment -%}Use shop.metaobjects.brand.values based on Shopify Community solution{%- endcomment -%}
             {%- for brand in shop.metaobjects.brand.values -%}
               <li class="brand-controller__brand-list-item{% if brand.id == active_brand_metaobject.id %} brand-controller__brand-list-item--active{% endif %}">
-                <a href="{% if brand.link != blank %}{{ brand.link }}{% else %}#{% endif %}" class="brand-controller__brand-list-link">
+                <a href="{% if brand.link.reference != blank %}{{ brand.link.reference.url }}{% else %}#{% endif %}" class="brand-controller__brand-list-link">
                   {%- if brand.image != blank -%}
                     <img 
                       src="{{ brand.image | image_url: width: block.settings.logo_width }}"
