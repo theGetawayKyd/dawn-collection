@@ -61,7 +61,7 @@
           "type": "brand",
           "settings": {
             "title": "Takata",
-            "handle": "",
+            "handle": "tak",
             "link": "",
             "menu": "",
             "prevent_navigation": false,
@@ -71,8 +71,8 @@
         "brand_bQrpmK": {
           "type": "brand",
           "settings": {
-            "title": "Brand name",
-            "handle": "",
+            "title": "Cobra Seats",
+            "handle": "cbr",
             "link": "",
             "menu": "",
             "prevent_navigation": false,
