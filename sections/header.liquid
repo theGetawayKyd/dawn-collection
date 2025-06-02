@@ -13,50 +13,6 @@
 
 {{ 'component-header-brand-menu.js' | asset_url | script_tag }}
 
-{% comment %}
-  Debug section for brand metaobjects
-{% endcomment %}
-<div style="background: #f5f5f5; padding: 20px; margin: 20px; border: 2px solid #333;">
-  <h3>Brand Metaobjects Debug</h3>
-  
-  <div>
-    <p><strong>Metaobjects.brand exists:</strong> {% if metaobjects.brand %}Yes{% else %}No{% endif %}</p>
-    <p><strong>Metaobject definition type:</strong> brand</p>
-    
-    <h4>Direct metaobjects.brand properties:</h4>
-    <ul>
-      <li>Type: {{ metaobjects.brand.type }}</li>
-      <li>Handle: {{ metaobjects.brand.handle }}</li>
-    </ul>
-    
-    <h4>All metaobject types in store:</h4>
-    <ul>
-      {% for type in metaobjects %}
-        <li>{{ type }}</li>
-      {% endfor %}
-    </ul>
-    
-    <h4>Try direct iteration through metaobjects.brand:</h4>
-    <ul>
-      {% for brand in metaobjects.brand %}
-        <li>
-          <strong>Brand:</strong> {{ brand.id }}<br>
-          <strong>Type:</strong> {{ brand.type }}<br>
-          <strong>Handle:</strong> {{ brand.handle }}<br>
-          <strong>Fields:</strong>
-          <ul>
-            <li>title: {% if brand.title.value %}{{ brand.title.value }}{% else %}Not set{% endif %}</li>
-            <li>brand_handle: {% if brand.brand_handle.value %}{{ brand.brand_handle.value }}{% else %}Not set{% endif %}</li>
-            <li>menu_handle: {% if brand.menu_handle.value %}{{ brand.menu_handle.value }}{% else %}Not set{% endif %}</li>
-            <li>image: {% if brand.image.reference %}Has image{% else %}No image{% endif %}</li>
-            <li>link: {% if brand.link.value %}{{ brand.link.value }}{% else %}Not set{% endif %}</li>
-          </ul>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
-</div>
-
 <style>
   header-drawer {
     justify-self: start;
