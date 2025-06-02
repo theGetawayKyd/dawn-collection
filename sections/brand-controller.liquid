@@ -120,6 +120,7 @@
         <div class="brand-controller__brand-list-container{% if block.settings.use_carousel %} brand-controller__brand-list-container--carousel{% endif %}" {{ block.shopify_attributes }}>
           
           <ul class="brand-controller__brand-list">
+            {%- comment -%}Iterate through all metaobjects with type 'brand'{%- endcomment -%}
             {%- for brand in metaobjects.brand -%}
               <li class="brand-controller__brand-list-item{% if brand == active_brand_metaobject %} brand-controller__brand-list-item--active{% endif %}">
                 <a href="{{ brand.link.value }}" class="brand-controller__brand-list-link">
@@ -140,6 +141,21 @@
                     <span class="brand-controller__brand-list-title">{{ brand.title.value }}</span>
                   {%- endif -%}
                 </a>
+              </li>
+            {%- else -%}
+              {%- comment -%}This section will only show if no brand metaobjects exist{%- endcomment -%}
+              <li class="brand-controller__brand-list-item brand-controller__brand-list-item--placeholder">
+                <!-- This is only visible in the theme editor, not on the live site -->
+                {% if request.design_mode %}
+                  <div style="padding: 20px; text-align: center; border: 1px dashed #ccc; border-radius: 4px;">
+                    <p>No brand metaobjects found. Create brand metaobjects in your Shopify admin:</p>
+                    <ol style="text-align: left; display: inline-block;">
+                      <li>Go to Settings > Custom data</li>
+                      <li>Create or select the "brand" definition</li>
+                      <li>Add brand metaobjects with title, image, link, etc.</li>
+                    </ol>
+                  </div>
+                {% endif %}
               </li>
             {%- endfor -%}
           </ul>
