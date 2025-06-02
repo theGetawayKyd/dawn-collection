@@ -26,15 +26,22 @@
   assign active_brand_metaobject = nil
   
   
-  # Get all brand metaobjects
-  # In Shopify, we need to query metaobjects using the correct definition type
+  # Get all brand metaobjects using the correct Shopify syntax
+  # The metaobject type should match exactly what's in your Shopify admin
   
-  # Get all brand metaobjects using the standard Shopify syntax
-  assign brands = metaobjects.brands
+  # Try with the standard metaobjects global variable
+  assign brands = ''
   
-  # If that doesn't work, try with singular form
-  if brands == blank or brands.size == 0
-    assign brands = metaobjects.brand
+  # Try different possible metaobject definition names
+  # Shopify metaobject definition names are case-sensitive
+  if metaobjects['brand'] != blank
+    assign brands = metaobjects['brand']
+  elsif metaobjects['Brand'] != blank
+    assign brands = metaobjects['Brand']
+  elsif metaobjects['brands'] != blank
+    assign brands = metaobjects['brands']
+  elsif metaobjects['Brands'] != blank
+    assign brands = metaobjects['Brands']
   endif
   
   # Store for reference
@@ -123,18 +130,33 @@
           <!-- Debug info -->
           <div style="background: #f5f5f5; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd;">
             <h4>Metaobject Debug Info</h4>
-            <p><strong>Brand definition type:</strong> {{ brand_definition_type }}</p>
-            <p><strong>Metaobjects.brand:</strong> {{ metaobjects.brand | json }}</p>
-            <p><strong>Metaobjects[brand]:</strong> {{ metaobjects[brand_definition_type] | json }}</p>
-            <p><strong>Metaobjects[brand].nodes:</strong> {{ metaobjects[brand_definition_type].nodes | json }}</p>
-            <p><strong>Brands variable:</strong> {{ brands | json }}</p>
             <p><strong>Brands size:</strong> {{ brands.size }}</p>
             <p><strong>Has brands:</strong> {{ has_brands }}</p>
             <hr>
-            <p><strong>All available metaobject types:</strong></p>
+            <p><strong>Testing access methods:</strong></p>
+            <ul>
+              <li>metaobjects['brand'] exists: {% if metaobjects['brand'] %}Yes{% else %}No{% endif %}</li>
+              <li>metaobjects['Brand'] exists: {% if metaobjects['Brand'] %}Yes{% else %}No{% endif %}</li>
+              <li>metaobjects['brands'] exists: {% if metaobjects['brands'] %}Yes{% else %}No{% endif %}</li>
+              <li>metaobjects['Brands'] exists: {% if metaobjects['Brands'] %}Yes{% else %}No{% endif %}</li>
+              <li>metaobjects.brand exists: {% if metaobjects.brand %}Yes{% else %}No{% endif %}</li>
+            </ul>
+            <hr>
+            <p><strong>Available metaobject definition types:</strong></p>
             <ul>
               {% for metaobject_type in metaobjects %}
-                <li>{{ metaobject_type | json }}</li>
+                <li>Type: {{ metaobject_type }}</li>
+              {% endfor %}
+            </ul>
+            <hr>
+            <p><strong>Brand metaobjects (if any):</strong></p>
+            <ul>
+              {% for brand in brands %}
+                <li>
+                  <strong>Title:</strong> {% if brand.title.value %}{{ brand.title.value }}{% else %}No title{% endif %}<br>
+                  <strong>Handle:</strong> {% if brand.brand_handle.value %}{{ brand.brand_handle.value }}{% else %}No handle{% endif %}<br>
+                  <strong>Has image:</strong> {% if brand.image.reference %}Yes{% else %}No{% endif %}
+                </li>
               {% endfor %}
             </ul>
           </div>
