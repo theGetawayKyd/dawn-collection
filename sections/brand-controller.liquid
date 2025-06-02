@@ -27,6 +27,7 @@
   
   # Get all brand metaobjects
   assign brands = metaobjects.brand
+  assign all_brand_metaobjects = metaobjects.brand
   
   # Check if we have any brands
   assign has_brands = false
@@ -63,30 +64,43 @@
 -%}
 
 <div class="brand-controller{% if section.settings.show_line_separator %} brand-controller--border-bottom{% endif %}">
-  {% if debug_brand_controller %}
+  {% comment %}
+    Display all brand metaobjects for debugging
+  {% endcomment %}
   <div style="background: #f0f0f0; padding: 10px; margin: 10px; border: 1px solid #ccc; font-size: 12px;">
-    <h4 style="margin-top: 0;">Brand Controller Debug</h4>
+    <h4 style="margin-top: 0;">Brand Metaobjects</h4>
     <p>Page Type: {{ request.page_type }}</p>
     <p>Active Brand Handle: {{ active_brand_handle }}</p>
     <p>Found Active Brand: {{ found_active_brand }}</p>
     <p>Active Brand Menu Handle: {{ active_brand_menu_handle }}</p>
+    <p>Total Brand Metaobjects: {{ all_brand_metaobjects.size }}</p>
     
-    <h5>Brand Metaobjects:</h5>
-    <ul>
-    {% for brand in brands %}
-      <li>
-        {% if brand == active_brand_metaobject %}<strong>ACTIVE: </strong>{% endif %}
-        Brand Handle: {{ brand.brand_handle.value }}<br>
-        Title: {{ brand.title.value }}<br>
-        Menu Handle: {{ brand.menu_handle.value }}<br>
-        Is Active: {{ brand.is_active.value }}
-      </li>
+    <h5>All Brand Metaobjects:</h5>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+    {% for brand in all_brand_metaobjects %}
+      <div style="border: 1px solid #ddd; padding: 10px; width: 200px; margin-bottom: 10px; {% if brand == active_brand_metaobject %}background: #e0ffe0;{% endif %}">
+        <h4 style="margin-top: 0;">{{ brand.title.value }}</h4>
+        {% if brand.image.reference != blank %}
+          <img 
+            src="{{ brand.image.reference | image_url: width: 120 }}"
+            alt="{{ brand.title.value | escape }}"
+            width="120"
+            loading="lazy"
+            style="max-width: 100%; height: auto;"
+          >
+        {% endif %}
+        <p>
+          <strong>Brand Handle:</strong> {{ brand.brand_handle.value }}<br>
+          <strong>Menu Handle:</strong> {{ brand.menu_handle.value }}<br>
+          <strong>Is Active:</strong> {{ brand.is_active.value }}<br>
+          <strong>Link:</strong> <a href="{{ brand.link.value }}" style="word-break: break-all;">{{ brand.link.value }}</a>
+        </p>
+      </div>
     {% else %}
-      <li>No brand metaobjects found</li>
+      <p>No brand metaobjects found</p>
     {% endfor %}
-    </ul>
+    </div>
   </div>
-  {% endif %}
   <div class="page-width brand-controller__grid{% if announcement_bar %} brand-controller__grid--with-announcement{% endif %}">
     {%- if announcement_bar -%}
       <div

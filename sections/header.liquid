@@ -167,10 +167,22 @@
     <h5>Brand Metaobjects:</h5>
     <ul>
     {% for brand in metaobjects.brand %}
-      <li>
+      <li style="margin-bottom: 10px; {% if active_brand_handle == brand.brand_handle.value or brand.is_active.value == true %}background: #e0ffe0; padding: 5px;{% endif %}">
+        <strong>{% if active_brand_handle == brand.brand_handle.value %}⭐ {% endif %}{{ brand.title.value }}</strong><br>
         Brand Handle: {{ brand.brand_handle.value }}<br>
-        Menu Handle: {{ brand.menu_handle.value }}<br>
-        Is Active: {{ brand.is_active.value }}
+        Menu Handle: {{ brand.menu_handle.value }} → 
+        {% if brand.menu_handle.value != blank %}
+          {% assign menu = linklists[brand.menu_handle.value] %}
+          {% if menu.links.size > 0 %}
+            {{ menu.links.size }} links
+          {% else %}
+            Empty menu
+          {% endif %}
+        {% else %}
+          No menu handle
+        {% endif %}<br>
+        Is Active: {{ brand.is_active.value }}<br>
+        Link: {{ brand.link.value }}
       </li>
     {% else %}
       <li>No brand metaobjects found</li>
