@@ -1360,6 +1360,17 @@
     ]
   },
   {
+    "name": "Brand Settings",
+    "settings": [
+      {
+        "type": "link_list",
+        "id": "active_brand_menu",
+        "label": "Active Brand Menu",
+        "info": "This menu will be used as the active brand menu in the header"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.search_input.name",
     "settings": [
       {

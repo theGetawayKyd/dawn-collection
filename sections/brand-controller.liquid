@@ -20,6 +20,30 @@
     assign active_brand_handle = product.metafields.brand.handle
   endif
   
+  # Initialize active brand variables
+  assign found_active_brand = false
+  assign active_brand_menu_handle = ''
+  
+  # First check if any brand is explicitly marked as active
+  for block in section.blocks
+    if block.type == 'brand' and block.settings.is_active
+      assign found_active_brand = true
+      assign active_brand_menu_handle = block.settings.menu
+      break
+    endif
+  endfor
+  
+  # If no brand is explicitly marked as active, try to match by handle
+  if found_active_brand == false and active_brand_handle != blank
+    for block in section.blocks
+      if block.type == 'brand' and block.settings.handle == active_brand_handle
+        assign found_active_brand = true
+        assign active_brand_menu_handle = block.settings.menu
+        break
+      endif
+    endfor
+  endif
+  
   # Check if we have brands
   assign has_brands = false
   for block in section.blocks
@@ -29,7 +53,7 @@
       # If we have an active brand handle, check if this block matches
       if active_brand_handle != blank and block.settings.handle == active_brand_handle
         assign block.settings.is_active = true
-        assign block.settings.menu = active_brand_menu
+        assign block.settings.menu = active_brand_menu_handle
       endif
     endif
   endfor

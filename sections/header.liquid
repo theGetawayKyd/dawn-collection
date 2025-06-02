@@ -114,39 +114,39 @@
     assign header_tag = 'sticky-header'
   endif
   
-  # Simple default menu assignment
+  # Default menu from header settings
   assign active_brand_menu = section.settings.menu
+  
+  # Check for active brand menu in theme settings
+  if settings.active_brand_menu != blank
+    assign active_brand_menu = settings.active_brand_menu
+  endif
+  
+  # Get active brand handle from metafields (if available)
+  assign active_brand_handle = ''
+  
+  # Check if we're on a page with a brand metafield
+  if request.page_type == 'page' and page.metafields.brand.handle != blank
+    assign active_brand_handle = page.metafields.brand.handle
+  # Check if we're on a collection with a brand metafield
+  elsif request.page_type == 'collection' and collection.metafields.brand.handle != blank
+    assign active_brand_handle = collection.metafields.brand.handle
+  # Check if we're on a product with a brand metafield
+  elsif request.page_type == 'product' and product.metafields.brand.handle != blank
+    assign active_brand_handle = product.metafields.brand.handle
+  endif
 %}
 
 <{{ header_tag }} {% if header_tag == 'sticky-header' %}data-sticky-type="{{ section.settings.sticky_header_type }}"{% endif %} class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
   <!-- DEBUG INFO -->
   <div style="background: #f0f0f0; padding: 10px; margin: 10px; border: 1px solid #ccc; font-size: 12px;">
-    <h4 style="margin-top: 0;">Brand Controller Debug</h4>
-    <p>Brand Controller Available: {% if sections['brand-controller'] != blank %}Yes{% else %}No{% endif %}</p>
-    <p>Brand Controller Blocks: {{ sections['brand-controller'].blocks.size }}</p>
-    
-    <div style="margin-top: 10px;">
-      <h5 style="margin-top: 5px;">Brand Blocks:</h5>
-      <ul style="margin-top: 5px;">
-        {% for block in sections['brand-controller'].blocks %}
-          {% if block.type == 'brand' %}
-            <li>
-              <strong>{{ block.settings.title }}</strong><br>
-              Handle: {{ block.settings.handle }}<br>
-              Is Active: {{ block.settings.is_active }}<br>
-              Menu: {{ block.settings.menu }}<br>
-              Menu Object Type: {{ block.settings.menu.type }}<br>
-              Menu Handle: {{ block.settings.menu.handle }}<br>
-              {% if block.settings.menu.links != blank %}
-                Menu Links: {{ block.settings.menu.links.size }}
-              {% else %}
-                Menu Links: None
-              {% endif %}
-            </li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    </div>
+    <h4 style="margin-top: 0;">Brand Menu Debug</h4>
+    <p>Page Type: {{ request.page_type }}</p>
+    <p>Active Brand Handle: {{ active_brand_handle }}</p>
+    <p>Theme Settings Brand Menu: {{ settings.active_brand_menu }}</p>
+    <p>Header Default Menu: {{ section.settings.menu }}</p>
+    <p>Final Active Brand Menu: {{ active_brand_menu }}</p>
+    <p>Menu Links: {% if active_brand_menu.links != blank %}{{ active_brand_menu.links.size }}{% else %}None{% endif %}</p>
   </div>
 
   {%- liquid
