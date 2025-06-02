@@ -60,10 +60,16 @@
         "color_scheme": "",
         "show_line_separator": true
       }
+    },
+    "metaobject_debug_jeLwQR": {
+      "type": "metaobject-debug",
+      "name": "Metaobject Debug",
+      "settings": {}
     }
   },
   "order": [
     "header",
-    "brand_controller_DNDGT9"
+    "brand_controller_DNDGT9",
+    "metaobject_debug_jeLwQR"
   ]
 }
