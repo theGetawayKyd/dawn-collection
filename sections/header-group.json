@@ -56,13 +56,37 @@
             "prevent_navigation": false,
             "is_active": false
           }
+        },
+        "brand_xyayRy": {
+          "type": "brand",
+          "settings": {
+            "title": "Takata",
+            "handle": "",
+            "link": "",
+            "menu": "",
+            "prevent_navigation": false,
+            "is_active": false
+          }
+        },
+        "brand_bQrpmK": {
+          "type": "brand",
+          "settings": {
+            "title": "Brand name",
+            "handle": "",
+            "link": "",
+            "menu": "",
+            "prevent_navigation": false,
+            "is_active": false
+          }
         }
       },
       "block_order": [
         "announcement_J9kg6H",
         "brand_3HXiyw",
         "brand_9he3mG",
-        "brand_cBi7Dq"
+        "brand_cBi7Dq",
+        "brand_xyayRy",
+        "brand_bQrpmK"
       ],
       "name": "Brand Controller",
       "settings": {
