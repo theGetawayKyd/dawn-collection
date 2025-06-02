@@ -147,23 +147,47 @@
     <p class="error">No Brand metaobjects found.</p>
   {% endif %}
   
-  <h3>Direct Access Test</h3>
+  <h3>Alternative Access Methods</h3>
+  
+  <h4>1. Global Metaobjects</h4>
   <pre>
-    {%- capture direct_access_test -%}
-      {% for brand in metaobjects.brand %}
-        Brand ID: {{ brand.id }}
-        Brand Type: {{ brand.type }}
-        Brand Handle: {{ brand.handle }}
-        Title: {{ brand.title.value }}
-        Brand Handle: {{ brand.brand_handle.value }}
-        Menu Handle: {{ brand.menu_handle.value }}
-        Has Image: {% if brand.image.reference %}Yes{% else %}No{% endif %}
-        Link: {{ brand.link.value }}
-        Is Active: {{ brand.is_active.value }}
+    {%- capture global_metaobjects -%}
+      {% for type in metaobjects %}
+        Type: {{ type }}
+        {% for entry in metaobjects[type] %}
+          Entry: {{ entry.handle }} ({{ entry.type }})
+        {% endfor %}
         ---
       {% endfor %}
     {%- endcapture -%}
-    {{ direct_access_test | strip }}
+    {{ global_metaobjects | strip }}
+  </pre>
+  
+  <h4>2. Direct Brand Definition Access</h4>
+  <pre>
+    {%- capture direct_definition_access -%}
+      Brand Definition Type: {{ metaobjects.brand.type }}
+      Brand Definition Handle: {{ metaobjects.brand.handle }}
+      Brand Definition Size: {{ metaobjects.brand.size }}
+      
+      Brand Definition Type (capitalized): {{ metaobjects.Brand.type }}
+      Brand Definition Handle (capitalized): {{ metaobjects.Brand.handle }}
+      Brand Definition Size (capitalized): {{ metaobjects.Brand.size }}
+    {%- endcapture -%}
+    {{ direct_definition_access | strip }}
+  </pre>
+  
+  <h4>3. All Metaobject Entries</h4>
+  <pre>
+    {%- capture all_entries -%}
+      {% for entry in all_metaobjects %}
+        Entry ID: {{ entry.id }}
+        Entry Type: {{ entry.type }}
+        Entry Handle: {{ entry.handle }}
+        ---
+      {% endfor %}
+    {%- endcapture -%}
+    {{ all_entries | strip }}
   </pre>
 </div>
 {% endif %}
