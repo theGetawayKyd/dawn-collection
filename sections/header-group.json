@@ -64,7 +64,7 @@
             "handle": "tak",
             "image": "shopify://shop_images/TK-RA-O-Green-P-L_2013.svg",
             "link": "shopify://collections/takata",
-            "menu": "",
+            "menu": "takata-menu",
             "prevent_navigation": false,
             "is_active": false
           }
