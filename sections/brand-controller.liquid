@@ -119,25 +119,16 @@
       {%- if block.type == 'brand_list' -%}
         <div class="brand-controller__brand-list-container{% if block.settings.use_carousel %} brand-controller__brand-list-container--carousel{% endif %}" {{ block.shopify_attributes }}>
           
-          {% if request.design_mode %}
-            <div style="background: #f8f9fa; padding: 10px; margin-bottom: 15px; border-radius: 4px; font-size: 12px;">
-              <details>
-                <summary>Debug Info (only visible in editor)</summary>
-                <p>Metaobjects.brand exists: {% if metaobjects.brand %}Yes{% else %}No{% endif %}</p>
-                <p>Metaobjects count: {{ metaobjects.brand.size }}</p>
-                <p>First few metaobject types in store:</p>
-                <ul>
-                  {% for type in metaobjects limit: 5 %}
-                    <li>{{ type }}</li>
-                  {% endfor %}
-                </ul>
-              </details>
-            </div>
-          {% endif %}
+
           
           <ul class="brand-controller__brand-list">
-            {%- comment -%}Iterate through all metaobjects with type 'brand'{%- endcomment -%}
-            {%- for brand in metaobjects.brand -%}
+            {%- comment -%}Try both lowercase and capitalized brand metaobject types{%- endcomment -%}
+            {%- assign brand_metaobjects = metaobjects.Brand -%}
+            {%- if brand_metaobjects.size == 0 -%}
+              {%- assign brand_metaobjects = metaobjects.brand -%}
+            {%- endif -%}
+            
+            {%- for brand in brand_metaobjects -%}
               <li class="brand-controller__brand-list-item{% if brand == active_brand_metaobject %} brand-controller__brand-list-item--active{% endif %}">
                 <a href="{{ brand.link.value }}" class="brand-controller__brand-list-link">
                   {%- if brand.image.reference != blank -%}
