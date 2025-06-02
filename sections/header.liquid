@@ -114,59 +114,39 @@
     assign header_tag = 'sticky-header'
   endif
   
-  # Default menu from header settings
+  # Simple default menu assignment
   assign active_brand_menu = section.settings.menu
-  
-  # Get active brand handle from metafields (if available)
-  assign active_brand_handle = ''
-  
-  # Check if we're on a page with a brand metafield
-  if request.page_type == 'page' and page.metafields.brand.handle != blank
-    assign active_brand_handle = page.metafields.brand.handle
-  # Check if we're on a collection with a brand metafield
-  elsif request.page_type == 'collection' and collection.metafields.brand.handle != blank
-    assign active_brand_handle = collection.metafields.brand.handle
-  # Check if we're on a product with a brand metafield
-  elsif request.page_type == 'product' and product.metafields.brand.handle != blank
-    assign active_brand_handle = product.metafields.brand.handle
-  endif
-  
-  # Look for the active brand in the brand controller
-  if sections['brand-controller'] != blank
-    # First check if any brand is explicitly marked as active
-    for block in sections['brand-controller'].blocks
-      if block.type == 'brand' and block.settings.is_active
-        # If we found an active brand in brand controller, use its menu
-        if block.settings.menu != blank
-          assign active_brand_menu = block.settings.menu
-          assign active_brand_title = block.settings.title
-        endif
-        break
-      endif
-    endfor
-    
-    # If no brand is explicitly marked as active, try to match by handle
-    if active_brand_title == blank and active_brand_handle != blank
-      for block in sections['brand-controller'].blocks
-        if block.type == 'brand' and block.settings.handle == active_brand_handle
-          # If we found a matching brand by handle, use its menu
-          if block.settings.menu != blank
-            assign active_brand_menu = block.settings.menu
-            assign active_brand_title = block.settings.title
-          endif
-          break
-        endif
-      endfor
-    endif
-  endif
 %}
 
 <{{ header_tag }} {% if header_tag == 'sticky-header' %}data-sticky-type="{{ section.settings.sticky_header_type }}"{% endif %} class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
   <!-- DEBUG INFO -->
   <div style="background: #f0f0f0; padding: 10px; margin: 10px; border: 1px solid #ccc; font-size: 12px;">
-    <p>Page Type: {{ request.page_type }}</p>
-    <p>Active Brand Menu: {{ block }}</p>
-    <p>Default Menu: {{ section.settings.menu }}</p>
+    <h4 style="margin-top: 0;">Brand Controller Debug</h4>
+    <p>Brand Controller Available: {% if sections['brand-controller'] != blank %}Yes{% else %}No{% endif %}</p>
+    <p>Brand Controller Blocks: {{ sections['brand-controller'].blocks.size }}</p>
+    
+    <div style="margin-top: 10px;">
+      <h5 style="margin-top: 5px;">Brand Blocks:</h5>
+      <ul style="margin-top: 5px;">
+        {% for block in sections['brand-controller'].blocks %}
+          {% if block.type == 'brand' %}
+            <li>
+              <strong>{{ block.settings.title }}</strong><br>
+              Handle: {{ block.settings.handle }}<br>
+              Is Active: {{ block.settings.is_active }}<br>
+              Menu: {{ block.settings.menu }}<br>
+              Menu Object Type: {{ block.settings.menu.type }}<br>
+              Menu Handle: {{ block.settings.menu.handle }}<br>
+              {% if block.settings.menu.links != blank %}
+                Menu Links: {{ block.settings.menu.links.size }}
+              {% else %}
+                Menu Links: None
+              {% endif %}
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
   </div>
 
   {%- liquid
