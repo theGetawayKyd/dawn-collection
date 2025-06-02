@@ -11,28 +11,6 @@
   "name": "t:sections.header.name",
   "type": "header",
   "sections": {
-    "brand_controller_TjhdcN": {
-      "type": "brand-controller",
-      "blocks": {
-        "announcement_J9kg6H": {
-          "type": "announcement",
-          "settings": {
-            "text": "HMS will be closed for Memorial Day",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "announcement_J9kg6H"
-      ],
-      "name": "Brand Controller",
-      "settings": {
-        "show_announcement": true,
-        "dropdown_label": "Our Brands",
-        "color_scheme": "",
-        "show_line_separator": true
-      }
-    },
     "header": {
       "type": "header",
       "settings": {
@@ -54,7 +32,6 @@
     }
   },
   "order": [
-    "brand_controller_TjhdcN",
     "header"
   ]
 }
