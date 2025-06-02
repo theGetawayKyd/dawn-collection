@@ -27,22 +27,13 @@
   
   
   # Get all brand metaobjects using the correct Shopify syntax
-  # The metaobject type should match exactly what's in your Shopify admin
+  # The metaobject definition exists, but we need to access the actual instances
   
-  # Try with the standard metaobjects global variable
-  assign brands = ''
+  # In Shopify, metaobjects are accessed differently than other objects
+  # We'll use a simpler approach that's more reliable
   
-  # Try different possible metaobject definition names
-  # Shopify metaobject definition names are case-sensitive
-  if metaobjects['brand'] != blank
-    assign brands = metaobjects['brand']
-  elsif metaobjects['Brand'] != blank
-    assign brands = metaobjects['Brand']
-  elsif metaobjects['brands'] != blank
-    assign brands = metaobjects['brands']
-  elsif metaobjects['Brands'] != blank
-    assign brands = metaobjects['Brands']
-  endif
+  # Get all brand metaobjects
+  assign brands = metaobjects.brand
   
   # Store for reference
   assign all_brand_metaobjects = brands
@@ -133,19 +124,19 @@
             <p><strong>Brands size:</strong> {{ brands.size }}</p>
             <p><strong>Has brands:</strong> {{ has_brands }}</p>
             <hr>
-            <p><strong>Testing access methods:</strong></p>
+            <p><strong>Access methods:</strong></p>
             <ul>
-              <li>metaobjects['brand'] exists: {% if metaobjects['brand'] %}Yes{% else %}No{% endif %}</li>
-              <li>metaobjects['Brand'] exists: {% if metaobjects['Brand'] %}Yes{% else %}No{% endif %}</li>
-              <li>metaobjects['brands'] exists: {% if metaobjects['brands'] %}Yes{% else %}No{% endif %}</li>
-              <li>metaobjects['Brands'] exists: {% if metaobjects['Brands'] %}Yes{% else %}No{% endif %}</li>
               <li>metaobjects.brand exists: {% if metaobjects.brand %}Yes{% else %}No{% endif %}</li>
+              <li>metaobjects.brand.all exists: {% if metaobjects.brand.all %}Yes{% else %}No{% endif %}</li>
+              <li>metaobjects.brand.nodes exists: {% if metaobjects.brand.nodes %}Yes{% else %}No{% endif %}</li>
+              <li>metaobjects.brand.type: {{ metaobjects.brand.type }}</li>
+              <li>metaobjects.brand.handle: {{ metaobjects.brand.handle }}</li>
             </ul>
             <hr>
-            <p><strong>Available metaobject definition types:</strong></p>
+            <p><strong>Try direct iteration:</strong></p>
             <ul>
-              {% for metaobject_type in metaobjects %}
-                <li>Type: {{ metaobject_type }}</li>
+              {% for brand in metaobjects.brand %}
+                <li>Found brand: {{ brand.id }}</li>
               {% endfor %}
             </ul>
             <hr>
@@ -153,8 +144,11 @@
             <ul>
               {% for brand in brands %}
                 <li>
+                  <strong>ID:</strong> {{ brand.id }}<br>
+                  <strong>Type:</strong> {{ brand.type }}<br>
+                  <strong>Handle:</strong> {{ brand.handle }}<br>
                   <strong>Title:</strong> {% if brand.title.value %}{{ brand.title.value }}{% else %}No title{% endif %}<br>
-                  <strong>Handle:</strong> {% if brand.brand_handle.value %}{{ brand.brand_handle.value }}{% else %}No handle{% endif %}<br>
+                  <strong>Brand Handle:</strong> {% if brand.brand_handle.value %}{{ brand.brand_handle.value }}{% else %}No brand handle{% endif %}<br>
                   <strong>Has image:</strong> {% if brand.image.reference %}Yes{% else %}No{% endif %}
                 </li>
               {% endfor %}
@@ -162,36 +156,40 @@
           </div>
           
           <ul class="brand-controller__brand-list">
-            {%- if brands.size > 0 -%}
-              {%- for brand in brands -%}
-                <li class="brand-controller__brand-list-item{% if brand == active_brand_metaobject %} brand-controller__brand-list-item--active{% endif %}">
-                  <a href="{{ brand.link.value }}" class="brand-controller__brand-list-link">
-                    {%- if brand.image.reference != blank -%}
-                      <div class="brand-controller__brand-list-image-wrapper">
-                        <img 
-                          src="{{ brand.image.reference | image_url: width: block.settings.logo_width }}"
-                          alt="{{ brand.title.value | escape }}"
-                          loading="lazy"
-                          width="{{ block.settings.logo_width }}"
-                          height="{{ brand.image.reference.height | divided_by: brand.image.reference.width | times: block.settings.logo_width | round }}"
-                          class="brand-controller__brand-list-image"
-                        >
-                      </div>
-                    {%- endif -%}
-                    
-                    {%- if block.settings.show_titles -%}
-                      <span class="brand-controller__brand-list-title">{{ brand.title.value }}</span>
-                    {%- endif -%}
-                  </a>
-                </li>
-              {%- endfor -%}
-            {%- else -%}
+            {%- comment -%}Directly iterate through metaobjects.brand{%- endcomment -%}
+            {%- assign has_any_brands = false -%}
+            
+            {%- for brand in metaobjects.brand -%}
+              {%- assign has_any_brands = true -%}
+              <li class="brand-controller__brand-list-item{% if brand == active_brand_metaobject %} brand-controller__brand-list-item--active{% endif %}">
+                <a href="{{ brand.link.value }}" class="brand-controller__brand-list-link">
+                  {%- if brand.image.reference != blank -%}
+                    <div class="brand-controller__brand-list-image-wrapper">
+                      <img 
+                        src="{{ brand.image.reference | image_url: width: block.settings.logo_width }}"
+                        alt="{{ brand.title.value | escape }}"
+                        loading="lazy"
+                        width="{{ block.settings.logo_width }}"
+                        height="{{ brand.image.reference.height | divided_by: brand.image.reference.width | times: block.settings.logo_width | round }}"
+                        class="brand-controller__brand-list-image"
+                      >
+                    </div>
+                  {%- endif -%}
+                  
+                  {%- if block.settings.show_titles -%}
+                    <span class="brand-controller__brand-list-title">{{ brand.title.value }}</span>
+                  {%- endif -%}
+                </a>
+              </li>
+            {%- endfor -%}
+            
+            {%- unless has_any_brands -%}
               <li class="brand-controller__brand-list-item">
                 <div class="brand-controller__brand-list-placeholder">
                   <p>No brand metaobjects found. Please create Brand metaobjects to see them here.</p>
                 </div>
               </li>
-            {%- endif -%}
+            {%- endunless -%}
           </ul>
         </div>
       {%- endif -%}
