@@ -132,7 +132,7 @@
   endif
   
   # Look for brand metaobject with matching handle or is_active flag
-  if active_brand_handle != blank or true
+  if active_brand_handle != blank or brands.size > 0
     # Check for brand metaobjects with matching handle or active flag
     for brand in metaobjects.brand
       if active_brand_handle != blank and brand.brand_handle.value == active_brand_handle
@@ -155,42 +155,7 @@
 %}
 
 <{{ header_tag }} {% if header_tag == 'sticky-header' %}data-sticky-type="{{ section.settings.sticky_header_type }}"{% endif %} class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
-  <!-- DEBUG INFO -->
-  <div style="background: #f0f0f0; padding: 10px; margin: 10px; border: 1px solid #ccc; font-size: 12px;">
-    <h4 style="margin-top: 0;">Brand Menu Debug</h4>
-    <p>Page Type: {{ request.page_type }}</p>
-    <p>Active Brand Handle: {{ active_brand_handle }}</p>
-    <p>Header Default Menu: {{ section.settings.menu }}</p>
-    <p>Final Active Brand Menu: {{ active_brand_menu }}</p>
-    <p>Menu Links: {% if active_brand_menu.links != blank %}{{ active_brand_menu.links.size }}{% else %}None{% endif %}</p>
-    
-    <h5>Brand Metaobjects:</h5>
-    <ul>
-    {% for brand in metaobjects.brand %}
-      <li style="margin-bottom: 10px; {% if active_brand_handle == brand.brand_handle.value or brand.is_active.value == true %}background: #e0ffe0; padding: 5px;{% endif %}">
-        <strong>{% if active_brand_handle == brand.brand_handle.value %}⭐ {% endif %}{{ brand.title.value }}</strong><br>
-        Brand Handle: {{ brand.brand_handle.value }}<br>
-        Menu Handle: {{ brand.menu_handle.value }} → 
-        {% if brand.menu_handle.value != blank %}
-          {% assign menu = linklists[brand.menu_handle.value] %}
-          {% if menu.links.size > 0 %}
-            {{ menu.links.size }} links
-          {% else %}
-            Empty menu
-          {% endif %}
-        {% else %}
-          No menu handle
-        {% endif %}<br>
-        Is Active: {{ brand.is_active.value }}<br>
-        Link: {{ brand.link.value }}
-      </li>
-    {% else %}
-      <li>No brand metaobjects found</li>
-    {% endfor %}
-    </ul>
-  </div>
-
-  {%- liquid
+{%- liquid
     assign social_links = false
     assign localization_forms = false
 
