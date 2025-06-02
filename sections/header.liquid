@@ -114,38 +114,33 @@
     assign header_tag = 'sticky-header'
   endif
   
-  # Determine active brand menu
+  # Default menu from header settings
   assign active_brand_menu = section.settings.menu
-  assign active_brand_handle = ''
   
-  # Check if we're on a page with a brand metafield
-  if request.page_type == 'page' and page.metafields.brand.handle != blank
-    assign active_brand_handle = page.metafields.brand.handle
-  # Check if we're on a collection with a brand metafield
-  elsif request.page_type == 'collection' and collection.metafields.brand.handle != blank
-    assign active_brand_handle = collection.metafields.brand.handle
-  # Check if we're on a product with a brand metafield
-  elsif request.page_type == 'product' and product.metafields.brand.handle != blank
-    assign active_brand_handle = product.metafields.brand.handle
-  endif
-  
-  # Look for the active brand in the brand controller to get its menu
-  if active_brand_handle != blank
-    for block in sections['brand-controller'].blocks
-      if block.type == 'brand' and block.settings.handle == active_brand_handle and block.settings.menu != blank
+  # Get active brand from brand controller
+  for block in section.blocks
+    if block.type == 'brand' and block.settings.is_active
+      # If we have an active brand in the header section, use its menu
+      if block.settings.menu != blank
         assign active_brand_menu = block.settings.menu
+      endif
+      break
+    endif
+  endfor
+  
+  # If no active brand in header, check brand controller section
+  if sections['brand-controller'] != blank
+    # Try to find an active brand in the brand controller
+    for block in sections['brand-controller'].blocks
+      if block.type == 'brand' and block.settings.is_active
+        # If we found an active brand in brand controller, use its menu
+        if block.settings.menu != blank
+          assign active_brand_menu = block.settings.menu
+          assign active_brand_title = block.settings.title
+        endif
         break
       endif
     endfor
-  endif
-  
-  # Fallback to direct metafield menu if specified
-  if request.page_type == 'page' and page.metafields.brand.menu != blank
-    assign active_brand_menu = page.metafields.brand.menu
-  elsif request.page_type == 'collection' and collection.metafields.brand.menu != blank
-    assign active_brand_menu = collection.metafields.brand.menu
-  elsif request.page_type == 'product' and product.metafields.brand.menu != blank
-    assign active_brand_menu = product.metafields.brand.menu
   endif
 %}
 
@@ -153,12 +148,22 @@
   <!-- DEBUG INFO -->
   <div style="background: #f0f0f0; padding: 10px; margin: 10px; border: 1px solid #ccc; font-size: 12px;">
     <p>Page Type: {{ request.page_type }}</p>
-    <p>Active Brand Handle: {{ active_brand_handle }}</p>
-    <p>Page Brand Menu Metafield: {{ page.metafields.brand.menu }}</p>
-    <p>Collection Brand Menu Metafield: {{ collection.metafields.brand.menu }}</p>
-    <p>Product Brand Menu Metafield: {{ product.metafields.brand.menu }}</p>
+    <p>Active Brand Title: {{ active_brand_title }}</p>
     <p>Active Brand Menu: {{ active_brand_menu }}</p>
     <p>Default Menu: {{ section.settings.menu }}</p>
+    <p>Brand Controller Available: {% if sections['brand-controller'] != blank %}Yes{% else %}No{% endif %}</p>
+    <p>Brand Controller Blocks: {{ sections['brand-controller'].blocks.size }}</p>
+    
+    <div style="margin-top: 10px; border-top: 1px solid #ccc; padding-top: 5px;">
+      <p>Active Brands in Brand Controller:</p>
+      <ul>
+        {% for block in sections['brand-controller'].blocks %}
+          {% if block.type == 'brand' %}
+            <li>{{ block.settings.title }} - Active: {{ block.settings.is_active }} - Menu: {{ block.settings.menu }}</li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
   </div>
   {%- liquid
     assign social_links = false
