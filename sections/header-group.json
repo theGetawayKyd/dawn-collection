@@ -13,6 +13,7 @@
   "sections": {
     "header": {
       "type": "header",
+      "disabled": true,
       "settings": {
         "logo_position": "middle-left",
         "mobile_logo_position": "center",
@@ -30,37 +31,6 @@
         "padding_bottom": 20
       }
     },
-    "brand_controller_DNDGT9": {
-      "type": "brand-controller",
-      "blocks": {
-        "announcement_mArnbR": {
-          "type": "announcement",
-          "settings": {
-            "text": "Announce something here",
-            "link": ""
-          }
-        },
-        "brand_list_wXpenQ": {
-          "type": "brand_list",
-          "settings": {
-            "show_titles": false,
-            "logo_width": 120,
-            "use_carousel": true
-          }
-        }
-      },
-      "block_order": [
-        "announcement_mArnbR",
-        "brand_list_wXpenQ"
-      ],
-      "name": "Brand Controller",
-      "settings": {
-        "show_announcement": true,
-        "dropdown_label": "Our Brands",
-        "color_scheme": "",
-        "show_line_separator": true
-      }
-    },
     "metaobject_debug_jeLwQR": {
       "type": "metaobject-debug",
       "name": "Metaobject Debug",
@@ -69,7 +39,6 @@
   },
   "order": [
     "header",
-    "brand_controller_DNDGT9",
     "metaobject_debug_jeLwQR"
   ]
 }
