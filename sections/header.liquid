@@ -116,20 +116,50 @@
   
   # Determine active brand menu
   assign active_brand_menu = section.settings.menu
+  assign active_brand_handle = ''
   
   # Check if we're on a page with a brand metafield
+  if request.page_type == 'page' and page.metafields.brand.handle != blank
+    assign active_brand_handle = page.metafields.brand.handle
+  # Check if we're on a collection with a brand metafield
+  elsif request.page_type == 'collection' and collection.metafields.brand.handle != blank
+    assign active_brand_handle = collection.metafields.brand.handle
+  # Check if we're on a product with a brand metafield
+  elsif request.page_type == 'product' and product.metafields.brand.handle != blank
+    assign active_brand_handle = product.metafields.brand.handle
+  endif
+  
+  # Look for the active brand in the brand controller to get its menu
+  if active_brand_handle != blank
+    for block in sections['brand-controller'].blocks
+      if block.type == 'brand' and block.settings.handle == active_brand_handle and block.settings.menu != blank
+        assign active_brand_menu = block.settings.menu
+        break
+      endif
+    endfor
+  endif
+  
+  # Fallback to direct metafield menu if specified
   if request.page_type == 'page' and page.metafields.brand.menu != blank
     assign active_brand_menu = page.metafields.brand.menu
-  # Check if we're on a collection with a brand metafield
   elsif request.page_type == 'collection' and collection.metafields.brand.menu != blank
     assign active_brand_menu = collection.metafields.brand.menu
-  # Check if we're on a product with a brand metafield
   elsif request.page_type == 'product' and product.metafields.brand.menu != blank
     assign active_brand_menu = product.metafields.brand.menu
   endif
 %}
 
 <{{ header_tag }} {% if header_tag == 'sticky-header' %}data-sticky-type="{{ section.settings.sticky_header_type }}"{% endif %} class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
+  <!-- DEBUG INFO -->
+  <div style="background: #f0f0f0; padding: 10px; margin: 10px; border: 1px solid #ccc; font-size: 12px;">
+    <p>Page Type: {{ request.page_type }}</p>
+    <p>Active Brand Handle: {{ active_brand_handle }}</p>
+    <p>Page Brand Menu Metafield: {{ page.metafields.brand.menu }}</p>
+    <p>Collection Brand Menu Metafield: {{ collection.metafields.brand.menu }}</p>
+    <p>Product Brand Menu Metafield: {{ product.metafields.brand.menu }}</p>
+    <p>Active Brand Menu: {{ active_brand_menu }}</p>
+    <p>Default Menu: {{ section.settings.menu }}</p>
+  </div>
   {%- liquid
     assign social_links = false
     assign localization_forms = false
