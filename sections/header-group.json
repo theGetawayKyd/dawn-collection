@@ -52,7 +52,7 @@
             "handle": "sbt",
             "image": "shopify://shop_images/SCHUBERTH_Logo-V_4C_P_M.svg",
             "link": "shopify://pages/schuberth-racing",
-            "menu": "",
+            "menu": "sbt-menu",
             "prevent_navigation": false,
             "is_active": false
           }
@@ -64,7 +64,7 @@
             "handle": "tak",
             "image": "shopify://shop_images/TK-RA-O-Green-P-L_2013.svg",
             "link": "shopify://collections/takata",
-            "menu": "",
+            "menu": "takata-menu",
             "prevent_navigation": false,
             "is_active": false
           }
@@ -76,7 +76,7 @@
             "handle": "cbr",
             "image": "shopify://shop_images/logo-cobra.svg",
             "link": "",
-            "menu": "",
+            "menu": "cbr-menu",
             "prevent_navigation": false,
             "is_active": false
           }
