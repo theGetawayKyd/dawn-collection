@@ -23,36 +23,22 @@
   # Initialize active brand variables
   assign found_active_brand = false
   assign active_brand_menu_handle = ''
-  assign active_brand_metaobject = nil
   
-  # Get all brand metaobjects
-  assign brands = metaobjects.brand
+  # First check if any brand is explicitly marked as active
+  for block in section.blocks
+    if block.type == 'brand' and block.settings.is_active
+      assign found_active_brand = true
+      assign active_brand_menu_handle = block.settings.menu
+      break
+    endif
+  endfor
   
-  # Check if we have any brands
-  assign has_brands = false
-  if brands.size > 0
-    assign has_brands = true
-  endif
-  
-  # First check if any brand metaobject matches the active brand handle
-  if active_brand_handle != blank
-    for brand in brands
-      if brand.brand_handle.value == active_brand_handle
+  # If no brand is explicitly marked as active, try to match by handle
+  if found_active_brand == false and active_brand_handle != blank
+    for block in section.blocks
+      if block.type == 'brand' and block.settings.handle == active_brand_handle
         assign found_active_brand = true
-        assign active_brand_metaobject = brand
-        assign active_brand_menu_handle = brand.menu_handle.value
-        break
-      endif
-    endfor
-  endif
-  
-  # If no brand matched by handle, check for explicitly active brand
-  if found_active_brand == false
-    for brand in brands
-      if brand.is_active.value == true
-        assign found_active_brand = true
-        assign active_brand_metaobject = brand
-        assign active_brand_menu_handle = brand.menu_handle.value
+        assign active_brand_menu_handle = block.settings.menu
         break
       endif
     endfor
@@ -60,33 +46,23 @@
   
   # Debug output for brand controller
   assign debug_brand_controller = true
+  
+  # Check if we have brands
+  assign has_brands = false
+  for block in section.blocks
+    if block.type == 'brand'
+      assign has_brands = true
+      
+      # If we have an active brand handle, check if this block matches
+      if active_brand_handle != blank and block.settings.handle == active_brand_handle
+        assign block.settings.is_active = true
+        assign block.settings.menu = active_brand_menu_handle
+      endif
+    endif
+  endfor
 -%}
 
 <div class="brand-controller{% if section.settings.show_line_separator %} brand-controller--border-bottom{% endif %}">
-  {% if debug_brand_controller %}
-  <div style="background: #f0f0f0; padding: 10px; margin: 10px; border: 1px solid #ccc; font-size: 12px;">
-    <h4 style="margin-top: 0;">Brand Controller Debug</h4>
-    <p>Page Type: {{ request.page_type }}</p>
-    <p>Active Brand Handle: {{ active_brand_handle }}</p>
-    <p>Found Active Brand: {{ found_active_brand }}</p>
-    <p>Active Brand Menu Handle: {{ active_brand_menu_handle }}</p>
-    
-    <h5>Brand Metaobjects:</h5>
-    <ul>
-    {% for brand in brands %}
-      <li>
-        {% if brand == active_brand_metaobject %}<strong>ACTIVE: </strong>{% endif %}
-        Brand Handle: {{ brand.brand_handle.value }}<br>
-        Title: {{ brand.title.value }}<br>
-        Menu Handle: {{ brand.menu_handle.value }}<br>
-        Is Active: {{ brand.is_active.value }}
-      </li>
-    {% else %}
-      <li>No brand metaobjects found</li>
-    {% endfor %}
-    </ul>
-  </div>
-  {% endif %}
   <div class="page-width brand-controller__grid{% if announcement_bar %} brand-controller__grid--with-announcement{% endif %}">
     {%- if announcement_bar -%}
       <div
@@ -119,18 +95,24 @@
       <div class="brand-controller__brands-container">
         <button type="button" class="brand-controller__dropdown-toggle">
           <span class="brand-controller__current-brand">
-            {%- if active_brand_metaobject -%}
-              {%- if active_brand_metaobject.image.reference != blank -%}
+            {%- assign active_brand = false -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'brand' and block.settings.is_active -%}
+                {%- assign active_brand = block -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+            
+            {%- if active_brand -%}
+              {%- if active_brand.settings.image != blank -%}
                 <img 
-                  src="{{ active_brand_metaobject.image.reference | image_url: width: 120 }}"
-                  alt="{{ active_brand_metaobject.title.value | escape }}"
-                  width="120"
-                  height="{{ active_brand_metaobject.image.reference.height | divided_by: active_brand_metaobject.image.reference.width | times: 120 | round }}"
+                  src="{{ active_brand.settings.image | image_url }}"
+                  alt="{{ active_brand.settings.image.alt | escape }}"
                   loading="lazy"
-                  class="brand-controller__brand-image"
+                  class="brand-controller__current-brand-image"
                 >
               {%- else -%}
-                <span class="brand-controller__brand-text">{{ active_brand_metaobject.title.value | escape }}</span>
+                <span class="brand-controller__brand-text">{{ active_brand.settings.title | escape }}</span>
               {%- endif -%}
             {%- else -%}
               <span class="brand-controller__brand-text">{{ section.settings.dropdown_label | default: 'Our Brands' }}</span>
@@ -145,30 +127,31 @@
 
         <div class="brand-controller__brands-list">
           <ul class="brand-controller__brands">
-            {%- for brand in brands -%}
-              <li class="brand-controller__brand-item{% if brand == active_brand_metaobject %} brand-controller__brand-item--active{% endif %}">
-                <a 
-                  href="{{ brand.link.value }}" 
-                  class="brand-controller__brand-link{% if brand == active_brand_metaobject %} brand-controller__brand-link--active{% endif %}" 
-                  data-brand-id="{{ brand.id }}" 
-                  data-brand-title="{{ brand.title.value | escape }}" 
-                  data-brand-handle="{{ brand.brand_handle.value }}"
-                  data-brand-menu="{{ brand.menu_handle.value }}"
-                  data-prevent-navigation="{{ brand.prevent_navigation.value | default: false }}" 
-                >
-                  {%- if brand.image.reference != blank -%}
-                    <img 
-                      src="{{ brand.image.reference | image_url: width: 120 }}"
-                      alt="{{ brand.title.value | escape }}"
-                      loading="lazy"
-                      width="120"
-                      height="{{ brand.image.reference.height | divided_by: brand.image.reference.width | times: 120 | round }}"
-                    >
-                  {%- else -%}
-                    <span class="brand-controller__brand-text">{{ brand.title.value | escape }}</span>
-                  {%- endif -%}
-                </a>
-              </li>
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'brand' -%}
+                <li class="brand-controller__brand-item{% if block.settings.is_active %} brand-controller__brand-item--active{% endif %}">
+                  <a 
+                    href="{{ block.settings.link }}" 
+                    class="brand-controller__brand-link{% if block.settings.is_active %} brand-controller__brand-link--active{% endif %}" 
+                    data-brand-id="{{ block.id }}" 
+                    data-brand-title="{{ block.settings.title | escape }}" 
+                    data-brand-handle="{{ block.settings.handle }}"
+                    data-brand-menu="{{ block.settings.menu }}"
+                    data-prevent-navigation="{{ block.settings.prevent_navigation }}" 
+                    {{ block.shopify_attributes }}
+                  >
+                    {%- if block.settings.image != blank -%}
+                      <img 
+                        src="{{ block.settings.image | image_url }}"
+                        alt="{{ block.settings.image.alt | escape }}"
+                        loading="lazy"
+                      >
+                    {%- else -%}
+                      <span class="brand-controller__brand-text">{{ block.settings.title | escape }}</span>
+                    {%- endif -%}
+                  </a>
+                </li>
+              {%- endif -%}
             {%- endfor -%}
           </ul>
         </div>
@@ -367,13 +350,8 @@
     },
     {
       "type": "brand",
-      "name": "Brand (Legacy)",
-      "info": "NOTE: Brands are now managed through metaobjects. This block type is kept for backward compatibility.",
+      "name": "Brand",
       "settings": [
-        {
-          "type": "paragraph",
-          "content": "Brands are now managed through metaobjects. Please create Brand metaobjects with brand_handle, menu_handle, title, image, link, is_active, and prevent_navigation fields."
-        },
         {
           "type": "text",
           "id": "title",
