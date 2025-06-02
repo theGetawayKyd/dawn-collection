@@ -114,57 +114,23 @@
     assign header_tag = 'sticky-header'
   endif
   
-  # Default menu from header settings
+  # Determine active brand menu
   assign active_brand_menu = section.settings.menu
   
-  # Get active brand from brand controller
-  for block in section.blocks
-    if block.type == 'brand' and block.settings.is_active
-      # If we have an active brand in the header section, use its menu
-      if block.settings.menu != blank
-        assign active_brand_menu = block.settings.menu
-      endif
-      break
-    endif
-  endfor
-  
-  # If no active brand in header, check brand controller section
-  if sections['brand-controller'] != blank
-    # Try to find an active brand in the brand controller
-    for block in sections['brand-controller'].blocks
-      if block.type == 'brand' and block.settings.is_active
-        # If we found an active brand in brand controller, use its menu
-        if block.settings.menu != blank
-          assign active_brand_menu = block.settings.menu
-          assign active_brand_title = block.settings.title
-        endif
-        break
-      endif
-    endfor
+  # Check if we're on a page with a brand metafield
+  if request.page_type == 'page' and page.metafields.brand.menu != blank
+    assign active_brand_menu = page.metafields.brand.menu
+  # Check if we're on a collection with a brand metafield
+  elsif request.page_type == 'collection' and collection.metafields.brand.menu != blank
+    assign active_brand_menu = collection.metafields.brand.menu
+  # Check if we're on a product with a brand metafield
+  elsif request.page_type == 'product' and product.metafields.brand.menu != blank
+    assign active_brand_menu = product.metafields.brand.menu
   endif
 %}
 
 <{{ header_tag }} {% if header_tag == 'sticky-header' %}data-sticky-type="{{ section.settings.sticky_header_type }}"{% endif %} class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
-  <!-- DEBUG INFO -->
-  <div style="background: #f0f0f0; padding: 10px; margin: 10px; border: 1px solid #ccc; font-size: 12px;">
-    <p>Page Type: {{ request.page_type }}</p>
-    <p>Active Brand Title: {{ active_brand_title }}</p>
-    <p>Active Brand Menu: {{ active_brand_menu }}</p>
-    <p>Default Menu: {{ section.settings.menu }}</p>
-    <p>Brand Controller Available: {% if sections['brand-controller'] != blank %}Yes{% else %}No{% endif %}</p>
-    <p>Brand Controller Blocks: {{ sections['brand-controller'].blocks.size }}</p>
-    
-    <div style="margin-top: 10px; border-top: 1px solid #ccc; padding-top: 5px;">
-      <p>Active Brands in Brand Controller:</p>
-      <ul>
-        {% for block in sections['brand-controller'].blocks %}
-          {% if block.type == 'brand' %}
-            <li>{{ block.settings.title }} - Active: {{ block.settings.is_active }} - Menu: {{ block.settings.menu }}</li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
+
   {%- liquid
     assign social_links = false
     assign localization_forms = false
