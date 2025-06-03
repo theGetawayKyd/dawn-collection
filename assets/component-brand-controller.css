@@ -20,6 +20,22 @@
   object-fit: contain;
 }
 
+/* Horizontal list styling */
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.inline-list__item {
+  display: flex;
+  align-items: center;
+}
+
 .inline-list__item.active .full-unstyled-link {
   text-decoration: underline;
   font-weight: 500;
@@ -63,9 +79,10 @@
 }
 
 .mobile-facets__list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
+  justify-content: flex-start;
 }
 
 .mobile-facets__item {
@@ -107,7 +124,19 @@
     padding: 1rem 0;
   }
   
+  /* Show inline list on mobile but with adjusted styling */
   .brand-controller .inline-list {
+    justify-content: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    gap: 1.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .brand-controller .inline-list::-webkit-scrollbar {
     display: none;
   }
   
