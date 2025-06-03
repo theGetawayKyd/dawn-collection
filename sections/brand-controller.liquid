@@ -1,153 +1,5 @@
 {{ 'component-brand-controller.css' | asset_url | stylesheet_tag }}
 
-{%- style -%}
-  /* Brand controller grid layout */
-  .brand-controller {
-    position: relative;
-    border-bottom: 1px solid rgba(var(--color-foreground), 0.08);
-    background-color: #000;
-    color: #fff;
-  }
-  
-  .brand-controller__grid {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-  }
-  
-  /* Announcement styles */
-  .brand-controller__announcement {
-    width: 40%;
-    padding-right: 2rem;
-  }
-  
-  .brand-controller__message {
-    margin: 0;
-  }
-  
-  /* Brand list container */
-  .brand-controller__brand-list-container {
-    display: flex;
-    justify-content: flex-end;
-    width: 60%;
-  }
-  
-  /* Brand list styles */
-  .brand-controller__brand-list {
-    display: flex;
-    gap: 0; /* Remove gap between items */
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    align-items: center;
-  }
-  
-  /* Brand list item */
-  .brand-controller__brand-list-item {
-    position: relative;
-    padding: 0.5rem 1rem;
-    border-left: 1px solid rgba(var(--color-foreground), 0.08);
-  }
-  
-  .brand-controller__brand-list-item:first-child {
-    border-left: none;
-  }
-  
-  /* Active brand highlighting */
-  .brand-controller__brand-list-item--active {
-    background-color: #fff;
-    box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.05);
-  }
-  
-  /* Make the active highlight extend to the bottom */
-  .brand-controller__brand-list-item--active::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background-color: #fff;
-    z-index: 2;
-  }
-  
-  /* Brand list link */
-  .brand-controller__brand-list-link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: #fff;
-    padding: 0.5rem;
-  }
-  
-  /* Active brand link color */
-  .brand-controller__brand-list-item--active .brand-controller__brand-list-link {
-    color: #000;
-  }
-  
-  /* Image */
-  .brand-controller__brand-list-image {
-    height: 20px;
-    width: auto;
-    max-width: 100%;
-    object-fit: contain;
-    margin-bottom: 0.5rem;
-    display: block;
-  }
-  
-  /* Placeholder styles */
-  .brand-controller__brand-list-image-placeholder {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f4f4f4;
-    border-radius: 4px;
-    font-weight: bold;
-    font-size: 0.8rem;
-    color: #555;
-    height: 20px;
-    width: 40px;
-  }
-  
-  /* Brand title */
-  .brand-controller__brand-list-title {
-    font-size: 0.9rem;
-    text-align: center;
-  }
-  
-  /* Mobile styles */
-  @media screen and (max-width: 749px) {
-    .brand-controller__grid {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    
-    .brand-controller__announcement {
-      padding-right: 0;
-      margin-bottom: 1rem;
-      width: 100%;
-    }
-    
-    .brand-controller__brand-list-container {
-      width: 100%;
-      justify-content: flex-start;
-      overflow-x: auto;
-    }
-    
-    .brand-controller__brand-list {
-      flex-wrap: nowrap;
-    }
-    
-    .brand-controller__brand-list-item {
-      border-left: none;
-      border-right: 1px solid rgba(var(--color-foreground), 0.08);
-    }
-  }
-{%- endstyle -%}
-
 {%- liquid
   assign announcement_bar = false
   if section.blocks.size > 0 and section.settings.show_announcement
@@ -233,147 +85,154 @@
   endfor
 -%}
 
-<div class="brand-controller{% if section.settings.show_line_separator %} brand-controller--border-bottom{% endif %}">
+<div class="color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} border-bottom{% endif %}">
 
-  <div class="page-width brand-controller__grid">
-    <!-- Left side: Announcement -->
-    {%- if announcement_bar -%}
-      <div
-        class="brand-controller__announcement"
-        role="region"
-        aria-label="{{ 'sections.header.announcement' | t }}"
-        {{ section.blocks.first.shopify_attributes }}
-      >
-        {%- if section.blocks.first.settings.text != blank -%}
-          {%- if section.blocks.first.settings.link != blank -%}
-            <a
-              href="{{ section.blocks.first.settings.link }}"
-              class="brand-controller__announcement-link link link--text focus-inset animate-arrow"
-            >
-          {%- endif -%}
-          <p class="brand-controller__message h5">
-            <span>{{ section.blocks.first.settings.text | escape }}</span>
+  <div class="page-width">
+    <div class="grid grid--1-col grid--2-col-tablet">
+      <!-- Left side: Announcement -->
+      {%- if announcement_bar -%}
+        <div
+          class="grid__item"
+          role="region"
+          aria-label="{{ 'sections.header.announcement' | t }}"
+          {{ section.blocks.first.shopify_attributes }}
+        >
+          {%- if section.blocks.first.settings.text != blank -%}
             {%- if section.blocks.first.settings.link != blank -%}
-              {{- 'icon-arrow.svg' | inline_asset_content -}}
+              <a
+                href="{{ section.blocks.first.settings.link }}"
+                class="link link--text focus-inset animate-arrow"
+              >
             {%- endif -%}
-          </p>
-          {%- if section.blocks.first.settings.link != blank -%}
-            </a>
-          {%- endif -%}
-        {%- endif -%}
-      </div>
-    {%- endif -%}
-    
-    <!-- Right side: Brand List -->
-    {%- for block in section.blocks -%}
-      {%- if block.type == 'brand_list' -%}
-        <div class="brand-controller__brand-list-container" {{ block.shopify_attributes }}>
-          <ul class="brand-controller__brand-list">
-            {%- comment -%}Use shop.metaobjects.brand.values based on Shopify Community solution{%- endcomment -%}
-            {%- for brand in shop.metaobjects.brand.values -%}
-              <li class="brand-controller__brand-list-item{% if brand.id == active_brand_metaobject.id %} brand-controller__brand-list-item--active{% endif %}">
-                <a href="{% if brand.link.reference != blank %}{{ brand.link.reference.url }}{% else %}#{% endif %}" class="brand-controller__brand-list-link">
-                  {%- if brand.image != blank -%}
-                    <img 
-                      src="{{ brand.image | image_url: width: block.settings.logo_width }}"
-                      alt="{{ brand.title | escape }}"
-                      loading="lazy"
-                      width="{{ block.settings.logo_width }}"
-                      height="{{ brand.image.height | divided_by: brand.image.width | times: block.settings.logo_width | round }}"
-                      class="brand-controller__brand-list-image"
-                    >
-                  {%- else -%}
-                    <div class="brand-controller__brand-list-image-placeholder" style="width: {{ block.settings.logo_width }}px; height: 20px;">
-                      {{ brand.title | escape | first | upcase }}
-                    </div>
-                  {%- endif -%}
-                  
-                  {%- if block.settings.show_titles -%}
-                    <span class="brand-controller__brand-list-title">{{ brand.title }}</span>
-                  {%- endif -%}
-                </a>
-              </li>
-            {%- else -%}
-              {%- comment -%}No brands found, show a message in the theme editor{%- endcomment -%}
-              {%- if request.design_mode -%}
-                <li class="brand-controller__brand-list-item">
-                  <div class="brand-controller__brand-list-link">
-                    <div style="padding: 10px; background-color: #f4f4f4; border-radius: 4px; text-align: center;">
-                      <p>No brand metaobjects found. Create brand metaobjects to display them here.</p>
-                    </div>
-                  </div>
-                </li>
+            <p class="h5 margin-bottom-0">
+              <span>{{ section.blocks.first.settings.text | escape }}</span>
+              {%- if section.blocks.first.settings.link != blank -%}
+                {{- 'icon-arrow.svg' | inline_asset_content -}}
               {%- endif -%}
-            {%- endfor -%}
-          </ul>
+            </p>
+            {%- if section.blocks.first.settings.link != blank -%}
+              </a>
+            {%- endif -%}
+          {%- endif -%}
         </div>
       {%- endif -%}
-    {%- endfor -%}
-
-    {%- if has_brands -%}
-      <div class="brand-controller__brands-container">
-        <button type="button" class="brand-controller__dropdown-toggle">
-          <span class="brand-controller__current-brand">
-            {%- assign active_brand = false -%}
-            {%- for block in section.blocks -%}
-              {%- if block.type == 'brand' and block.settings.is_active -%}
-                {%- assign active_brand = block -%}
-                {%- break -%}
-              {%- endif -%}
-            {%- endfor -%}
-            
-            {%- if active_brand -%}
-              {%- if active_brand.settings.image != blank -%}
-                <img 
-                  src="{{ active_brand.settings.image | image_url }}"
-                  alt="{{ active_brand.settings.image.alt | escape }}"
-                  loading="lazy"
-                  class="brand-controller__current-brand-image"
-                >
-              {%- else -%}
-                <span class="brand-controller__brand-text">{{ active_brand.settings.title | escape }}</span>
-              {%- endif -%}
-            {%- else -%}
-              <span class="brand-controller__brand-text">{{ section.settings.dropdown_label | default: 'Our Brands' }}</span>
-            {%- endif -%}
-          </span>
-          <span class="brand-controller__dropdown-icon">
-            <svg viewBox="0 0 14 8" fill="none" aria-hidden="true" focusable="false" class="icon icon-caret" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M0 1.5L1.5 0L7 5.5L12.5 0L14 1.5L7 8.5L0 1.5Z" fill="currentColor"></path>
-            </svg>
-          </span>
-        </button>
-
-        <div class="brand-controller__brands-list">
-          <ul class="brand-controller__brands">
-            {%- for block in section.blocks -%}
-              {%- if block.type == 'brand' -%}
-                <li class="brand-controller__brand-item{% if block.settings.is_active %} brand-controller__brand-item--active{% endif %}">
-                  <a 
-                    href="{{ block.settings.link }}" 
-                    class="brand-controller__brand-link{% if block.settings.is_active %} brand-controller__brand-link--active{% endif %}" 
-                    data-brand-id="{{ block.id }}" 
-                    data-brand-title="{{ block.settings.title | escape }}" 
-                    data-brand-handle="{{ block.settings.handle }}"
-                    data-brand-menu="{{ block.settings.menu }}"
-                    data-prevent-navigation="{{ block.settings.prevent_navigation }}" 
-                    {{ block.shopify_attributes }}
-                  >
-                    {%- if block.settings.image != blank -%}
+      
+      <!-- Right side: Brand List -->
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'brand_list' -%}
+          <div class="grid__item text-right" {{ block.shopify_attributes }}>
+            <ul class="list-unstyled inline-list">
+              {%- comment -%}Use shop.metaobjects.brand.values based on Shopify Community solution{%- endcomment -%}
+              {%- for brand in shop.metaobjects.brand.values -%}
+                <li class="inline-list__item{% if brand.id == active_brand_metaobject.id %} active{% endif %}">
+                  <a href="{% if brand.link.reference != blank %}{{ brand.link.reference.url }}{% else %}#{% endif %}" class="full-unstyled-link">
+                    {%- if brand.image != blank -%}
                       <img 
-                        src="{{ block.settings.image | image_url }}"
-                        alt="{{ block.settings.image.alt | escape }}"
+                        src="{{ brand.image | image_url: width: block.settings.logo_width }}"
+                        alt="{{ brand.title | escape }}"
                         loading="lazy"
+                        width="{{ block.settings.logo_width }}"
+                        height="{{ brand.image.height | divided_by: brand.image.width | times: block.settings.logo_width | round }}"
+                        class="brand-logo"
                       >
                     {%- else -%}
-                      <span class="brand-controller__brand-text">{{ block.settings.title | escape }}</span>
+                      <div class="brand-placeholder" style="width: {{ block.settings.logo_width }}px; height: 20px;">
+                        {{ brand.title | escape | first | upcase }}
+                      </div>
+                    {%- endif -%}
+                    
+                    {%- if block.settings.show_titles -%}
+                      <span class="brand-title">{{ brand.title }}</span>
                     {%- endif -%}
                   </a>
                 </li>
+              {%- else -%}
+                {%- comment -%}No brands found, show a message in the theme editor{%- endcomment -%}
+                {%- if request.design_mode -%}
+                  <li class="inline-list__item">
+                    <div class="full-unstyled-link">
+                      <div style="padding: 10px; background-color: #f4f4f4; border-radius: 4px; text-align: center;">
+                        <p>No brand metaobjects found. Create brand metaobjects to display them here.</p>
+                      </div>
+                    </div>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+    </div> <!-- End of grid -->
+    
+    {%- if has_brands -%}
+      <div class="mobile-facets__wrapper medium-hide small-hide">
+        <details class="mobile-facets">
+          <summary class="mobile-facets__summary">
+            <div class="mobile-facets__summary-inner">
+              {%- assign active_brand = false -%}
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'brand' and block.settings.is_active -%}
+                  {%- assign active_brand = block -%}
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+              
+              {%- if active_brand -%}
+                {%- if active_brand.settings.image != blank -%}
+                  <img 
+                    src="{{ active_brand.settings.image | image_url }}"
+                    alt="{{ active_brand.settings.image.alt | escape }}"
+                    loading="lazy"
+                    class="brand-logo"
+                  >
+                {%- else -%}
+                  <span>{{ active_brand.settings.title | escape }}</span>
+                {%- endif -%}
+              {%- else -%}
+                <span>{{ section.settings.dropdown_label | default: 'Our Brands' }}</span>
               {%- endif -%}
-            {%- endfor -%}
-          </ul>
-        </div>
+              
+              <span class="mobile-facets__arrow-icon">
+                <svg viewBox="0 0 14 8" fill="none" aria-hidden="true" focusable="false" class="icon icon-caret" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M0 1.5L1.5 0L7 5.5L12.5 0L14 1.5L7 8.5L0 1.5Z" fill="currentColor"></path>
+                </svg>
+              </span>
+            </div>
+          </summary>
+          
+          <div class="mobile-facets__body">
+            <ul class="mobile-facets__list list-unstyled">
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'brand' -%}
+                  <li class="mobile-facets__item{% if block.settings.is_active %} mobile-facets__item--active{% endif %}">
+                    <a 
+                      href="{{ block.settings.link }}" 
+                      class="mobile-facets__link{% if block.settings.is_active %} mobile-facets__link--active{% endif %}" 
+                      data-brand-id="{{ block.id }}" 
+                      data-brand-title="{{ block.settings.title | escape }}" 
+                      data-brand-handle="{{ block.settings.handle }}"
+                      data-brand-menu="{{ block.settings.menu }}"
+                      data-prevent-navigation="{{ block.settings.prevent_navigation }}" 
+                      {{ block.shopify_attributes }}
+                    >
+                      {%- if block.settings.image != blank -%}
+                        <img 
+                          src="{{ block.settings.image | image_url }}"
+                          alt="{{ block.settings.image.alt | escape }}"
+                          loading="lazy"
+                          class="brand-logo"
+                        >
+                      {%- else -%}
+                        <span>{{ block.settings.title | escape }}</span>
+                      {%- endif -%}
+                    </a>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+        </details>
       </div>
     {%- endif -%}
   </div>
@@ -386,8 +245,9 @@
   });
 
   function initBrandController() {
-    const dropdownToggle = document.querySelector('.brand-controller__dropdown-toggle');
-    const brandLinks = document.querySelectorAll('.brand-controller__brand-link');
+    const mobileDetails = document.querySelector('.mobile-facets');
+    const brandLinks = document.querySelectorAll('.mobile-facets__link');
+    const desktopBrandLinks = document.querySelectorAll('.full-unstyled-link');
     
     // Check if there's a stored active brand in session storage
     const storedActiveBrand = sessionStorage.getItem('activeBrand');
@@ -399,31 +259,27 @@
       // Check if any of our current brands match the stored one
       brandLinks.forEach(link => {
         const brandId = link.getAttribute('data-brand-id');
+        
         if (brandId === storedActiveBrand) {
           brandFound = true;
-          // Only update if it's not already active
-          if (!link.classList.contains('brand-controller__brand-link--active')) {
-            // Remove active class from all links
-            brandLinks.forEach(l => {
-              l.classList.remove('brand-controller__brand-link--active');
-              l.closest('.brand-controller__brand-item')?.classList.remove('brand-controller__brand-item--active');
+          
+          // Only activate if it's not already active
+          if (!link.classList.contains('mobile-facets__link--active')) {
+            // Deactivate all other brands
+            brandLinks.forEach(otherLink => {
+              otherLink.classList.remove('mobile-facets__link--active');
+              otherLink.closest('.mobile-facets__item')?.classList.remove('mobile-facets__item--active');
             });
             
-            // Add active class to this link
-            link.classList.add('brand-controller__brand-link--active');
-            link.closest('.brand-controller__brand-item')?.classList.add('brand-controller__brand-item--active');
-            
-            // Update dropdown toggle content if it exists
-            updateDropdownToggle(link);
+            // Activate this brand
+            link.classList.add('mobile-facets__link--active');
+            link.closest('.mobile-facets__item')?.classList.add('mobile-facets__item--active');
           }
         }
       });
-      
-      // If the stored brand isn't found in the current page, just keep the session storage
-      // It might be used on other pages
     }
     
-    // Add click event listeners to brand links
+    // Add click event listeners to mobile brand links
     brandLinks.forEach(link => {
       link.addEventListener('click', function(e) {
         // Only prevent default if we're just switching brands without navigation
@@ -431,86 +287,44 @@
           e.preventDefault();
         }
         
+        // Store the active brand in session storage
         const brandId = this.getAttribute('data-brand-id');
-        
-        // Store the selected brand in session storage
         sessionStorage.setItem('activeBrand', brandId);
         
-        // Broadcast the brand change event for other components to listen for
-        const brandChangeEvent = new CustomEvent('brandChange', {
-          detail: {
-            brandId: brandId,
-            brandTitle: this.getAttribute('data-brand-title'),
-            brandUrl: this.getAttribute('href')
-          }
-        });
-        document.dispatchEvent(brandChangeEvent);
-        
-        // Remove active class from all links
-        brandLinks.forEach(link => {
-          link.classList.remove('brand-controller__brand-link--active');
-          link.closest('.brand-controller__brand-item')?.classList.remove('brand-controller__brand-item--active');
+        // Deactivate all other brands
+        brandLinks.forEach(otherLink => {
+          otherLink.classList.remove('mobile-facets__link--active');
+          otherLink.closest('.mobile-facets__item')?.classList.remove('mobile-facets__item--active');
         });
         
-        // Add active class to this link
-        this.classList.add('brand-controller__brand-link--active');
-        this.closest('.brand-controller__brand-item')?.classList.add('brand-controller__brand-item--active');
+        // Activate this brand
+        this.classList.add('mobile-facets__link--active');
+        this.closest('.mobile-facets__item')?.classList.add('mobile-facets__item--active');
         
-        // Update dropdown toggle
-        updateDropdownToggle(this);
+        // Close the details element
+        if (mobileDetails) {
+          mobileDetails.removeAttribute('open');
+        }
       });
     });
     
-    // Dropdown toggle functionality for mobile
-    if (dropdownToggle) {
-      dropdownToggle.addEventListener('click', function() {
-        const brandsList = document.querySelector('.brand-controller__brands-list');
-        if (brandsList) {
-          brandsList.classList.toggle('brand-controller__brands-list--open');
-          dropdownToggle.classList.toggle('brand-controller__dropdown-toggle--open');
+    // Add click event listeners to desktop brand links
+    desktopBrandLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        // Only prevent default if we're just switching brands without navigation
+        if (this.getAttribute('data-prevent-navigation') === 'true') {
+          e.preventDefault();
         }
+        
+        // Deactivate all other brands
+        desktopBrandLinks.forEach(otherLink => {
+          otherLink.closest('.inline-list__item')?.classList.remove('active');
+        });
+        
+        // Activate this brand
+        this.closest('.inline-list__item')?.classList.add('active');
       });
-
-      // Close dropdown when clicking outside
-      document.addEventListener('click', function(event) {
-        const container = document.querySelector('.brand-controller__brands-container');
-        if (container && !container.contains(event.target)) {
-          const brandsList = document.querySelector('.brand-controller__brands-list');
-          if (brandsList && brandsList.classList.contains('brand-controller__brands-list--open')) {
-            brandsList.classList.remove('brand-controller__brands-list--open');
-            dropdownToggle.classList.remove('brand-controller__dropdown-toggle--open');
-          }
-        }
-      });
-    }
-  }
-  
-  // Helper function to update the dropdown toggle content
-  function updateDropdownToggle(activeBrandLink) {
-    const dropdownToggle = document.querySelector('.brand-controller__dropdown-toggle');
-    if (!dropdownToggle) return;
-    
-    const currentBrandElement = dropdownToggle.querySelector('.brand-controller__current-brand');
-    if (!currentBrandElement) return;
-    
-    // Clone the content from the active brand link
-    const brandContent = activeBrandLink.cloneNode(true);
-    
-    // Clear the current content
-    currentBrandElement.innerHTML = '';
-    
-    // If there's an image, use it
-    const brandImage = brandContent.querySelector('img');
-    if (brandImage) {
-      brandImage.classList.add('brand-controller__current-brand-image');
-      currentBrandElement.appendChild(brandImage);
-    } else {
-      // Otherwise use the text
-      const brandText = brandContent.querySelector('.brand-controller__brand-text');
-      if (brandText) {
-        currentBrandElement.appendChild(brandText);
-      }
-    }
+    });
   }
 </script>
 

@@ -2,251 +2,115 @@
   display: block;
   width: 100%;
   padding: 0;
-  background-color: #000000;
-  color: #ffffff;
-  height: 40px;
+  background-color: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  height: 4rem;
   box-sizing: border-box;
 }
 
 .brand-controller--border-bottom {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.1);
 }
 
-.brand-controller__grid {
+/* Brand logo styling */
+.brand-logo {
+  display: block;
+  width: auto;
+  height: 2rem;
+  object-fit: contain;
+}
+
+.inline-list__item.active .full-unstyled-link {
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+/* Mobile facets styling */
+.mobile-facets__wrapper {
+  margin-top: 1rem;
+}
+
+.mobile-facets__summary {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background-color: rgba(var(--color-foreground), 0.04);
+  border-radius: 0.4rem;
+}
+
+.mobile-facets__summary-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 40px;
-  box-sizing: border-box;
 }
 
-.brand-controller__grid--with-announcement {
-  justify-content: space-between;
-}
-
-.brand-controller__announcement {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex: 1;
-}
-
-.brand-controller__message {
-  margin: 0;
-  padding: 0;
-  font-size: 1.2rem;
-  line-height: 1.3;
-  letter-spacing: 0.1rem;
-  color: #ffffff;
-}
-
-.brand-controller__announcement-link {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: #ffffff;
-}
-
-/* Brands container */
-.brand-controller__brands-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  height: 100%;
-}
-
-/* Dropdown toggle button (mobile only) */
-.brand-controller__dropdown-toggle {
-  display: none;
-  align-items: center;
-  background: transparent;
-  border: none;
-  color: #ffffff;
-  cursor: pointer;
-  padding: 0 15px;
-  height: 40px;
-}
-
-.brand-controller__dropdown-icon {
-  margin-left: 8px;
+.mobile-facets__arrow-icon {
+  margin-left: 0.8rem;
   transition: transform 0.3s ease;
 }
 
-.brand-controller__dropdown-toggle--open .brand-controller__dropdown-icon {
+.mobile-facets[open] .mobile-facets__arrow-icon {
   transform: rotate(180deg);
 }
 
-.brand-controller__current-brand {
+.mobile-facets__body {
+  padding: 1rem;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.1);
+  border-top: none;
+  border-radius: 0 0 0.4rem 0.4rem;
+}
+
+.mobile-facets__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 1rem;
+}
+
+.mobile-facets__item {
   display: flex;
-  align-items: center;
 }
 
-.brand-controller__current-brand-image {
-  height: 20px;
-  width: auto;
-}
-
-/* Brands list */
-.brand-controller__brands-list {
-  height: 100%;
-}
-
-.brand-controller__brands {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
-
-.brand-controller__brand-item {
-  display: flex;
-  height: 100%;
-}
-
-.brand-controller__brand-link {
+.mobile-facets__link {
   display: flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  padding: 10px 15px;
+  padding: 1rem;
   transition: background-color 0.3s ease;
-  height: 100%;
-  box-sizing: border-box;
-}
-
-.brand-controller__brand-link--active {
-  background-color: #ffffff;
-}
-
-.brand-controller__brand-link img {
-  display: block;
-  width: auto;
-  height: 20px;
-  object-fit: contain;
-}
-
-.brand-controller__brand-text {
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: #ffffff;
-}
-
-.brand-controller__brand-link--active .brand-controller__brand-text {
-  color: #000000;
-}
-
-/* Brand List Block Styles */
-.brand-controller__brand-list-container {
-  margin: 20px 0;
   width: 100%;
+  border-radius: 0.4rem;
+  background-color: rgba(var(--color-foreground), 0.04);
 }
 
-.brand-controller__brand-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.brand-controller__brand-list-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.brand-controller__brand-list-link {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  transition: transform 0.2s ease;
-}
-
-.brand-controller__brand-list-link:hover {
-  transform: translateY(-5px);
-}
-
-.brand-controller__brand-list-image-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-
-.brand-controller__brand-list-image {
-  max-width: 100%;
-  height: auto;
-  object-fit: contain;
-}
-
-.brand-controller__brand-list-title {
-  margin-top: 10px;
-  font-size: 1.4rem;
+.mobile-facets__link--active {
+  background-color: rgba(var(--color-foreground), 0.1);
   font-weight: 500;
-  text-align: center;
-  color: #000000;
 }
 
-.brand-controller__brand-list-item--active .brand-controller__brand-list-title {
-  font-weight: 700;
+/* Hide mobile facets on desktop */
+@media screen and (min-width: 750px) {
+  .mobile-facets__wrapper {
+    display: none;
+  }
 }
 
 /* Mobile styles */
 @media screen and (max-width: 749px) {
-  .brand-controller__grid {
-    height: auto;
-    min-height: 60px;
+  .brand-controller .grid {
+    grid-template-columns: 1fr;
   }
   
-  .brand-controller__dropdown-toggle {
-    display: flex;
-  }
-  
-  .brand-controller__brands-list {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: #000000;
+  .brand-controller .grid__item {
     width: 100%;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    z-index: 10;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    padding: 1rem 0;
   }
   
-  .brand-controller__brands-list--open {
-    max-height: 500px;
+  .brand-controller .inline-list {
+    display: none;
   }
   
-  .brand-controller__brands {
-    flex-direction: column;
-    height: auto;
-  }
-  
-  .brand-controller__brand-item {
-    width: 100%;
-    height: auto;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .brand-controller__brand-link {
-    width: 100%;
-    justify-content: flex-start;
-    padding: 15px;
-  }
-  
-  .brand-controller__brand-link img {
-    margin-right: 10px;
-  }
-  
-  /* Mobile styles for brand list block */
   .brand-controller__brand-list-container {
     margin: 15px 0;
   }
