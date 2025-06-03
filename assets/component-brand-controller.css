@@ -4,7 +4,7 @@
   padding: 0;
   background-color: rgb(var(--color-background));
   color: rgb(var(--color-foreground));
-  height: 4rem;
+  min-height: 4.5rem;
   box-sizing: border-box;
 }
 
@@ -34,6 +34,13 @@
 .inline-list__item {
   display: flex;
   align-items: center;
+  height: 100%;
+}
+
+.inline-list__item .full-unstyled-link {
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 .inline-list__item.active .full-unstyled-link {
