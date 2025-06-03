@@ -38,7 +38,7 @@
       "settings": {
         "show_announcement": true,
         "dropdown_label": "Our Brands",
-        "color_scheme": "",
+        "color_scheme": "scheme-3",
         "show_line_separator": true
       }
     },
