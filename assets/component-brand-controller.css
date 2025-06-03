@@ -49,6 +49,12 @@
   font-weight: 500;
 }
 
+/* Active brand styling */
+.brand-controller .active-brand {
+  position: relative;
+  background-color: rgb(var(--color-background));
+}
+
 /* Mobile facets styling */
 .mobile-facets__wrapper {
   margin-top: 1rem;

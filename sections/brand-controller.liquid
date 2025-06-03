@@ -123,8 +123,9 @@
           <div class="grid__item text-right" {{ block.shopify_attributes }}>
             <ul class="list-unstyled inline-list">
               {%- comment -%}Use shop.metaobjects.brand.values based on Shopify Community solution{%- endcomment -%}
+              {%- assign is_first_brand = true -%}
               {%- for brand in shop.metaobjects.brand.values -%}
-                <li class="inline-list__item{% if brand.id == active_brand_metaobject.id %} active{% endif %}">
+                <li class="inline-list__item{% if brand.id == active_brand_metaobject.id %} active{% endif %}{% if is_first_brand %} active-brand{% endif %}">{% assign is_first_brand = false %}
                   <a href="{% if brand.link.reference != blank %}{{ brand.link.reference.url }}{% else %}#{% endif %}" class="full-unstyled-link">
                     {%- if brand.image != blank -%}
                       <img 
@@ -203,9 +204,10 @@
           
           <div class="mobile-facets__body">
             <ul class="mobile-facets__list list-unstyled">
+              {%- assign is_first_mobile_brand = true -%}
               {%- for block in section.blocks -%}
                 {%- if block.type == 'brand' -%}
-                  <li class="mobile-facets__item{% if block.settings.is_active %} mobile-facets__item--active{% endif %}">
+                  <li class="mobile-facets__item{% if block.settings.is_active %} mobile-facets__item--active{% endif %}{% if is_first_mobile_brand %} active-brand{% endif %}">{% assign is_first_mobile_brand = false %}
                     <a 
                       href="{{ block.settings.link }}" 
                       class="mobile-facets__link{% if block.settings.is_active %} mobile-facets__link--active{% endif %}" 
