@@ -20,9 +20,10 @@
   object-fit: contain;
 }
 
-/* Brand controller specific list styling */
-.brand-controller .inline-list {
+/* Brand list styling */
+.brand-controller .brand-list-wrapper {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   gap: 2rem;
   justify-content: flex-end;
@@ -30,27 +31,29 @@
   margin: 0;
   padding: 0;
   height: 100%;
+  width: 100%;
 }
 
-.brand-controller .inline-list__item {
+.brand-controller .brand-item {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
+}
+
+.brand-controller .brand-item .full-unstyled-link {
   display: flex;
   align-items: center;
   height: 100%;
 }
 
-.brand-controller .inline-list__item .full-unstyled-link {
-  display: flex;
-  align-items: center;
-  height: 100%;
-}
-
-.brand-controller .inline-list__item.active .full-unstyled-link {
+.brand-controller .brand-item.active .full-unstyled-link {
   text-decoration: underline;
   font-weight: 500;
 }
 
 /* Active brand styling */
-.brand-controller .inline-list__item.active-brand {
+.brand-controller .brand-item.active-brand {
   background-color: #ffffff;
   padding: 0.5rem 1rem;
   border-radius: 0.3rem;
@@ -147,8 +150,8 @@
     padding: 1rem 0;
   }
   
-  /* Show inline list on mobile but with adjusted styling */
-  .brand-controller .inline-list {
+  /* Show brand list on mobile but with adjusted styling */
+  .brand-controller .brand-list-wrapper {
     justify-content: center;
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -160,7 +163,7 @@
   }
   
   /* Hide scrollbar for Chrome, Safari and Opera */
-  .brand-controller .inline-list::-webkit-scrollbar {
+  .brand-controller .brand-list-wrapper::-webkit-scrollbar {
     display: none;
   }
   

@@ -121,11 +121,11 @@
       {%- for block in section.blocks -%}
         {%- if block.type == 'brand_list' -%}
           <div class="grid__item text-right" {{ block.shopify_attributes }}>
-            <ul class="list-unstyled inline-list">
+            <div class="brand-list-wrapper">
               {%- comment -%}Use shop.metaobjects.brand.values based on Shopify Community solution{%- endcomment -%}
               {%- assign is_first_brand = true -%}
               {%- for brand in shop.metaobjects.brand.values -%}
-                <li class="inline-list__item{% if brand.id == active_brand_metaobject.id %} active{% endif %}{% if is_first_brand %} active-brand{% endif %}">{% assign is_first_brand = false %}
+                <div class="brand-item{% if brand.id == active_brand_metaobject.id %} active{% endif %}{% if is_first_brand %} active-brand{% endif %}">{% assign is_first_brand = false %}
                   <a href="{% if brand.link.reference != blank %}{{ brand.link.reference.url }}{% else %}#{% endif %}" class="full-unstyled-link">
                     {%- if brand.image != blank -%}
                       <img 
@@ -146,20 +146,20 @@
                       <span class="brand-title">{{ brand.title }}</span>
                     {%- endif -%}
                   </a>
-                </li>
+                </div>
               {%- else -%}
                 {%- comment -%}No brands found, show a message in the theme editor{%- endcomment -%}
                 {%- if request.design_mode -%}
-                  <li class="inline-list__item">
+                  <div class="brand-item">
                     <div class="full-unstyled-link">
                       <div style="padding: 10px; background-color: #f4f4f4; border-radius: 4px; text-align: center;">
                         <p>No brand metaobjects found. Create brand metaobjects to display them here.</p>
                       </div>
                     </div>
-                  </li>
+                  </div>
                 {%- endif -%}
               {%- endfor -%}
-            </ul>
+            </div>
           </div>
         {%- endif -%}
       {%- endfor -%}
