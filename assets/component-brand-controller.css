@@ -50,14 +50,23 @@
 }
 
 /* Active brand styling */
-.brand-controller .active-brand {
-  position: relative;
-  background-color: rgb(var(--color-background));
+.brand-controller .inline-list__item.active-brand {
+  background-color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Mobile facets styling */
 .mobile-facets__wrapper {
   margin-top: 1rem;
+}
+
+/* Mobile active brand styling */
+.mobile-facets__item.active-brand {
+  background-color: #ffffff;
+  border-radius: 0.3rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .mobile-facets__summary {
