@@ -146,24 +146,23 @@
     <p>Collection Brand Metafield: {{ collection.metafields.brand.brand_handle.value | default: 'Not set' }}</p>
     
     <h4>Metafield Debug:</h4>
-    <p>Raw metafield object: {{ collection.metafields.brand.brand_handle }}</p>
-    <p>Metafield type: {{ collection.metafields.brand.brand_handle.type }}</p>
+    <p>Raw metafield value: {{ collection.metafields.brand.brand_handle }}</p>
     
-    <h4>Available Collection Metafield Namespaces:</h4>
+    <h4>Metafield Access Tests:</h4>
     <ul>
-      {% for namespace in collection.metafields %}
-        <li>{{ namespace[0] }}</li>
-      {% endfor %}
+      <li>Direct access: {{ collection.metafields.brand.brand_handle }}</li>
+      <li>With .value: {{ collection.metafields.brand.brand_handle.value }}</li>
     </ul>
     
-    {% if collection.metafields.brand %}
-      <h4>Brand Namespace Keys:</h4>
-      <ul>
-        {% for field in collection.metafields.brand %}
-          <li>{{ field[0] }}: {{ field[1].value }}</li>
-        {% endfor %}
-      </ul>
+    <h4>Metafield Existence Check:</h4>
+    {% assign has_brand_metafield = false %}
+    {% if collection.metafields.brand != blank %}
+      {% if collection.metafields.brand.brand_handle != blank %}
+        {% assign has_brand_metafield = true %}
+      {% endif %}
     {% endif %}
+    <p>Has brand namespace: {% if collection.metafields.brand != blank %}Yes{% else %}No{% endif %}</p>
+    <p>Has brand_handle metafield: {% if has_brand_metafield %}Yes{% else %}No{% endif %}</p>
     <p>Debug enabled: {{ show_debug }}</p>
     <p>Total brands found: {{ shop.metaobjects.brand.values.size }}</p>
     

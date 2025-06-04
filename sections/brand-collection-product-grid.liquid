@@ -6,8 +6,13 @@
 {% endcomment %}
 
 {%- liquid
+  # Initialize collection_brand variable
+  assign collection_brand = ''
+  
   # Check if this collection has a brand_handle metafield
-  assign collection_brand = collection.metafields.brand.brand_handle.value | default: ''
+  if collection.metafields.brand != blank and collection.metafields.brand.brand_handle != blank
+    assign collection_brand = collection.metafields.brand.brand_handle.value | default: ''
+  endif
   
   # Use the collection's brand metafield if available, otherwise use the cart attribute
   assign selected_brand = cart.attributes.selected_brand | default: ''
