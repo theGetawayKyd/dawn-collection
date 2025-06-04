@@ -22,10 +22,9 @@
             <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
               {% if brand_logo != blank %}
                 <img 
-                  src="{{ brand_logo | image_url: width: 100 }}" 
+                  src="{{ brand_logo }}" 
                   alt="{{ brand_title }}" 
                   width="100" 
-                  height="{{ 100 | divided_by: brand_logo.aspect_ratio | round }}" 
                   loading="lazy"
                   class="brand-banner__logo"
                 >
@@ -54,6 +53,9 @@
               {{ brand.title }} ({{ brand.brand_handle }})
               {% if brand.link != blank %}
                 - Link: {{ brand.link }}
+              {% endif %}
+              {% if brand.logo != blank %}
+                - Logo: {{ brand.logo }}
               {% endif %}
             </li>
           {% endfor %}
