@@ -148,48 +148,8 @@
     <h4>Metafield Debug:</h4>
     <p>Raw metafield value: {{ collection.metafields.brand.brand_handle }}</p>
     
-    <h4>Metafield Access Tests:</h4>
-    <ul>
-      <li>Direct access: {{ collection.metafields.brand.brand_handle }}</li>
-      <li>With .value: {{ collection.metafields.brand.brand_handle.value }}</li>
-    </ul>
-    
-    <h4>Metafield Existence Check:</h4>
-    {% assign has_brand_metafield = false %}
-    {% if collection.metafields.brand != blank %}
-      {% if collection.metafields.brand.brand_handle != blank %}
-        {% assign has_brand_metafield = true %}
-      {% endif %}
-    {% endif %}
-    <p>Has brand namespace: {% if collection.metafields.brand != blank %}Yes{% else %}No{% endif %}</p>
-    <p>Has brand_handle metafield: {% if has_brand_metafield %}Yes{% else %}No{% endif %}</p>
-    <p>Debug enabled: {{ show_debug }}</p>
-    <p>Total brands found: {{ shop.metaobjects.brand.values.size }}</p>
-    
-    {% assign first_brand = shop.metaobjects.brand.values | first %}
-    {% if first_brand %}
-      <h4>First Brand Link Structure:</h4>
-      <ul>
-        <li>brand.link: {{ first_brand.link }}</li>
-        <li>brand.link.type: {{ first_brand.link.type }}</li>
-        <li>brand.link.value: {{ first_brand.link.value }}</li>
-        <li>brand.link.value.url: {{ first_brand.link.value.url }}</li>
-      </ul>
-    {% endif %}
-    
-    <h4>Raw brand data:</h4>
-    <div style="background-color: white; padding: 10px; border: 1px solid #ccc; overflow: auto; max-height: 300px;">
-      {% for brand in shop.metaobjects.brand.values %}
-        <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
-          <p><strong>Brand #{{ forloop.index }}</strong></p>
-          <p>Handle: {{ brand.brand_handle }}</p>
-          <p>Title: {{ brand.title }}</p>
-          <p>Sort Order: {{ brand.sort_order | default: 'Not set' }}</p>
-          <p>Link: {{ brand.link.value.url }}</p>
-        </div>
-      {% else %}
-        <p><strong>No brands found in shop.metaobjects.brand.values</strong></p>
-      {% endfor %}
+
+
     </div>
   </div>
 {% endif %}
