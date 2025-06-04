@@ -48,7 +48,7 @@
             "logo_padding": 10,
             "logo_alignment": "right",
             "active_brand_bg_color": "#ffffff",
-            "show_debug": false
+            "show_debug": true
           }
         }
       },
