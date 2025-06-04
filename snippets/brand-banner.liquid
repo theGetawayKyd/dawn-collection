@@ -22,7 +22,7 @@
             <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
               {% if brand_logo != blank %}
                 <img 
-                  src="{{ brand_logo }}" 
+                  src="{{ brand_logo | image_url }}" 
                   alt="{{ brand_title }}" 
                   width="100" 
                   loading="lazy"
