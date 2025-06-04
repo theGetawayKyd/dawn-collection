@@ -6,7 +6,23 @@
 {% endcomment %}
 
 {%- liquid
+  # Check if this collection has a brand_handle metafield
+  assign collection_brand = collection.metafields.brand.brand_handle | default: ''
+  
+  # Use the collection's brand metafield if available, otherwise use the cart attribute
   assign selected_brand = cart.attributes.selected_brand | default: ''
+  
+  # If we have a collection brand but no selected brand, update the selected brand
+  if collection_brand != blank and selected_brand == blank
+    selected_brand = collection_brand
+  endif
+  
+  # If we have a collection brand that doesn't match the selected brand, update the selected brand
+  if collection_brand != blank and selected_brand != collection_brand
+    selected_brand = collection_brand
+  endif
+  
+  # Set up template variables
   assign template_name = 'main-collection-product-grid'
   
   if selected_brand != blank
