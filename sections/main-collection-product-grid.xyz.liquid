@@ -1,0 +1,241 @@
+{% comment %}
+  XYZ Brand Collection Template
+  
+  This is a brand-specific collection template for the XYZ brand.
+  It includes custom styling and additional brand-specific elements.
+{% endcomment %}
+
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
+{{ 'component-loading-overlay.css' | asset_url | stylesheet_tag }}
+{{ 'component-facets.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .xyz-collection-header {
+    background-color: var(--xyz-primary-color);
+    color: var(--xyz-text-on-primary);
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    border-radius: 4px;
+  }
+  
+  .xyz-collection-title {
+    color: var(--xyz-text-on-primary);
+    margin-bottom: 1rem;
+  }
+  
+  .xyz-collection-description {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .xyz-collection-badge {
+    display: inline-block;
+    background-color: var(--xyz-accent-color);
+    color: var(--xyz-text-on-accent);
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  .xyz-product-card {
+    border: 1px solid var(--xyz-border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .xyz-product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .xyz-card-info {
+    background-color: var(--xyz-background-light);
+    padding: 1rem;
+  }
+  
+  .xyz-card-title {
+    color: var(--xyz-primary-color);
+    font-weight: 600;
+  }
+  
+  .xyz-card-price {
+    color: var(--xyz-primary-color);
+    font-weight: 700;
+  }
+  
+  .xyz-featured-collection {
+    background-color: rgba(var(--color-background), 0.8);
+    padding: 1rem;
+    border: 1px solid var(--xyz-primary-color);
+    border-radius: 4px;
+    margin-bottom: 2rem;
+  }
+  
+  .xyz-featured-collection h2 {
+    color: var(--xyz-primary-color);
+    margin-top: 0;
+  }
+</style>
+
+<div class="page-width">
+  <div class="xyz-collection-header">
+    <div class="xyz-collection-badge">XYZ Collection</div>
+    <h1 class="xyz-collection-title">{{ collection.title | escape }}</h1>
+    {%- if collection.description != blank -%}
+      <div class="xyz-collection-description">{{ collection.description }}</div>
+    {%- endif -%}
+  </div>
+  
+  {%- if collection.metafields.custom.featured_text != blank -%}
+    <div class="xyz-featured-collection">
+      <h2>XYZ Featured Collection</h2>
+      <div class="rte">{{ collection.metafields.custom.featured_text }}</div>
+    </div>
+  {%- endif -%}
+  
+  {% paginate collection.products by section.settings.products_per_page %}
+    {%- if collection.products.size == 0 -%}
+      <div class="collection collection--empty page-width" id="product-grid" data-id="{{ section.id }}">
+        <div class="loading-overlay gradient"></div>
+        <div class="title-wrapper center">
+          <h2 class="title title--primary">
+            {{ 'sections.collection_template.empty' | t }}<br>
+            {{ 'sections.collection_template.use_fewer_filters_html' | t: link: collection.url, class: "underlined-link link" }}
+          </h2>
+        </div>
+      </div>
+    {%- else -%}
+      <div class="collection page-width">
+        <div class="loading-overlay gradient"></div>
+        
+        <ul id="product-grid" data-id="{{ section.id }}" class="grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down grid--{{ section.settings.columns_desktop }}-col-desktop">
+          {%- for product in collection.products -%}
+            <li class="grid__item">
+              {% render 'card-product',
+                card_product: product,
+                media_aspect_ratio: section.settings.image_ratio,
+                show_secondary_image: section.settings.show_secondary_image,
+                show_vendor: section.settings.show_vendor,
+                show_rating: section.settings.show_rating,
+                lazy_load: lazy_load,
+                show_quick_add: section.settings.enable_quick_add,
+                section_id: section.id,
+                class: 'xyz-product-card',
+                card_info_class: 'xyz-card-info',
+                card_title_class: 'xyz-card-title',
+                card_price_class: 'xyz-card-price'
+              %}
+            </li>
+          {%- endfor -%}
+        </ul>
+        
+        {%- if paginate.pages > 1 -%}
+          {% render 'pagination', paginate: paginate, anchor: '' %}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {% endpaginate %}
+</div>
+
+{% schema %}
+{
+  "name": "XYZ Collection",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 48,
+      "step": 8,
+      "default": 16,
+      "label": "Products per page"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 4,
+      "label": "Number of columns on desktop"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Adapt to image"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        }
+      ],
+      "default": "adapt",
+      "label": "Image ratio"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "Show secondary image on hover"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "Show product vendor"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "Show product rating"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_quick_add",
+      "default": false,
+      "label": "Enable quick add"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Layout"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "default": "2",
+      "label": "Number of columns on mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 column"
+        },
+        {
+          "value": "2",
+          "label": "2 columns"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "XYZ Collection"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,346 @@
+{% comment %}
+  XYZ Brand Product Template
+  
+  This is a brand-specific product template for the XYZ brand.
+  It includes custom styling and additional brand-specific elements.
+{% endcomment %}
+
+{{ 'component-accordion.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-rte.css' | asset_url | stylesheet_tag }}
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+{{ 'component-rating.css' | asset_url | stylesheet_tag }}
+{{ 'component-loading-overlay.css' | asset_url | stylesheet_tag }}
+
+<link rel="stylesheet" href="{{ 'component-deferred-media.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<style>
+  .xyz-brand-banner {
+    background-color: var(--xyz-primary-color);
+    color: var(--xyz-text-on-primary);
+    padding: 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    border-radius: 4px;
+  }
+  
+  .xyz-brand-badge {
+    display: inline-block;
+    background-color: var(--xyz-accent-color);
+    color: var(--xyz-text-on-accent);
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  .xyz-special-price {
+    background-color: var(--xyz-secondary-color);
+    color: var(--xyz-text-on-secondary);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 1rem;
+  }
+  
+  .xyz-product-title {
+    color: var(--xyz-primary-color);
+    font-weight: 700;
+  }
+  
+  .xyz-member-benefits {
+    background-color: rgba(var(--color-background), 0.8);
+    border: 1px solid var(--xyz-primary-color);
+    border-radius: 4px;
+    padding: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .xyz-member-benefits h3 {
+    color: var(--xyz-primary-color);
+    margin-top: 0;
+  }
+  
+  .xyz-member-benefits ul {
+    padding-left: 1.5rem;
+  }
+  
+  .xyz-member-benefits li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .product__title.xyz-product-title {
+    color: var(--xyz-primary-color);
+  }
+  
+  .price.xyz-price .price__regular .price-item--regular {
+    color: var(--xyz-primary-color);
+  }
+  
+  .product-form__buttons .button {
+    background-color: var(--xyz-primary-color);
+    color: var(--xyz-text-on-primary);
+  }
+  
+  .product-form__buttons .button:hover {
+    background-color: var(--xyz-secondary-color);
+    color: var(--xyz-text-on-secondary);
+  }
+</style>
+
+<section class="page-width">
+  <div class="xyz-brand-banner">
+    <h2>XYZ Exclusive Collection</h2>
+    <p>Premium products for XYZ members</p>
+  </div>
+  
+  <div class="product grid grid--1-col gradient">
+    <div class="grid__item">
+      <div class="product__media-wrapper">
+        <media-gallery id="MediaGallery-{{ section.id }}" class="product__media-gallery">
+          <div id="GalleryStatus-{{ section.id }}" class="visually-hidden" role="status"></div>
+          <div id="GalleryViewer-{{ section.id }}" class="product__media-list">
+            {%- if product.selected_or_first_available_variant.featured_media != null -%}
+              {%- assign media = product.selected_or_first_available_variant.featured_media -%}
+              <div class="product__media-item" data-media-id="{{ section.id }}-{{ media.id }}">
+                {% render 'product-thumbnail',
+                  media: media,
+                  position: 'featured',
+                  loop: section.settings.enable_video_looping,
+                  modal_id: section.id
+                %}
+              </div>
+            {%- endif -%}
+            {%- for media in product.media -%}
+              {%- unless media.id == product.selected_or_first_available_variant.featured_media.id -%}
+                <div class="product__media-item" data-media-id="{{ section.id }}-{{ media.id }}">
+                  {% render 'product-thumbnail',
+                    media: media,
+                    position: forloop.index,
+                    loop: section.settings.enable_video_looping,
+                    modal_id: section.id
+                  %}
+                </div>
+              {%- endunless -%}
+            {%- endfor -%}
+          </div>
+        </media-gallery>
+      </div>
+      <div class="product__info-wrapper">
+        <div id="ProductInfo-{{ section.id }}" class="product__info-container">
+          {%- assign product_form_id = 'product-form-' | append: section.id -%}
+
+          <div class="xyz-brand-badge">XYZ Exclusive</div>
+
+          <div class="product__title">
+            <h1 class="xyz-product-title">{{ product.title | escape }}</h1>
+            {{ product.vendor }}
+          </div>
+
+          {%- if product.description != blank -%}
+            <div class="product__description rte">
+              {{ product.description }}
+            </div>
+          {%- endif -%}
+
+          <div class="price xyz-price">
+            {%- render 'price', product: product, use_variant: true, show_badges: true -%}
+          </div>
+
+          {%- if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price -%}
+            <div class="xyz-special-price">
+              <span>XYZ Member Special Price</span>
+              <p>Save {{ product.selected_or_first_available_variant.compare_at_price | minus: product.selected_or_first_available_variant.price | money }}</p>
+            </div>
+          {%- endif -%}
+
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when 'variant_picker' -%}
+                {%- render 'variant-picker', product: product, block: block, product_form_id: product_form_id -%}
+              {%- when 'quantity_selector' -%}
+                <div class="product-form__input product-form__quantity">
+                  <label class="form__label" for="Quantity-{{ section.id }}">
+                    {{ 'products.product.quantity.label' | t }}
+                  </label>
+                  <quantity-input class="quantity">
+                    <button class="quantity__button no-js-hidden" name="minus" type="button">
+                      <span class="visually-hidden">{{ 'products.product.quantity.decrease' | t: product: product.title | escape }}</span>
+                      {% render 'icon-minus' %}
+                    </button>
+                    <input class="quantity__input"
+                      type="number"
+                      name="quantity"
+                      id="Quantity-{{ section.id }}"
+                      min="1"
+                      value="1"
+                      form="{{ product_form_id }}"
+                    >
+                    <button class="quantity__button no-js-hidden" name="plus" type="button">
+                      <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: product.title | escape }}</span>
+                      {% render 'icon-plus' %}
+                    </button>
+                  </quantity-input>
+                </div>
+              {%- when 'buy_buttons' -%}
+                <div class="product-form">
+                  {%- form 'product', product, id: product_form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+                    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                    <div class="product-form__buttons">
+                      <button
+                        type="submit"
+                        name="add"
+                        class="product-form__submit button button--full-width {% if block.settings.show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}"
+                        {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}
+                      >
+                        <span>
+                          {%- if product.selected_or_first_available_variant.available -%}
+                            {{ 'products.product.add_to_cart' | t }}
+                          {%- else -%}
+                            {{ 'products.product.sold_out' | t }}
+                          {%- endif -%}
+                        </span>
+                        <div class="loading-overlay__spinner hidden">
+                          <svg aria-hidden="true" focusable="false" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                            <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                          </svg>
+                        </div>
+                      </button>
+                      {%- if block.settings.show_dynamic_checkout -%}
+                        {{ form | payment_button }}
+                      {%- endif -%}
+                    </div>
+                  {%- endform -%}
+                </div>
+            {%- endcase -%}
+          {%- endfor -%}
+
+          <div class="xyz-member-benefits">
+            <h3>XYZ Member Benefits</h3>
+            <ul>
+              <li>Free shipping on all orders</li>
+              <li>30-day money-back guarantee</li>
+              <li>Exclusive access to limited editions</li>
+              <li>Member-only discounts</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% javascript %}
+  class ProductModal extends ModalDialog {
+    constructor() {
+      super();
+    }
+
+    hide() {
+      super.hide();
+    }
+
+    show(opener) {
+      super.show(opener);
+      this.showActiveMedia();
+    }
+
+    showActiveMedia() {
+      this.querySelectorAll(`[data-media-id]:not([data-media-id="${this.openedBy.getAttribute("data-media-id")}"])`).forEach((element) => {
+          element.classList.remove('active');
+        }
+      );
+      const activeMedia = this.querySelector(`[data-media-id="${this.openedBy.getAttribute("data-media-id")}"]`);
+      const activeMediaTemplate = activeMedia.querySelector('template');
+      const activeMediaContent = activeMediaTemplate ? activeMediaTemplate.content : null;
+      activeMedia.classList.add('active');
+      activeMedia.scrollIntoView();
+
+      const container = this.querySelector('[role="document"]');
+      container.scrollLeft = (activeMedia.width - container.clientWidth) / 2;
+
+      if (activeMedia.firstElementChild.nodeName === 'DEFERRED-MEDIA') {
+        activeMedia.firstElementChild.loadContent(false);
+      } else if (activeMediaContent && activeMediaContent.querySelector('.js-youtube')) {
+        activeMediaContent.querySelector('.js-youtube').contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+      } else if (activeMediaContent && activeMediaContent.querySelector('.js-vimeo')) {
+        activeMediaContent.querySelector('.js-vimeo').contentWindow.postMessage('{"method":"play"}', '*');
+      }
+    }
+  }
+  
+  customElements.define('product-modal', ProductModal);
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "XYZ Product",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_video_looping",
+      "label": "Enable video looping",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "variant_picker",
+      "name": "Variant picker",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "picker_type",
+          "options": [
+            {
+              "value": "dropdown",
+              "label": "Dropdown"
+            },
+            {
+              "value": "button",
+              "label": "Buttons"
+            }
+          ],
+          "default": "button",
+          "label": "Picker type"
+        }
+      ]
+    },
+    {
+      "type": "quantity_selector",
+      "name": "Quantity selector",
+      "limit": 1
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "default": true,
+          "label": "Show dynamic checkout buttons",
+          "info": "Using the payment methods available on your store, customers see their preferred option. [Learn more](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_gift_card_recipient",
+          "default": true,
+          "label": "Show gift card recipient form",
+          "info": "Gift card recipient fields will appear when a gift card is in the cart."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "XYZ Product"
+    }
+  ]
+}
+{% endschema %}

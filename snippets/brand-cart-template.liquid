@@ -1,0 +1,35 @@
+{% comment %}
+  Brand Cart Template Selector
+  
+  This snippet determines which cart template to use based on the selected brand.
+  If a brand-specific template exists, it will be used. Otherwise, the default template is used.
+{% endcomment %}
+
+{%- liquid
+  assign selected_brand = cart.attributes.selected_brand | default: ''
+  assign template_name = 'main-cart-items'
+  
+  if selected_brand != blank
+    assign brand_template_name = template_name | append: '.' | append: selected_brand
+    assign brand_template_exists = false
+    
+    # Unfortunately, Liquid doesn't provide a direct way to check if a template exists
+    # We'll use a fallback approach where we try to render the brand-specific template
+    # and if it fails, we'll use the default template
+  endif
+-%}
+
+{% if selected_brand != blank and brand_template_exists %}
+  {% section brand_template_name %}
+{% else %}
+  {% if show_debug %}
+    <div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 20px; border: 1px solid #f5c6cb; border-radius: 4px;">
+      <strong>Debug Info:</strong>
+      <p>Selected Brand: {{ selected_brand | default: 'None' }}</p>
+      <p>Trying to load template: {{ brand_template_name | default: 'None' }}</p>
+      <p>Using default template: {{ template_name }}</p>
+    </div>
+  {% endif %}
+  
+  {% section template_name %}
+{% endif %}

@@ -1,9 +1,10 @@
-# Dawn
+# Dawn with Brand Switching
 
 [![Build status](https://github.com/shopify/dawn/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Shopify/dawn/actions/workflows/ci.yml?query=branch%3Amain)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?color=informational)](/.github/CONTRIBUTING.md)
 
 [Getting started](#getting-started) |
+[Brand Switching Module](#brand-switching-module) |
 [Staying up to date with Dawn changes](#staying-up-to-date-with-dawn-changes) |
 [Developer tools](#developer-tools) |
 [Contributing](#contributing) |
@@ -26,6 +27,71 @@ We recommend using Dawn as a starting point for theme development. [Learn more o
 > If you're building a theme for the Shopify Theme Store, then you can use Dawn as a starting point. However, the theme that you submit needs to be [substantively different from Dawn](https://shopify.dev/themes/store/requirements#uniqueness) so that it provides added value for merchants. Learn about the [ways that you can use Dawn](https://shopify.dev/themes/tools/dawn#ways-to-use-dawn).
 
 Please note that the main branch may include code for features not yet released. The "stable" version of Dawn is available in the theme store.
+
+## Brand Switching Module
+
+This theme includes a brand switching module that allows customers to switch between different brands within a single store. The implementation is primarily server-side using Liquid with minimal JavaScript.
+
+### Features
+
+- Brand-specific product templates
+- Brand-specific collection templates
+- Brand-specific cart templates
+- Brand-specific CSS styling
+- Brand banner in header for brand switching
+
+### How It Works
+
+1. **Brand Selection**: Brand selection is stored in `cart.attributes.selected_brand` and persists throughout the customer's session.
+
+2. **Metaobjects**: Brand information is stored in Shopify metaobjects. Each brand metaobject includes:
+   - `brand_handle`: Unique identifier for the brand
+   - `title`: Display name of the brand
+   - `logo`: Brand logo image
+   - `menu_handle`: Handle of the menu to use for this brand
+   - `link`: URL for the brand's landing page
+
+3. **Template Handling**: The system dynamically loads brand-specific templates based on the selected brand:
+   - Product templates: `main-product.[brand_handle].liquid`
+   - Collection templates: `main-collection-product-grid.[brand_handle].liquid`
+   - Cart templates: `main-cart-items.[brand_handle].liquid`
+
+4. **CSS Styling**: Brand-specific CSS is loaded from `assets/[brand_handle].css`
+
+### Implementation
+
+- **Brand Banner**: `snippets/brand-banner.liquid` - Displays a horizontal list of brand logos for switching
+- **Brand Menu**: `snippets/brand-menu.liquid` - Loads brand-specific navigation menus
+- **Brand Product Template**: `snippets/brand-product-template.liquid` - Determines which product template to use
+- **Brand Product Section**: `sections/brand-product.liquid` - Dynamically renders brand-specific product templates
+
+### Setup Instructions
+
+1. **Create Brand Metaobjects**:
+   - In Shopify Admin, go to Settings > Custom data > Metaobjects
+   - Create a metaobject definition called "brand" with fields:
+     - brand_handle (single line text)
+     - title (single line text)
+     - logo (file reference)
+     - menu_handle (single line text)
+     - link (single line text or URL)
+   - Create entries for each brand
+
+2. **Add Brand Banner to Header**:
+   - The brand banner is already integrated into the header section
+   - You can enable/disable it in the theme editor under Header > Show brand banner
+
+3. **Create Brand-Specific Templates**:
+   - For each brand, create templates with the naming convention `[template-name].[brand_handle].liquid`
+   - Example: `main-product.xyz.liquid` for the XYZ brand's product page
+
+4. **Create Brand-Specific CSS**:
+   - For each brand, create a CSS file in the assets folder with the brand handle as the filename
+   - Example: `xyz.css` for the XYZ brand
+
+### Debugging
+
+If you encounter issues with metaobject access, enable debug mode in the theme editor under Header > Show debug information. This will display detailed information about the metaobjects and their values.
 
 ## Staying up to date with Dawn changes
 

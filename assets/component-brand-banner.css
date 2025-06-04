@@ -1,0 +1,96 @@
+.brand-banner {
+  padding: 0.5rem 0;
+  background-color: var(--color-background);
+  border-bottom: 1px solid rgba(var(--color-foreground), 0.08);
+}
+
+.brand-banner__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-banner__list {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; /* Firefox */
+}
+
+.brand-banner__list::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+.brand-banner__item {
+  flex: 0 0 auto;
+  padding: 0 1rem;
+  scroll-snap-align: start;
+}
+
+.brand-banner__item--active .brand-banner__button {
+  opacity: 1;
+  border-color: rgba(var(--color-foreground), 0.2);
+}
+
+.brand-banner__button {
+  background-color: transparent;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.brand-banner__button:hover {
+  opacity: 1;
+}
+
+.brand-banner__logo {
+  max-height: 40px;
+  width: auto;
+  display: block;
+}
+
+.brand-banner__name {
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.brand-banner__debug {
+  margin: 1rem auto;
+  max-width: 1200px;
+  padding: 0 1.5rem;
+}
+
+.brand-banner__debug summary {
+  cursor: pointer;
+  padding: 0.5rem;
+  background: #f1f1f1;
+  display: inline-block;
+}
+
+.brand-banner__debug-content {
+  padding: 1rem;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+}
+
+@media screen and (max-width: 749px) {
+  .brand-banner__item {
+    padding: 0 0.5rem;
+  }
+  
+  .brand-banner__logo {
+    max-height: 30px;
+  }
+  
+  .brand-banner__name {
+    font-size: 1.2rem;
+  }
+}

@@ -1,0 +1,233 @@
+/**
+ * XYZ Brand Specific CSS
+ * This file contains brand-specific styling for the XYZ brand
+ */
+
+:root {
+  /* XYZ Brand Colors */
+  --xyz-primary-color: #0056b3;
+  --xyz-secondary-color: #17a2b8;
+  --xyz-accent-color: #ffc107;
+  --xyz-text-on-primary: #ffffff;
+  --xyz-text-on-secondary: #ffffff;
+  --xyz-text-on-accent: #212529;
+  --xyz-background-light: #f8f9fa;
+  --xyz-border-color: #dee2e6;
+}
+
+/* Global Brand Styling */
+body.xyz-brand {
+  background-color: var(--xyz-background-light);
+}
+
+/* Header Styling */
+.header.xyz-header {
+  border-bottom: 2px solid var(--xyz-primary-color);
+}
+
+.header__heading-link.xyz-logo {
+  color: var(--xyz-primary-color);
+}
+
+.header__menu-item.xyz-menu-item {
+  color: var(--xyz-primary-color);
+}
+
+.header__menu-item.xyz-menu-item:hover {
+  color: var(--xyz-secondary-color);
+}
+
+/* Footer Styling */
+.footer.xyz-footer {
+  background-color: var(--xyz-primary-color);
+  color: var(--xyz-text-on-primary);
+}
+
+.footer__content-top.xyz-footer-top {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Product Card Styling */
+.card.xyz-card {
+  border: 1px solid var(--xyz-border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card.xyz-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card__information.xyz-card-info {
+  background-color: var(--xyz-background-light);
+  padding: 15px;
+}
+
+.card__heading.xyz-card-heading {
+  color: var(--xyz-primary-color);
+  font-weight: 600;
+}
+
+.price.xyz-price .price__regular .price-item--regular {
+  color: var(--xyz-primary-color);
+}
+
+.price.xyz-price .price__sale .price-item--sale {
+  color: var(--xyz-secondary-color);
+}
+
+/* Button Styling */
+.button.xyz-button {
+  background-color: var(--xyz-primary-color);
+  color: var(--xyz-text-on-primary);
+  border-radius: 4px;
+  border: none;
+  padding: 10px 20px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.button.xyz-button:hover {
+  background-color: var(--xyz-secondary-color);
+}
+
+.button.xyz-button--secondary {
+  background-color: transparent;
+  color: var(--xyz-primary-color);
+  border: 2px solid var(--xyz-primary-color);
+}
+
+.button.xyz-button--secondary:hover {
+  background-color: var(--xyz-primary-color);
+  color: var(--xyz-text-on-primary);
+}
+
+/* Collection Page Styling */
+.collection.xyz-collection {
+  background-color: var(--xyz-background-light);
+}
+
+.collection__title.xyz-collection-title {
+  color: var(--xyz-primary-color);
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.collection__description.xyz-collection-description {
+  color: var(--xyz-primary-color);
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+}
+
+/* Cart Page Styling */
+.cart.xyz-cart {
+  background-color: var(--xyz-background-light);
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.cart__items.xyz-cart-items {
+  border-bottom: 1px solid var(--xyz-border-color);
+}
+
+.cart-item.xyz-cart-item {
+  border-bottom: 1px solid var(--xyz-border-color);
+  padding: 1rem 0;
+}
+
+.cart__checkout-button.xyz-checkout-button {
+  background-color: var(--xyz-primary-color);
+  color: var(--xyz-text-on-primary);
+}
+
+.cart__checkout-button.xyz-checkout-button:hover {
+  background-color: var(--xyz-secondary-color);
+}
+
+/* Brand Banner Styling */
+.brand-banner.xyz-active {
+  border-bottom: 3px solid var(--xyz-primary-color);
+}
+
+.brand-banner__logo-item.xyz-active {
+  border-color: var(--xyz-primary-color);
+}
+
+/* Custom XYZ Brand Elements */
+.xyz-featured-banner {
+  background-color: var(--xyz-primary-color);
+  color: var(--xyz-text-on-primary);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.xyz-featured-banner h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.xyz-featured-banner p {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.xyz-benefits-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.xyz-benefits-item {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.xyz-benefits-item h3 {
+  color: var(--xyz-primary-color);
+  margin-bottom: 1rem;
+}
+
+.xyz-benefits-item p {
+  color: #666;
+}
+
+/* XYZ Brand Badge */
+.xyz-brand-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--xyz-accent-color);
+  color: var(--xyz-text-on-accent);
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  z-index: 2;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 749px) {
+  .xyz-featured-banner h2 {
+    font-size: 1.5rem;
+  }
+  
+  .xyz-featured-banner p {
+    font-size: 1rem;
+  }
+  
+  .xyz-benefits-list {
+    grid-template-columns: 1fr;
+  }
+}

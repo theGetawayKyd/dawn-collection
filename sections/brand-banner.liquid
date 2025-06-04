@@ -1,0 +1,35 @@
+{% comment %}
+  Brand Banner Section
+  
+  This section displays a horizontal list of brand logos and allows customers to switch between brands.
+  It uses metaobjects to retrieve brand information and cart attributes to store the selected brand.
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'component-brand-banner.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<div class="brand-banner-section">
+  {% render 'brand-banner', show_debug: section.settings.show_debug %}
+</div>
+
+{% schema %}
+{
+  "name": "Brand Banner",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_debug",
+      "label": "Show debug information",
+      "default": false,
+      "info": "Display debugging information for brand metaobjects"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Banner",
+      "category": "Brand"
+    }
+  ]
+}
+{% endschema %}

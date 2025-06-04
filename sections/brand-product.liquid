@@ -1,0 +1,60 @@
+{% comment %}
+  Brand Product Section
+  
+  This section dynamically loads the appropriate product template based on the selected brand.
+  It checks if a brand-specific template exists and renders it, otherwise falls back to the default.
+{% endcomment %}
+
+{% assign selected_brand = cart.attributes.selected_brand | default: '' %}
+{% assign default_section = 'main-product' %}
+{% assign brand_section = default_section %}
+
+{% if selected_brand != blank %}
+  {% assign brand_section = default_section | append: '.' | append: selected_brand %}
+  
+  {% comment %} Check if the brand-specific section exists {% endcomment %}
+  {% assign section_exists = false %}
+  
+  {% comment %}
+    Shopify doesn't provide a direct way to check if a section exists,
+    so we'll use a try/catch approach with section rendering.
+  {% endcomment %}
+  
+  {% capture section_content %}
+    {% section brand_section %}
+  {% endcapture %}
+  
+  {% if section_content contains "Liquid error" %}
+    {% comment %} Brand-specific section doesn't exist, use default {% endcomment %}
+    {% assign brand_section = default_section %}
+  {% else %}
+    {% assign section_exists = true %}
+  {% endif %}
+{% endif %}
+
+{% if section_exists %}
+  {{ section_content }}
+{% else %}
+  {% section default_section %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Brand Product",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_debug",
+      "label": "Show debug information",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Product"
+    }
+  ]
+}
+{% endschema %}

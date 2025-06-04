@@ -45,7 +45,13 @@
       assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
       assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic'
       assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+      
+      assign selected_brand = cart.attributes.selected_brand | default: ''
     %}
+    
+    {%- if selected_brand != blank -%}
+      <link rel="stylesheet" href="{{ selected_brand | append: '.css' | asset_url }}" media="all">
+    {%- endif -%}
 
     {% style %}
       {{ settings.type_body_font | font_face: font_display: 'swap' }}

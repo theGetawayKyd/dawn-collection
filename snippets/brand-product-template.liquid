@@ -1,0 +1,30 @@
+{% comment %}
+  Brand Product Template Snippet
+  
+  This snippet determines which product template to use based on the selected brand.
+  If a brand-specific template exists (e.g., main-product.xyz.liquid), it will be used.
+  Otherwise, the default template will be used.
+{% endcomment %}
+
+{% assign selected_brand = cart.attributes.selected_brand | default: '' %}
+{% assign template_name = 'main-product' %}
+
+{% if selected_brand != blank %}
+  {% assign brand_template = template_name | append: '.' | append: selected_brand %}
+  {% assign template_path = brand_template | append: '.liquid' %}
+  
+  {% comment %} Check if the brand-specific template exists {% endcomment %}
+  {% assign template_exists = false %}
+  
+  {% comment %}
+    Shopify doesn't provide a direct way to check if a template exists,
+    so we'll use a workaround by checking if the brand-specific section exists.
+    This is done by the parent section (brand-product.liquid).
+  {% endcomment %}
+  
+  {% if section.settings.brand_template_exists %}
+    {% assign template_name = brand_template %}
+  {% endif %}
+{% endif %}
+
+{{ template_name }}

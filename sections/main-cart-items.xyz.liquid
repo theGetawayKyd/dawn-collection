@@ -1,0 +1,197 @@
+{% comment %}
+  XYZ Brand Cart Template - Simplified Version
+  This is a brand-specific cart template for the XYZ brand.
+{% endcomment %}
+
+{{ 'component-cart.css' | asset_url | stylesheet_tag }}
+{{ 'component-cart-items.css' | asset_url | stylesheet_tag }}
+{{ 'component-totals.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .xyz-cart-header {
+    background-color: var(--xyz-primary-color);
+    color: var(--xyz-text-on-primary);
+    padding: 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    border-radius: 4px;
+  }
+  
+  .xyz-cart-title {
+    color: var(--xyz-text-on-primary);
+    margin: 0;
+  }
+  
+  .xyz-cart-item {
+    border: 1px solid var(--xyz-border-color);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+  
+  .xyz-cart-checkout {
+    background-color: var(--xyz-primary-color);
+    color: var(--xyz-text-on-primary);
+    border: none;
+    border-radius: 4px;
+  }
+  
+  .xyz-member-perks {
+    background-color: rgba(var(--color-background), 0.8);
+    border: 1px solid var(--xyz-primary-color);
+    border-radius: 4px;
+    padding: 1rem;
+    margin-top: 2rem;
+  }
+</style>
+
+<cart-items class="page-width{% if cart == empty %} is-empty{% endif %}">
+  <div class="title-wrapper-with-link">
+    <div class="xyz-cart-header">
+      <h1 class="xyz-cart-title">{{ 'sections.cart.title' | t }}</h1>
+      <p>XYZ Exclusive Shopping Experience</p>
+    </div>
+    <a href="{{ routes.all_products_collection_url }}" class="underlined-link">
+      {{ 'general.continue_shopping' | t }}
+    </a>
+  </div>
+
+  <div class="cart__warnings">
+    <h1 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h1>
+    <a href="{{ routes.all_products_collection_url }}" class="button">
+      {{ 'general.continue_shopping' | t }}
+    </a>
+  </div>
+
+  <form action="{{ routes.cart_url }}" class="cart__contents critical-hidden" method="post" id="cart">
+    <div class="cart__items" id="main-cart-items" data-id="{{ section.id }}">
+      <div class="js-contents">
+        {%- if cart != empty -%}
+          <table class="cart-items">
+            <thead>
+              <tr>
+                <th class="caption-with-letter-spacing" colspan="2" scope="col">{{ 'sections.cart.headings.product' | t }}</th>
+                <th class="cart-items__heading--wide small-hide caption-with-letter-spacing" colspan="1" scope="col">{{ 'sections.cart.headings.quantity' | t }}</th>
+                <th class="small-hide right caption-with-letter-spacing" colspan="1" scope="col">{{ 'sections.cart.headings.total' | t }}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {%- for item in cart.items -%}
+                <tr class="cart-item xyz-cart-item" id="CartItem-{{ item.index | plus: 1 }}">
+                  <td class="cart-item__media">
+                    {% if item.image %}
+                      <img class="cart-item__image"
+                        src="{{ item.image | image_url: width: 300 }}"
+                        alt="{{ item.image.alt | escape }}"
+                        loading="lazy"
+                        width="150"
+                      >
+                    {% endif %}
+                  </td>
+
+                  <td class="cart-item__details">
+                    <a href="{{ item.url }}" class="cart-item__name h4 break">{{ item.product.title | escape }}</a>
+                    <p class="product-option">{{ item.original_price | money }}</p>
+                  </td>
+
+                  <td class="cart-item__quantity">
+                    <div class="cart-item__quantity-wrapper">
+                      <quantity-input class="quantity">
+                        <button class="quantity__button no-js-hidden" name="minus" type="button">
+                          <span class="visually-hidden">{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}</span>
+                          {% render 'icon-minus' %}
+                        </button>
+                        <input class="quantity__input"
+                          type="number"
+                          name="updates[]"
+                          value="{{ item.quantity }}"
+                          min="0"
+                          id="Quantity-{{ item.index | plus: 1 }}"
+                          data-index="{{ item.index | plus: 1 }}"
+                        >
+                        <button class="quantity__button no-js-hidden" name="plus" type="button">
+                          <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}</span>
+                          {% render 'icon-plus' %}
+                        </button>
+                      </quantity-input>
+                    </div>
+
+                    <cart-remove-button id="Remove-{{ item.index | plus: 1 }}" data-index="{{ item.index | plus: 1 }}">
+                      <a href="{{ item.url_to_remove }}" class="button button--tertiary">
+                        {% render 'icon-remove' %}
+                      </a>
+                    </cart-remove-button>
+                  </td>
+
+                  <td class="cart-item__totals right small-hide">
+                    <span class="price price--end">
+                      {{ item.original_line_price | money }}
+                    </span>
+                  </td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div id="main-cart-footer" class="main-cart-footer">
+      <div class="cart__blocks">
+        <div class="js-contents">
+          {%- if cart != empty -%}
+            <div class="cart__footer">
+              <div class="cart__blocks">
+                <div>
+                  <div class="totals">
+                    <h2 class="totals__subtotal">{{ 'sections.cart.subtotal' | t }}</h2>
+                    <p class="totals__subtotal-value">{{ cart.total_price | money_with_currency }}</p>
+                  </div>
+
+                  <small class="tax-note caption-large rte">
+                    {%- if cart.taxes_included -%}
+                      {{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}
+                    {%- else -%}
+                      {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
+                    {%- endif -%}
+                  </small>
+                </div>
+              </div>
+              
+              <div class="cart__ctas">
+                <button type="submit" id="checkout" class="cart__checkout-button button xyz-cart-checkout" name="checkout" form="cart">
+                  {{ 'sections.cart.checkout' | t }}
+                </button>
+              </div>
+
+              <div class="xyz-member-perks">
+                <h3>XYZ Member Benefits</h3>
+                <ul>
+                  <li>Free shipping on all orders</li>
+                  <li>30-day money-back guarantee</li>
+                  <li>Member-only discounts</li>
+                </ul>
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </form>
+</cart-items>
+
+{% schema %}
+{
+  "name": "XYZ Cart",
+  "tag": "section",
+  "class": "section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "XYZ Cart"
+    }
+  ]
+}
+{% endschema %}

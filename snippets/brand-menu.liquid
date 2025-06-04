@@ -1,0 +1,72 @@
+{% comment %}
+  Brand Menu Snippet
+  
+  This snippet selects the appropriate menu based on the selected brand.
+  If a brand is selected and has a menu handle defined, that menu will be used.
+  Otherwise, the default menu will be used.
+{% endcomment %}
+
+{% assign selected_brand = cart.attributes.selected_brand | default: '' %}
+{% assign menu_handle = section.settings.menu %}
+
+{% if selected_brand != blank %}
+  {% comment %} Find the selected brand in metaobjects to get its menu handle {% endcomment %}
+  {% for brand in shop.metaobjects.brand.values %}
+    {% if brand.brand_handle.value == selected_brand and brand.menu_handle.value != blank %}
+      {% assign menu_handle = brand.menu_handle.value %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if menu_handle != blank %}
+  <nav class="header__inline-menu">
+    <ul class="list-menu list-menu--inline" role="list">
+      {%- for link in linklists[menu_handle].links -%}
+        <li>
+          {%- if link.links != blank -%}
+            <header-menu>
+              <details id="Details-HeaderMenu-{{ forloop.index }}">
+                <summary class="header__menu-item list-menu__item link focus-inset">
+                  <span {%- if link.child_active %} class="header__active-menu-item"{% endif %}>{{ link.title | escape }}</span>
+                  {% render 'icon-caret' %}
+                </summary>
+                <ul id="HeaderMenu-MenuList-{{ forloop.index }}" class="header__submenu list-menu list-menu--disclosure gradient caption-large motion-reduce" role="list" tabindex="-1">
+                  {%- for childlink in link.links -%}
+                    <li>
+                      {%- if childlink.links == blank -%}
+                        <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                          {{ childlink.title | escape }}
+                        </a>
+                      {%- else -%}
+                        <details id="Details-HeaderSubMenu-{{ forloop.index }}">
+                          <summary class="header__menu-item link link--text list-menu__item focus-inset caption-large">
+                            <span>{{ childlink.title | escape }}</span>
+                            {% render 'icon-caret' %}
+                          </summary>
+                          <ul id="HeaderMenu-SubMenuList-{{ forloop.index }}" class="header__submenu list-menu motion-reduce">
+                            {%- for grandchildlink in childlink.links -%}
+                              <li>
+                                <a href="{{ grandchildlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if grandchildlink.current %} list-menu__item--active{% endif %}"{% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                  {{ grandchildlink.title | escape }}
+                                </a>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        </details>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </details>
+            </header-menu>
+          {%- else -%}
+            <a href="{{ link.url }}" class="header__menu-item header__menu-item list-menu__item link link--text focus-inset"{% if link.current %} aria-current="page"{% endif %}>
+              <span {%- if link.current %} class="header__active-menu-item"{% endif %}>{{ link.title | escape }}</span>
+            </a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+{% endif %}

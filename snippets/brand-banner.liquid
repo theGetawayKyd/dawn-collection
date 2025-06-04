@@ -1,0 +1,76 @@
+{% comment %}
+  Brand Banner Snippet
+  
+  This snippet displays a horizontal list of brand logos and allows customers to switch between brands.
+  It uses metaobjects to retrieve brand information and cart attributes to store the selected brand.
+{% endcomment %}
+
+{% assign selected_brand = cart.attributes.selected_brand | default: '' %}
+
+<div class="brand-banner">
+  <div class="brand-banner__container page-width">
+    <ul class="brand-banner__list">
+      {% comment %} Access brand metaobjects using shop.metaobjects.brand.values {% endcomment %}
+      {% for brand in shop.metaobjects.brand.values %}
+        {% if brand.brand_handle != blank %}
+          {% assign brand_handle = brand.brand_handle.value %}
+          {% assign brand_title = brand.title.value %}
+          {% assign brand_logo = brand.logo.value %}
+          {% assign brand_link = brand.link.value %}
+          
+          <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
+            <form method="post" action="{{ routes.cart_update_url }}">
+              <input type="hidden" name="attributes[selected_brand]" value="{{ brand_handle }}">
+              <button type="submit" class="brand-banner__button" aria-label="Select {{ brand_title }} brand">
+                {% if brand_logo != blank %}
+                  <img 
+                    src="{{ brand_logo | image_url: width: 100 }}" 
+                    alt="{{ brand_title }}" 
+                    width="100" 
+                    height="{{ 100 | divided_by: brand_logo.aspect_ratio | round }}" 
+                    loading="lazy"
+                    class="brand-banner__logo"
+                  >
+                {% else %}
+                  <span class="brand-banner__name">{{ brand_title }}</span>
+                {% endif %}
+              </button>
+            </form>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% comment %} Debug information for metaobject access issues {% endcomment %}
+{% if show_debug %}
+  <div class="brand-banner__debug">
+    <details>
+      <summary>Debug Info</summary>
+      <div class="brand-banner__debug-content">
+        <h4>Metaobject Access</h4>
+        <p>Selected Brand: {{ selected_brand }}</p>
+        <p>Brand Metaobjects Available: {{ shop.metaobjects.brand.values.size }}</p>
+        
+        <h4>Available Metaobjects:</h4>
+        <ul>
+          {% for metaobject_type in shop.metaobjects %}
+            <li>{{ metaobject_type.first }}: {{ metaobject_type.last.values.size }} entries</li>
+          {% endfor %}
+        </ul>
+        
+        <h4>Brand Metaobject Details:</h4>
+        {% for brand in shop.metaobjects.brand.values %}
+          <div style="margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+            <p>Brand Handle: {{ brand.brand_handle.value }}</p>
+            <p>Title: {{ brand.title.value }}</p>
+            <p>Menu Handle: {{ brand.menu_handle.value }}</p>
+            <p>Has Logo: {% if brand.logo.value %}Yes{% else %}No{% endif %}</p>
+            <p>Has Link: {% if brand.link.value %}Yes{% else %}No{% endif %}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </details>
+  </div>
+{% endif %}
