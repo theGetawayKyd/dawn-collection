@@ -1,0 +1,176 @@
+{% comment %}
+  Brand Template Controller
+  
+  This section serves as the central controller for loading brand-specific templates.
+  It dynamically loads the appropriate template based on the selected brand and page type.
+{% endcomment %}
+
+{%- liquid
+  assign selected_brand = cart.attributes.selected_brand | default: ''
+  assign page_type = section.settings.page_type | default: 'product'
+  assign show_debug = section.settings.show_debug
+  
+  # Get all available brand templates from metaobjects
+  assign available_brands = shop.metaobjects.brand.values
+  assign brand_templates = ''
+  
+  # Check if we have a valid brand selection
+  assign valid_brand = false
+  if selected_brand != blank
+    for brand in available_brands
+      if brand.brand_handle == selected_brand
+        assign valid_brand = true
+        break
+      endif
+    endfor
+  endif
+-%}
+
+{% if show_debug %}
+  <div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 20px; border: 1px solid #f5c6cb; border-radius: 4px;">
+    <strong>Brand Template Controller Debug Info:</strong>
+    <p>Selected Brand: {{ selected_brand | default: 'None' }}</p>
+    <p>Page Type: {{ page_type }}</p>
+    <p>Valid Brand: {{ valid_brand }}</p>
+    <p>Available Brands:</p>
+    <ul>
+      {% for brand in available_brands %}
+        <li>{{ brand.title }} ({{ brand.brand_handle }})</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+{% case page_type %}
+  {% when 'product' %}
+    {% if valid_brand %}
+      {% for section in section.blocks %}
+        {% if section.settings.brand_handle == selected_brand %}
+          <div class="brand-template-section" data-brand="{{ selected_brand }}" data-page-type="{{ page_type }}">
+            {% section section.settings.section_id %}
+          </div>
+          {% break %}
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      {% if show_debug %}
+        <div style="background-color: #fff3cd; color: #856404; padding: 10px; margin-bottom: 20px; border: 1px solid #ffeeba; border-radius: 4px;">
+          <strong>Notice:</strong> No brand selected or invalid brand. Using default template.
+        </div>
+      {% endif %}
+      {% section 'main-product' %}
+    {% endif %}
+    
+  {% when 'collection' %}
+    {% if valid_brand %}
+      {% for section in section.blocks %}
+        {% if section.settings.brand_handle == selected_brand %}
+          <div class="brand-template-section" data-brand="{{ selected_brand }}" data-page-type="{{ page_type }}">
+            {% section section.settings.section_id %}
+          </div>
+          {% break %}
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      {% if show_debug %}
+        <div style="background-color: #fff3cd; color: #856404; padding: 10px; margin-bottom: 20px; border: 1px solid #ffeeba; border-radius: 4px;">
+          <strong>Notice:</strong> No brand selected or invalid brand. Using default template.
+        </div>
+      {% endif %}
+      {% section 'main-collection-product-grid' %}
+    {% endif %}
+    
+  {% when 'cart' %}
+    {% if valid_brand %}
+      {% for section in section.blocks %}
+        {% if section.settings.brand_handle == selected_brand %}
+          <div class="brand-template-section" data-brand="{{ selected_brand }}" data-page-type="{{ page_type }}">
+            {% section section.settings.section_id %}
+          </div>
+          {% break %}
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      {% if show_debug %}
+        <div style="background-color: #fff3cd; color: #856404; padding: 10px; margin-bottom: 20px; border: 1px solid #ffeeba; border-radius: 4px;">
+          <strong>Notice:</strong> No brand selected or invalid brand. Using default template.
+        </div>
+      {% endif %}
+      {% section 'main-cart-items' %}
+    {% endif %}
+    
+  {% else %}
+    {% if show_debug %}
+      <div style="background-color: #fff3cd; color: #856404; padding: 10px; margin-bottom: 20px; border: 1px solid #ffeeba; border-radius: 4px;">
+        <strong>Notice:</strong> Unknown page type. Please specify a valid page type.
+      </div>
+    {% endif %}
+{% endcase %}
+
+{% schema %}
+{
+  "name": "Brand Template Controller",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "page_type",
+      "label": "Page Type",
+      "options": [
+        {
+          "value": "product",
+          "label": "Product Page"
+        },
+        {
+          "value": "collection",
+          "label": "Collection Page"
+        },
+        {
+          "value": "cart",
+          "label": "Cart Page"
+        }
+      ],
+      "default": "product",
+      "info": "Select the type of page this controller is being used on"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_debug",
+      "label": "Show debug information",
+      "default": false,
+      "info": "Display debugging information for brand template loading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand_template",
+      "name": "Brand Template",
+      "settings": [
+        {
+          "type": "text",
+          "id": "brand_handle",
+          "label": "Brand Handle",
+          "info": "Enter the brand handle that matches the metaobject brand_handle field"
+        },
+        {
+          "type": "text",
+          "id": "section_id",
+          "label": "Section ID",
+          "info": "Enter the ID of the section to use for this brand (e.g., 'brand-customizable-product-xyz')"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Template Controller",
+      "blocks": [
+        {
+          "type": "brand_template"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

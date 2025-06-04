@@ -34,9 +34,9 @@ This theme includes a brand switching module that allows customers to switch bet
 
 ### Features
 
-- Brand-specific product templates
-- Brand-specific collection templates
-- Brand-specific cart templates
+- Brand-specific product templates customizable through the theme editor
+- Brand-specific collection templates customizable through the theme editor
+- Brand-specific cart templates customizable through the theme editor
 - Brand-specific CSS styling
 - Brand banner in header for brand switching
 
@@ -51,10 +51,10 @@ This theme includes a brand switching module that allows customers to switch bet
    - `menu_handle`: Handle of the menu to use for this brand
    - `link`: URL for the brand's landing page
 
-3. **Template Handling**: The system dynamically loads brand-specific templates based on the selected brand:
-   - Product templates: `main-product.[brand_handle].liquid`
-   - Collection templates: `main-collection-product-grid.[brand_handle].liquid`
-   - Cart templates: `main-cart-items.[brand_handle].liquid`
+3. **Template Handling**: The system dynamically loads brand-specific templates based on the selected brand using the brand template controller:
+   - Product templates: Customizable through the theme editor using `brand-customizable-product-[brand_handle].liquid` sections
+   - Collection templates: Customizable through the theme editor using `brand-customizable-collection-[brand_handle].liquid` sections
+   - Cart templates: Customizable through the theme editor using `brand-customizable-cart-[brand_handle].liquid` sections
 
 4. **CSS Styling**: Brand-specific CSS is loaded from `assets/[brand_handle].css`
 
@@ -62,8 +62,10 @@ This theme includes a brand switching module that allows customers to switch bet
 
 - **Brand Banner**: `snippets/brand-banner.liquid` - Displays a horizontal list of brand logos for switching
 - **Brand Menu**: `snippets/brand-menu.liquid` - Loads brand-specific navigation menus
-- **Brand Product Template**: `snippets/brand-product-template.liquid` - Determines which product template to use
-- **Brand Product Section**: `sections/brand-product.liquid` - Dynamically renders brand-specific product templates
+- **Brand Template Controller**: `sections/brand-template-controller.liquid` - Central controller for loading brand-specific templates
+- **Brand Customizable Product**: `sections/brand-customizable-product.liquid` - Customizable product template section for brands
+- **Brand Customizable Collection**: `sections/brand-customizable-collection.liquid` - Customizable collection template section for brands
+- **Brand Customizable Cart**: `sections/brand-customizable-cart.liquid` - Customizable cart template section for brands
 
 ### Setup Instructions
 
@@ -81,17 +83,50 @@ This theme includes a brand switching module that allows customers to switch bet
    - The brand banner is already integrated into the header section
    - You can enable/disable it in the theme editor under Header > Show brand banner
 
-3. **Create Brand-Specific Templates**:
-   - For each brand, create templates with the naming convention `[template-name].[brand_handle].liquid`
-   - Example: `main-product.xyz.liquid` for the XYZ brand's product page
+3. **Create Brand-Specific Templates Using the Theme Editor**:
+   - Go to the theme editor and navigate to Templates > Product, Collection, or Cart
+   - Add the Brand Template Controller section to your template
+   - Configure the controller with the appropriate page type (product, collection, or cart)
+   - Add brand template blocks for each brand you want to support
+   - For each brand block, specify:
+     - Brand Handle: The unique identifier that matches the metaobject brand_handle field
+     - Section ID: The ID of the customizable section to use (e.g., 'brand-customizable-product-xyz')
+   - Create and customize brand-specific sections using the theme editor
 
-4. **Create Brand-Specific CSS**:
+4. **Create and Customize Brand-Specific Sections**:
+   - In the theme editor, go to Sections > Add section
+   - Add a new section using one of the brand customizable templates:
+     - Brand Customizable Product
+     - Brand Customizable Collection
+     - Brand Customizable Cart
+   - Configure the section with the appropriate brand handle
+   - Customize the section's appearance, layout, and content blocks
+   - The section will only appear when the customer has selected the matching brand
+
+5. **Create Brand-Specific CSS**:
    - For each brand, create a CSS file in the assets folder with the brand handle as the filename
    - Example: `xyz.css` for the XYZ brand
 
 ### Debugging
 
-If you encounter issues with metaobject access, enable debug mode in the theme editor under Header > Show debug information. This will display detailed information about the metaobjects and their values.
+If you encounter issues with the brand switching system:
+
+1. **Enable Debug Mode in Brand Template Controller**:
+   - In the theme editor, edit the Brand Template Controller section
+   - Enable the "Show debug information" setting
+   - This will display information about the selected brand, available brands, and template loading
+
+2. **Check Metaobject Configuration**:
+   - Ensure that all required fields are present in your brand metaobjects
+   - Verify that the brand_handle values match exactly what you've configured in your templates
+
+3. **Verify Template Configuration**:
+   - Check that your brand template controller blocks are correctly configured
+   - Ensure that the section IDs match your customizable brand sections
+
+4. **Inspect Cart Attributes**:
+   - The selected brand is stored in `cart.attributes.selected_brand`
+   - You can clear this by setting a blank value or clearing the cart
 
 ## Staying up to date with Dawn changes
 

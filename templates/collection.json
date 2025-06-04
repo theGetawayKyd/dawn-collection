@@ -9,19 +9,19 @@
       }
     },
     "product-grid": {
-      "type": "brand-collection-product-grid",
+      "type": "brand-template-controller",
       "settings": {
-        "products_per_page": 16,
-        "columns_desktop": 4,
-        "image_ratio": "adapt",
-        "show_secondary_image": false,
-        "show_vendor": false,
-        "show_rating": false,
-        "enable_filtering": true,
-        "enable_sorting": true,
-        "columns_mobile": "2",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "page_type": "collection",
+        "show_debug": false
+      },
+      "blocks": {
+        "xyz-brand": {
+          "type": "brand_template",
+          "settings": {
+            "brand_handle": "xyz",
+            "section_id": "brand-customizable-collection-xyz"
+          }
+        }
       }
     }
   },

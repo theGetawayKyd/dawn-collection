@@ -1,0 +1,411 @@
+{% comment %}
+  Brand Customizable Collection Section
+  
+  This section allows customization of collection templates for different brands
+  through the theme editor rather than requiring code editing.
+{% endcomment %}
+
+{%- liquid
+  assign selected_brand = cart.attributes.selected_brand | default: ''
+  assign current_brand = section.settings.brand_handle | default: ''
+  assign should_render = false
+  
+  # Check if this section should render based on the selected brand
+  if selected_brand == current_brand and current_brand != blank
+    assign should_render = true
+  endif
+-%}
+
+{% if should_render %}
+<div class="page-width">
+  <div class="collection brand-collection brand-collection--{{ current_brand }}" 
+       id="collection-{{ section.id }}"
+       data-brand="{{ current_brand }}">
+    
+    {% if section.settings.show_collection_title or section.settings.show_collection_description %}
+      <div class="collection-header">
+        {% if section.settings.show_collection_title %}
+          <h1 class="collection-title">{{ collection.title }}</h1>
+        {% endif %}
+        
+        {% if section.settings.show_collection_description and collection.description != blank %}
+          <div class="collection-description rte">
+            {{ collection.description }}
+          </div>
+        {% endif %}
+        
+        {% if section.settings.show_brand_banner %}
+          <div class="brand-collection-banner">
+            {% if section.settings.banner_image != blank %}
+              <img src="{{ section.settings.banner_image | img_url: 'master' }}" 
+                   alt="{{ section.settings.brand_name }}" 
+                   class="brand-banner-image">
+            {% endif %}
+            
+            {% if section.settings.banner_text != blank %}
+              <div class="brand-banner-text">
+                {{ section.settings.banner_text }}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+    
+    {% if section.settings.custom_html_top != blank %}
+      <div class="brand-custom-html brand-custom-html--top">
+        {{ section.settings.custom_html_top }}
+      </div>
+    {% endif %}
+    
+    {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
+      {{ 'component-facets.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+    
+      <div class="page-width" id="main-collection-filters" data-id="{{ section.id }}">
+        {% render 'facets', results: collection, enable_filtering: section.settings.enable_filtering, enable_sorting: section.settings.enable_sorting, collapse_on_larger_devices: section.settings.collapse_on_larger_devices %}
+      </div>
+    {%- endif -%}
+    
+    <div class="collection-products">
+      {%- paginate collection.products by section.settings.products_per_page -%}
+        {%- if collection.products.size == 0 -%}
+          <div class="collection collection--empty" id="product-grid" data-id="{{ section.id }}">
+            <div class="loading-overlay gradient"></div>
+            <div class="title-wrapper center">
+              <h2 class="title title--primary">
+                {{ 'sections.collection_template.empty' | t }}<br>
+                {{ 'sections.collection_template.use_fewer_filters_html' | t: link: collection.url, class: "underlined-link link" }}
+              </h2>
+            </div>
+          </div>
+        {%- else -%}
+          <div class="collection">
+            <div class="loading-overlay gradient"></div>
+    
+            <ul id="product-grid" data-id="{{ section.id }}" class="
+              grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down
+              grid--{{ section.settings.columns_desktop }}-col-desktop">
+              {%- for product in collection.products -%}
+                <li class="grid__item">
+                  {% render 'card-product',
+                    card_product: product,
+                    media_aspect_ratio: section.settings.image_ratio,
+                    show_secondary_image: section.settings.show_secondary_image,
+                    show_vendor: section.settings.show_vendor,
+                    show_rating: section.settings.show_rating,
+                    lazy_load: lazy_load,
+                    show_quick_add: section.settings.enable_quick_add,
+                    section_id: section.id
+                  %}
+                </li>
+              {%- endfor -%}
+            </ul>
+    
+            {%- if paginate.pages > 1 -%}
+              {% render 'pagination', paginate: paginate, anchor: '' %}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endpaginate -%}
+    </div>
+    
+    {% if section.settings.custom_html_bottom != blank %}
+      <div class="brand-custom-html brand-custom-html--bottom">
+        {{ section.settings.custom_html_bottom }}
+      </div>
+    {% endif %}
+    
+    {% if section.settings.show_brand_features %}
+      <div class="brand-features">
+        <h2>{{ section.settings.features_title }}</h2>
+        <div class="brand-features-grid">
+          {% for block in section.blocks %}
+            {% if block.type == 'feature' %}
+              <div class="brand-feature-item">
+                {% if block.settings.icon != blank %}
+                  <div class="feature-icon">{{ block.settings.icon }}</div>
+                {% endif %}
+                <h3 class="feature-title">{{ block.settings.title }}</h3>
+                <div class="feature-text">{{ block.settings.text }}</div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% if section.settings.custom_css != blank %}
+  <style>
+    {{ section.settings.custom_css }}
+  </style>
+{% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Brand Collection Template",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Brand Configuration"
+    },
+    {
+      "type": "text",
+      "id": "brand_handle",
+      "label": "Brand Handle",
+      "info": "Enter the brand handle that matches the metaobject brand_handle field. This template will only show for this brand."
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand Name",
+      "info": "Display name for the brand"
+    },
+    {
+      "type": "header",
+      "content": "Collection Information"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_title",
+      "label": "Show collection title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "label": "Show collection description",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Brand Banner"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_banner",
+      "label": "Show brand banner",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Banner image"
+    },
+    {
+      "type": "richtext",
+      "id": "banner_text",
+      "label": "Banner text"
+    },
+    {
+      "type": "header",
+      "content": "Products Grid"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 48,
+      "step": 8,
+      "default": 16,
+      "label": "Products per page"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 4,
+      "label": "Number of columns on desktop"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Adapt to image"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        }
+      ],
+      "default": "adapt",
+      "label": "Image ratio"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "Show secondary image on hover"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "Show product vendor"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "Show product rating"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_quick_add",
+      "default": false,
+      "label": "Enable quick add"
+    },
+    {
+      "type": "header",
+      "content": "Filtering and sorting"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "default": true,
+      "label": "Enable filtering",
+      "info": "Filtering uses facets"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "default": true,
+      "label": "Enable sorting"
+    },
+    {
+      "type": "checkbox",
+      "id": "collapse_on_larger_devices",
+      "default": false,
+      "label": "Collapse on larger devices"
+    },
+    {
+      "type": "header",
+      "content": "Brand Features"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_features",
+      "label": "Show brand features",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "features_title",
+      "label": "Features title",
+      "default": "Why Shop With Us"
+    },
+    {
+      "type": "header",
+      "content": "Custom Content"
+    },
+    {
+      "type": "html",
+      "id": "custom_html_top",
+      "label": "Custom HTML (Top)",
+      "info": "Add custom HTML content above the product grid"
+    },
+    {
+      "type": "html",
+      "id": "custom_html_bottom",
+      "label": "Custom HTML (Bottom)",
+      "info": "Add custom HTML content below the product grid"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_css",
+      "label": "Custom CSS",
+      "info": "Add custom CSS styles for this brand's collection page"
+    },
+    {
+      "type": "header",
+      "content": "Mobile layout"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "default": "2",
+      "label": "Number of columns on mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 column"
+        },
+        {
+          "value": "2",
+          "label": "2 columns"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Brand Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon",
+          "info": "Enter an emoji or icon character"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Feature title",
+          "default": "Quality Products"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Feature description",
+          "default": "<p>Describe this feature in a few words.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Collection Template",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "✓",
+            "title": "Quality Products",
+            "text": "<p>All our products are carefully selected and quality tested.</p>"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "★",
+            "title": "Member Benefits",
+            "text": "<p>Exclusive discounts and early access to new collections.</p>"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "⚡",
+            "title": "Fast Delivery",
+            "text": "<p>Quick shipping on all orders with tracking provided.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

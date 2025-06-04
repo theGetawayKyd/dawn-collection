@@ -1,0 +1,348 @@
+{% comment %}
+  Brand Customizable Product Section
+  
+  This section allows customization of product templates for different brands
+  through the theme editor rather than requiring code editing.
+{% endcomment %}
+
+{%- liquid
+  assign selected_brand = cart.attributes.selected_brand | default: ''
+  assign current_brand = section.settings.brand_handle | default: ''
+  assign should_render = false
+  
+  # Check if this section should render based on the selected brand
+  if selected_brand == current_brand and current_brand != blank
+    assign should_render = true
+  endif
+-%}
+
+{% if should_render %}
+<div class="page-width">
+  <div class="product brand-product brand-product--{{ current_brand }}" 
+       id="product-{{ section.id }}"
+       data-brand="{{ current_brand }}">
+    
+    <div class="grid product-grid">
+      <div class="grid__item product-grid__item product-media-container">
+        {% if section.settings.show_brand_badge %}
+          <div class="brand-badge">
+            <span>{{ section.settings.brand_name }}</span>
+          </div>
+        {% endif %}
+        
+        <div class="product-media-gallery">
+          {% for media in product.media %}
+            <div class="product-media-item">
+              {% render 'product-media', media: media, position: forloop.index, loop_length: product.media.size %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+      <div class="grid__item product-grid__item product-info-container">
+        <div class="product-info">
+          {% if section.settings.show_vendor %}
+            <div class="product-vendor">{{ product.vendor }}</div>
+          {% endif %}
+          
+          <h1 class="product-title">{{ product.title }}</h1>
+          
+          {% if section.settings.show_price %}
+            <div class="product-price">
+              {% render 'price', product: product, use_variant: true %}
+            </div>
+          {% endif %}
+          
+          {% if section.settings.show_description %}
+            <div class="product-description rte">
+              {{ product.description }}
+            </div>
+          {% endif %}
+          
+          {% if section.settings.custom_html != blank %}
+            <div class="brand-custom-html">
+              {{ section.settings.custom_html }}
+            </div>
+          {% endif %}
+          
+          {% form 'product', product %}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            
+            {% if section.settings.show_variant_selector and product.has_only_default_variant == false %}
+              <div class="product-form__variants">
+                {% for option in product.options_with_values %}
+                  <div class="product-form__option">
+                    <label for="Option-{{ section.id }}-{{ option.position }}">
+                      {{ option.name }}
+                    </label>
+                    <select id="Option-{{ section.id }}-{{ option.position }}" 
+                            class="product-form__select" 
+                            name="options[{{ option.name | escape }}]">
+                      {% for value in option.values %}
+                        <option value="{{ value | escape }}" 
+                                {% if option.selected_value == value %}selected="selected"{% endif %}>
+                          {{ value }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+            
+            <div class="product-form__buttons">
+              <button type="submit" 
+                      name="add" 
+                      class="product-form__submit button button--{{ section.settings.button_style }}" 
+                      {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}>
+                {% if product.selected_or_first_available_variant.available %}
+                  {{ section.settings.add_to_cart_text | default: 'Add to cart' }}
+                {% else %}
+                  {{ 'products.product.sold_out' | t }}
+                {% endif %}
+              </button>
+            </div>
+          {% endform %}
+          
+          {% if section.settings.show_brand_benefits %}
+            <div class="brand-benefits">
+              <h3>{{ section.settings.benefits_title }}</h3>
+              <ul class="brand-benefits-list">
+                {% for block in section.blocks %}
+                  {% if block.type == 'benefit' %}
+                    <li class="brand-benefit-item">
+                      {% if block.settings.icon != blank %}
+                        <span class="benefit-icon">{{ block.settings.icon }}</span>
+                      {% endif %}
+                      <span class="benefit-text">{{ block.settings.text }}</span>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    
+    {% if section.settings.show_related_products %}
+      <div class="related-products">
+        <h2>{{ section.settings.related_products_title }}</h2>
+        <ul class="related-products-grid">
+          {% for product in collections[section.settings.related_collection].products limit: section.settings.related_products_limit %}
+            <li class="related-product-item">
+              {% render 'product-card', product: product %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% if section.settings.custom_css != blank %}
+  <style>
+    {{ section.settings.custom_css }}
+  </style>
+{% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Brand Product Template",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Brand Configuration"
+    },
+    {
+      "type": "text",
+      "id": "brand_handle",
+      "label": "Brand Handle",
+      "info": "Enter the brand handle that matches the metaobject brand_handle field. This template will only show for this brand."
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand Name",
+      "info": "Display name for the brand"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_badge",
+      "label": "Show brand badge",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Product Information"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show price",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variant_selector",
+      "label": "Show variant selector",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Button Styling"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Primary"
+        },
+        {
+          "value": "secondary",
+          "label": "Secondary"
+        },
+        {
+          "value": "tertiary",
+          "label": "Tertiary"
+        }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_text",
+      "label": "Add to cart text",
+      "default": "Add to cart"
+    },
+    {
+      "type": "header",
+      "content": "Brand Benefits"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_benefits",
+      "label": "Show brand benefits",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "benefits_title",
+      "label": "Benefits title",
+      "default": "Member Benefits"
+    },
+    {
+      "type": "header",
+      "content": "Related Products"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_related_products",
+      "label": "Show related products",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "related_products_title",
+      "label": "Related products title",
+      "default": "You may also like"
+    },
+    {
+      "type": "collection",
+      "id": "related_collection",
+      "label": "Related collection"
+    },
+    {
+      "type": "range",
+      "id": "related_products_limit",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4,
+      "label": "Number of related products"
+    },
+    {
+      "type": "header",
+      "content": "Custom Content"
+    },
+    {
+      "type": "html",
+      "id": "custom_html",
+      "label": "Custom HTML",
+      "info": "Add custom HTML content to the product page"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_css",
+      "label": "Custom CSS",
+      "info": "Add custom CSS styles for this brand's product page"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Brand Benefit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon",
+          "info": "Enter an emoji or icon character"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Benefit text",
+          "default": "Free shipping on orders over $50"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Product Template",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "✓",
+            "text": "Free shipping on orders over $50"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "★",
+            "text": "Exclusive member benefits"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "⚡",
+            "text": "Fast delivery"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
