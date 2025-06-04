@@ -82,14 +82,12 @@
   <div class="brand-banner__container page-width">
     <ul class="brand-banner__list">
       {% comment %} Access brand metaobjects using shop.metaobjects.brand.values {% endcomment %}
-      {% for brand in shop.metaobjects.brand.values %}
-      {% brand.link %}
-      
+      {% for brand in shop.metaobjects.brand.values %}      
         {% if brand.brand_handle != blank %}
           {% assign brand_handle = brand.brand_handle %}
           {% assign brand_title = brand.title %}
           {% assign brand_logo = brand.logo %}
-          {% assign brand_link = brand.link | url %}
+          {% assign brand_link = brand.link %}
           
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
             <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
@@ -121,14 +119,15 @@
         <p>Available Brands:</p>
         <ul>
           {% for brand in shop.metaobjects.brand.values %}
-            <li>
-              {{ brand.title }} ({{ brand.brand_handle }})
-              {% if brand.link != blank %}
-                - Link: {{ brand.link }}
-              {% endif %}
-              {% if brand.logo != blank %}
-                - Logo: {{ brand.logo }}
-              {% endif %}
+            <li style="margin-bottom: 20px; border: 1px solid #ccc; padding: 10px;">
+              <strong>Brand Handle:</strong> {{ brand.brand_handle }}<br>
+              <strong>Title:</strong> {{ brand.title }}<br>
+              <strong>Logo (raw):</strong> {{ brand.logo }}<br>
+              <strong>Logo (image_url):</strong> {{ brand.logo | image_url }}<br>
+              <strong>Link (raw):</strong> {{ brand.link }}<br>
+              <strong>Link (url filter):</strong> {{ brand.link | url }}<br>
+              <strong>All Fields:</strong> 
+              <pre>{{ brand | json }}</pre>
             </li>
           {% endfor %}
         </ul>
