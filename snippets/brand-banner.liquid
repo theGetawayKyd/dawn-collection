@@ -82,7 +82,22 @@
   <div class="brand-banner__container page-width">
     <ul class="brand-banner__list">
       {% comment %} Access brand metaobjects using shop.metaobjects.brand.values {% endcomment %}
-      {% for brand in shop.metaobjects.brand.values %}      
+      {% comment %} Sort brands by sort_order if available, otherwise use title {% endcomment %}
+      {% assign has_sort_order = false %}
+      {% for brand in shop.metaobjects.brand.values %}
+        {% if brand.sort_order != blank %}
+          {% assign has_sort_order = true %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+      
+      {% if has_sort_order %}
+        {% assign sorted_brands = shop.metaobjects.brand.values | sort: 'sort_order' %}
+      {% else %}
+        {% assign sorted_brands = shop.metaobjects.brand.values | sort: 'title' %}
+      {% endif %}
+      
+      {% for brand in sorted_brands %}      
         {% if brand.brand_handle != blank %}
           {% assign brand_handle = brand.brand_handle %}
           {% assign brand_title = brand.title %}
@@ -146,6 +161,7 @@
           <p><strong>Brand #{{ forloop.index }}</strong></p>
           <p>Handle: {{ brand.brand_handle }}</p>
           <p>Title: {{ brand.title }}</p>
+          <p>Sort Order: {{ brand.sort_order | default: 'Not set' }}</p>
           <p>Link: {{ brand.link.value.url }}</p>
         </div>
       {% else %}
