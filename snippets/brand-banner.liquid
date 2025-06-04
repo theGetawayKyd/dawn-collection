@@ -56,6 +56,7 @@
   .brand-banner__logo {
     max-height: calc({{ banner_height }}px - {{ logo_padding | times: 2 }}px);
     width: auto;
+    height: auto;
     object-fit: contain;
   }
   
@@ -79,13 +80,12 @@
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
             <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
               {% if brand_logo != blank %}
-                <img 
-                  src="{{ brand_logo | image_url }}" 
-                  alt="{{ brand_title }}" 
-                  width="100" 
-                  loading="lazy"
-                  class="brand-banner__logo"
-                >
+                {% assign max_logo_height = banner_height | minus: logo_padding | minus: logo_padding %}
+                {{ brand_logo | image_url: width: 150 | image_tag: 
+                  alt: brand_title,
+                  class: 'brand-banner__logo',
+                  loading: 'lazy'
+                }}
               {% else %}
                 <span class="brand-banner__name">{{ brand_title }}</span>
               {% endif %}
