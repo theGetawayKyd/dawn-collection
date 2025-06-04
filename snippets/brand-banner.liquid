@@ -87,7 +87,17 @@
           {% assign brand_handle = brand.brand_handle %}
           {% assign brand_title = brand.title %}
           {% assign brand_logo = brand.logo %}
-          {% assign brand_link = brand.link.value.url %}
+          
+          {% comment %} Try different approaches to get the URL {% endcomment %}
+          {% if brand.link.value.url != blank %}
+            {% assign brand_link = brand.link.value.url %}
+          {% elsif brand.link.url != blank %}
+            {% assign brand_link = brand.link.url %}
+          {% elsif brand.link.value != blank %}
+            {% assign brand_link = brand.link.value %}
+          {% else %}
+            {% assign brand_link = brand.link %}
+          {% endif %}
           
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
             <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
@@ -117,6 +127,17 @@
     <p>Selected Brand: {{ selected_brand | default: 'None' }}</p>
     <p>Debug enabled: {{ show_debug }}</p>
     <p>Total brands found: {{ shop.metaobjects.brand.values.size }}</p>
+    
+    {% assign first_brand = shop.metaobjects.brand.values | first %}
+    {% if first_brand %}
+      <h4>First Brand Link Structure:</h4>
+      <ul>
+        <li>brand.link: {{ first_brand.link }}</li>
+        <li>brand.link.type: {{ first_brand.link.type }}</li>
+        <li>brand.link.value: {{ first_brand.link.value }}</li>
+        <li>brand.link.value.url: {{ first_brand.link.value.url }}</li>
+      </ul>
+    {% endif %}
     
     <h4>Raw brand data:</h4>
     <div style="background-color: white; padding: 10px; border: 1px solid #ccc; overflow: auto; max-height: 300px;">
