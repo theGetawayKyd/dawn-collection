@@ -1,14 +1,25 @@
 {% comment %}
   Brand Banner Section
   
-  This section displays a horizontal list of brand logos and allows customers to switch between brands.
-  It uses metaobjects to retrieve brand information and cart attributes to store the selected brand.
+  This section displays a horizontal list of brand logos and allows customers to navigate to brand pages.
+  It uses metaobjects to retrieve brand information.
 {% endcomment %}
 
 <link rel="stylesheet" href="{{ 'component-brand-banner.css' | asset_url }}" media="print" onload="this.media='all'">
 
-<div class="brand-banner-section">
-  {% render 'brand-banner', show_debug: section.settings.show_debug %}
+{%- style -%}
+  .brand-banner-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+  }
+{%- endstyle -%}
+
+<div class="brand-banner-section brand-banner-section-{{ section.id }}">
+  {% render 'brand-banner', 
+    show_debug: section.settings.show_debug, 
+    banner_height: section.settings.banner_height, 
+    logo_padding: section.settings.logo_padding,
+    text_color: section.settings.text_color
+  %}
 </div>
 
 {% schema %}
@@ -17,6 +28,44 @@
   "tag": "section",
   "class": "section",
   "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "background-1"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "banner_height",
+      "min": 30,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Banner height",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "logo_padding",
+      "min": 0,
+      "max": 20,
+      "step": 5,
+      "unit": "px",
+      "label": "Logo padding",
+      "default": 5
+    },
     {
       "type": "checkbox",
       "id": "show_debug",

@@ -6,6 +6,63 @@
 {% endcomment %}
 
 {% assign selected_brand = cart.attributes.selected_brand | default: '' %}
+{% assign banner_height = banner_height | default: 40 %}
+{% assign logo_padding = logo_padding | default: 5 %}
+{% assign text_color = text_color | default: '#000000' %}
+
+<style>
+  .brand-banner {
+    height: {{ banner_height }}px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .brand-banner__list {
+    display: flex;
+    flex-wrap: nowrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    gap: 20px;
+    justify-content: center;
+    height: 100%;
+    align-items: center;
+  }
+  
+  .brand-banner__item {
+    flex: 0 0 auto;
+    padding: {{ logo_padding }}px;
+  }
+  
+  .brand-banner__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    height: 100%;
+    transition: transform 0.2s ease;
+  }
+  
+  .brand-banner__link:hover {
+    transform: scale(1.05);
+  }
+  
+  .brand-banner__item--active .brand-banner__link {
+    border-bottom: 2px solid var(--color-primary);
+  }
+  
+  .brand-banner__logo {
+    max-height: calc({{ banner_height }}px - {{ logo_padding | times: 2 }}px);
+    width: auto;
+    object-fit: contain;
+  }
+  
+  .brand-banner__name {
+    font-weight: 600;
+    color: {{ text_color }};
+  }
+</style>
 
 <div class="brand-banner">
   <div class="brand-banner__container page-width">
@@ -66,53 +123,6 @@
 {% endif %}
 
 <style>
-  .brand-banner {
-    background-color: var(--color-background);
-    border-bottom: 1px solid var(--color-border);
-    padding: 10px 0;
-  }
-  
-  .brand-banner__list {
-    display: flex;
-    flex-wrap: nowrap;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    overflow-x: auto;
-    gap: 20px;
-    justify-content: center;
-  }
-  
-  .brand-banner__item {
-    flex: 0 0 auto;
-  }
-  
-  .brand-banner__link {
-    display: block;
-    text-decoration: none;
-    padding: 5px;
-    transition: transform 0.2s ease;
-  }
-  
-  .brand-banner__link:hover {
-    transform: scale(1.05);
-  }
-  
-  .brand-banner__item--active .brand-banner__link {
-    border-bottom: 2px solid var(--color-primary);
-  }
-  
-  .brand-banner__logo {
-    max-height: 50px;
-    width: auto;
-    object-fit: contain;
-  }
-  
-  .brand-banner__name {
-    font-weight: 600;
-    color: var(--color-text);
-  }
-  
   .brand-banner__debug {
     margin-top: 10px;
     padding: 10px;
