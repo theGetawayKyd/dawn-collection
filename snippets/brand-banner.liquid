@@ -5,7 +5,24 @@
   It uses metaobjects to retrieve brand information.
 {% endcomment %}
 
+{% comment %} Check if this collection has a brand_handle metafield {% endcomment %}
+{% assign collection_brand = '' %}
+{% if collection.metafields.brand != blank and collection.metafields.brand.brand_handle != blank %}
+  {% assign collection_brand = collection.metafields.brand.brand_handle.value | default: '' %}
+{% endif %}
+
+{% comment %} Use the collection's brand metafield if available, otherwise use the cart attribute {% endcomment %}
 {% assign selected_brand = cart.attributes.selected_brand | default: '' %}
+
+{% comment %} If we have a collection brand but no selected brand, update the selected brand {% endcomment %}
+{% if collection_brand != blank and selected_brand == blank %}
+  {% assign selected_brand = collection_brand %}
+{% endif %}
+
+{% comment %} If we have a collection brand that doesn't match the selected brand, update the selected brand {% endcomment %}
+{% if collection_brand != blank and selected_brand != collection_brand %}
+  {% assign selected_brand = collection_brand %}
+{% endif %}
 {% assign banner_height = banner_height | default: 40 %}
 {% assign logo_padding = logo_padding | default: 5 %}
 {% assign text_color = text_color | default: '#000000' %}
@@ -146,10 +163,27 @@
     <p>Collection Brand Metafield: {{ collection.metafields.brand.brand_handle.value | default: 'Not set' }}</p>
     
     <h4>Metafield Debug:</h4>
-    <p>Raw metafield value: {{ collection.metafields.brand.brand_handle }}</p>
-    
-
-
+    <p>Raw metafield data:</p>
+    <ul>
+      {% for namespace in collection.metafields %}
+        <li>
+          <strong>Namespace: {{ namespace[0] }}</strong>
+          <ul>
+            {% for field in namespace[1] %}
+              <li>{{ field[0] }}:
+                {% if field[1].value != blank %}
+                  Value: {{ field[1].value }} (Type: {{ field[1].type }})
+                {% else %}
+                  {{ field[1] }}
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+      {% else %}
+        <li>No metafields found for this collection</li>
+      {% endfor %}
+    </ul>
     </div>
   </div>
 {% endif %}
