@@ -21,19 +21,11 @@
   }
   
   .brand-banner__container {
-    display: flex;
     width: 100%;
-    {% if logo_alignment == 'left' %}
-    justify-content: flex-start;
-    {% elsif logo_alignment == 'center' %}
-    justify-content: center;
-    {% else %}
-    justify-content: flex-end;
-    {% endif %}
   }
   
   .brand-banner__list {
-    display: inline-flex;
+    display: flex;
     flex-wrap: nowrap;
     list-style: none;
     margin: 0;
@@ -41,7 +33,13 @@
     overflow-x: auto;
     height: 100%;
     align-items: center;
-    max-width: 100%;
+    {% if logo_alignment == 'left' %}
+    justify-content: flex-start;
+    {% elsif logo_alignment == 'center' %}
+    justify-content: center;
+    {% else %}
+    justify-content: flex-end;
+    {% endif %}
   }
   
   .brand-banner__item {
@@ -81,9 +79,8 @@
 </style>
 
 <div class="brand-banner" style="background-color: {{ background_color }};">
-  <div class="page-width">
-    <div class="brand-banner__container">
-      <ul class="brand-banner__list">
+  <div class="brand-banner__container page-width">
+    <ul class="brand-banner__list">
       {% comment %} Access brand metaobjects using shop.metaobjects.brand.values {% endcomment %}
       {% for brand in shop.metaobjects.brand.values %}
         {% if brand.brand_handle != blank %}
@@ -108,8 +105,7 @@
           </li>
         {% endif %}
       {% endfor %}
-      </ul>
-    </div>
+    </ul>
   </div>
 </div>
 
