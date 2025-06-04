@@ -144,6 +144,10 @@
     <p>Cart Attribute Brand: {{ cart.attributes.selected_brand | default: 'None' }}</p>
     <p>Current Collection: {{ collection.title | default: 'None' }}</p>
     <p>Collection Brand Metafield: {{ collection.metafields.brand.brand_handle.value | default: 'Not set' }}</p>
+    
+    <h4>Metafield Debug:</h4>
+    <p>Raw metafield object: {{ collection.metafields.brand.brand_handle | json }}</p>
+    <p>All collection metafields: {{ collection.metafields | json }}</p>
     <p>Debug enabled: {{ show_debug }}</p>
     <p>Total brands found: {{ shop.metaobjects.brand.values.size }}</p>
     

@@ -7,7 +7,7 @@
 
 {%- liquid
   # Check if this collection has a brand_handle metafield
-  assign collection_brand = collection.metafields.brand.brand_handle | default: ''
+  assign collection_brand = collection.metafields.brand.brand_handle.value | default: ''
   
   # Use the collection's brand metafield if available, otherwise use the cart attribute
   assign selected_brand = cart.attributes.selected_brand | default: ''
