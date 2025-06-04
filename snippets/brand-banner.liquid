@@ -76,7 +76,6 @@
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
             <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
               {% if brand_logo != blank %}
-                {% assign max_logo_height = banner_height | minus: logo_padding | minus: logo_padding %}
                 {{ brand_logo | image_url | image_tag: 
                   alt: brand_title,
                   class: 'brand-banner__logo',
