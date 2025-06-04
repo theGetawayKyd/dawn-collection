@@ -46,6 +46,8 @@
             "text_color": "#000000",
             "banner_height": 40,
             "logo_padding": 10,
+            "logo_alignment": "right",
+            "active_brand_bg_color": "#ffffff",
             "show_debug": false
           }
         }
