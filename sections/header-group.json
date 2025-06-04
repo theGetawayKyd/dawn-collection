@@ -44,7 +44,7 @@
             "show_brand_banner": true,
             "background_color": "#e41b1b",
             "text_color": "#000000",
-            "banner_height": 40,
+            "banner_height": 60,
             "logo_padding": 5,
             "show_debug": false
           }
