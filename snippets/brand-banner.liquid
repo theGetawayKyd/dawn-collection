@@ -87,11 +87,7 @@
           {% assign brand_handle = brand.brand_handle %}
           {% assign brand_title = brand.title %}
           {% assign brand_logo = brand.logo %}
-          {% if brand.link contains 'shopify://shop_metaobject' or brand.link contains 'gid://' %}
-            {% assign brand_link = brand.link | url %}
-          {% else %}
-            {% assign brand_link = brand.link %}
-          {% endif %}
+          {% assign brand_link = brand.link %}
           
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
             <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
@@ -129,7 +125,7 @@
           <p><strong>Brand #{{ forloop.index }}</strong></p>
           <p>Handle: {{ brand.brand_handle }}</p>
           <p>Title: {{ brand.title }}</p>
-          <p>Link: {{ brand.link }}</p>
+          <p>Link: {{ brand.link.url }}</p>
         </div>
       {% else %}
         <p><strong>No brands found in shop.metaobjects.brand.values</strong></p>
