@@ -10,6 +10,8 @@
 {% assign logo_padding = logo_padding | default: 5 %}
 {% assign text_color = text_color | default: '#000000' %}
 {% assign background_color = background_color | default: '#f8f8f8' %}
+{% assign logo_alignment = logo_alignment | default: 'right' %}
+{% assign active_brand_bg_color = active_brand_bg_color | default: '#f0f0f0' %}
 
 <style>
   .brand-banner {
@@ -25,7 +27,7 @@
     margin: 0;
     padding: 0;
     overflow-x: auto;
-    justify-content: right;
+    justify-content: {{ logo_alignment }};
     height: 100%;
     align-items: center;
   }
@@ -46,6 +48,10 @@
   
   .brand-banner__link:hover {
     transform: scale(1.05);
+  }
+  
+  .brand-banner__item--active {
+    background-color: {{ active_brand_bg_color }};
   }
   
   .brand-banner__item--active .brand-banner__link {

@@ -135,7 +135,9 @@
         banner_height: block.settings.banner_height, 
         logo_padding: block.settings.logo_padding,
         text_color: block.settings.text_color,
-        background_color: block.settings.background_color
+        background_color: block.settings.background_color,
+        logo_alignment: block.settings.logo_alignment,
+        active_brand_bg_color: block.settings.active_brand_bg_color
       %}
     {% endif %}
   {% endfor %}
@@ -690,6 +692,32 @@
           "unit": "px",
           "label": "Logo padding",
           "default": 5
+        },
+        {
+          "type": "select",
+          "id": "logo_alignment",
+          "label": "Logo alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "right"
+        },
+        {
+          "type": "color",
+          "id": "active_brand_bg_color",
+          "label": "Active brand background color",
+          "default": "#f0f0f0"
         },
         {
           "type": "checkbox",
