@@ -125,7 +125,7 @@
           <p><strong>Brand #{{ forloop.index }}</strong></p>
           <p>Handle: {{ brand.brand_handle }}</p>
           <p>Title: {{ brand.title }}</p>
-          <p>Link: {{ brand.link | url }}</p>
+          <p>Link: {{ brand.link.value.url }}</p>
         </div>
       {% else %}
         <p><strong>No brands found in shop.metaobjects.brand.values</strong></p>
