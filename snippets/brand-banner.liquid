@@ -146,8 +146,24 @@
     <p>Collection Brand Metafield: {{ collection.metafields.brand.brand_handle.value | default: 'Not set' }}</p>
     
     <h4>Metafield Debug:</h4>
-    <p>Raw metafield object: {{ collection.metafields.brand.brand_handle | json }}</p>
-    <p>All collection metafields: {{ collection.metafields | json }}</p>
+    <p>Raw metafield object: {{ collection.metafields.brand.brand_handle }}</p>
+    <p>Metafield type: {{ collection.metafields.brand.brand_handle.type }}</p>
+    
+    <h4>Available Collection Metafield Namespaces:</h4>
+    <ul>
+      {% for namespace in collection.metafields %}
+        <li>{{ namespace[0] }}</li>
+      {% endfor %}
+    </ul>
+    
+    {% if collection.metafields.brand %}
+      <h4>Brand Namespace Keys:</h4>
+      <ul>
+        {% for field in collection.metafields.brand %}
+          <li>{{ field[0] }}: {{ field[1].value }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
     <p>Debug enabled: {{ show_debug }}</p>
     <p>Total brands found: {{ shop.metaobjects.brand.values.size }}</p>
     
