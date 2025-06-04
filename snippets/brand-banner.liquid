@@ -9,6 +9,7 @@
 {% assign banner_height = banner_height | default: 40 %}
 {% assign logo_padding = logo_padding | default: 5 %}
 {% assign text_color = text_color | default: '#000000' %}
+{% assign background_color = background_color | default: '#f8f8f8' %}
 
 <style>
   .brand-banner {
@@ -64,7 +65,7 @@
   }
 </style>
 
-<div class="brand-banner">
+<div class="brand-banner" style="background-color: {{ background_color }};">
   <div class="brand-banner__container page-width">
     <ul class="brand-banner__list">
       {% comment %} Access brand metaobjects using shop.metaobjects.brand.values {% endcomment %}

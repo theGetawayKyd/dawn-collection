@@ -131,7 +131,19 @@
   {% render 'brand-banner', show_debug: section.settings.show_brand_debug %}
 {% endif %}
 
-<header class="header header--{{ section.settings.logo_position }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}">
+  {% for block in section.blocks %}
+    {% if block.type == 'brand_banner' and block.settings.show_brand_banner %}
+      {% render 'brand-banner', 
+        show_debug: block.settings.show_debug, 
+        banner_height: block.settings.banner_height, 
+        logo_padding: block.settings.logo_padding,
+        text_color: block.settings.text_color,
+        background_color: block.settings.background_color
+      %}
+    {% endif %}
+  {% endfor %}
+
+  <header class="header header--{{ section.settings.logo_position }} page-width header--mobile-{{ section.settings.mobile_logo_position }} header--{{ section.settings.menu_type_desktop }}{% if section.settings.show_line_separator %} header--has-separator{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}">
     {%- liquid
       if section.settings.menu != blank
         render 'header-drawer'
@@ -656,6 +668,59 @@
     }
   ],
   "blocks": [
+    {
+      "type": "brand_banner",
+      "name": "Brand Banner",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_brand_banner",
+          "label": "Show brand banner",
+          "default": true,
+          "info": "Display a banner at the top of the page that allows customers to switch between brands"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background color",
+          "default": "#f8f8f8"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#000000"
+        },
+        {
+          "type": "range",
+          "id": "banner_height",
+          "min": 30,
+          "max": 100,
+          "step": 10,
+          "unit": "px",
+          "label": "Banner height",
+          "default": 40
+        },
+        {
+          "type": "range",
+          "id": "logo_padding",
+          "min": 0,
+          "max": 20,
+          "step": 5,
+          "unit": "px",
+          "label": "Logo padding",
+          "default": 5
+        },
+        {
+          "type": "checkbox",
+          "id": "show_debug",
+          "label": "Show debug information",
+          "default": false,
+          "info": "Display debugging information for brand metaobjects"
+        }
+      ]
+    },
     {
       "type": "@app"
     }
