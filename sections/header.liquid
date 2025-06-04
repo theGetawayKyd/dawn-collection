@@ -127,9 +127,6 @@
       assign localization_forms = true
     endif
   -%}
-  {% if section.settings.show_brand_banner %}
-  {% render 'brand-banner', show_debug: section.settings.show_brand_debug %}
-{% endif %}
 
   {% for block in section.blocks %}
     {% if block.type == 'brand_banner' and block.settings.show_brand_banner %}
