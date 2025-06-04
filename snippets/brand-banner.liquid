@@ -13,10 +13,10 @@
       {% comment %} Access brand metaobjects using shop.metaobjects.brand.values {% endcomment %}
       {% for brand in shop.metaobjects.brand.values %}
         {% if brand.brand_handle != blank %}
-          {% assign brand_handle = brand.brand_handle.value %}
-          {% assign brand_title = brand.title.value %}
-          {% assign brand_logo = brand.logo.value %}
-          {% assign brand_link = brand.link.value %}
+          {% assign brand_handle = brand.brand_handle %}
+          {% assign brand_title = brand.title %}
+          {% assign brand_logo = brand.logo %}
+          {% assign brand_link = brand.link %}
           
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
             <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
@@ -51,9 +51,9 @@
         <ul>
           {% for brand in shop.metaobjects.brand.values %}
             <li>
-              {{ brand.title.value }} ({{ brand.brand_handle.value }})
-              {% if brand.link.value != blank %}
-                - Link: {{ brand.link.value }}
+              {{ brand.title }} ({{ brand.brand_handle }})
+              {% if brand.link != blank %}
+                - Link: {{ brand.link }}
               {% endif %}
             </li>
           {% endfor %}
