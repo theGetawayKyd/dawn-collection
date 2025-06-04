@@ -54,7 +54,7 @@
         "brand_banner_FYq78e"
       ],
       "settings": {
-        "show_brand_banner": true,
+        "show_brand_banner": false,
         "show_brand_debug": false,
         "logo_position": "middle-left",
         "mobile_logo_position": "center",
