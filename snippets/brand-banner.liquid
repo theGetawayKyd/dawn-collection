@@ -87,7 +87,7 @@
           {% assign brand_handle = brand.brand_handle %}
           {% assign brand_title = brand.title %}
           {% assign brand_logo = brand.logo %}
-          {% assign brand_link = brand.link %}
+          {% assign brand_link = brand.link.value.url %}
           
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
             <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
