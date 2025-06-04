@@ -47,10 +47,6 @@
     padding: {{ logo_padding }}px;
   }
   
-  .brand-banner__form {
-    margin: 0;
-    padding: 0;
-  }
   
   .brand-banner__link {
     display: flex;
@@ -59,12 +55,6 @@
     text-decoration: none;
     height: 100%;
     transition: transform 0.2s ease;
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    font: inherit;
-    color: inherit;
   }
   
   .brand-banner__link:hover {
@@ -88,51 +78,6 @@
     color: {{ text_color }};
   }
 </style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Store brand links for redirection after form submission
-    var brandLinks = {};
-    
-    {% for brand in sorted_brands %}
-      {% if brand.brand_handle != blank and brand.link.value.url != blank %}
-        brandLinks['{{ brand.brand_handle }}'] = '{{ brand.link.value.url }}';
-      {% endif %}
-    {% endfor %}
-    
-    // Add event listeners to brand forms
-    document.querySelectorAll('.brand-banner__form').forEach(function(form) {
-      form.addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        // Get the brand handle from the input field
-        var brandHandle = this.querySelector('input[name="attributes[selected_brand]"]').value;
-        
-        // Submit the form via AJAX to update cart attributes
-        fetch('/cart/update.js', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json'
-          },
-          body: new URLSearchParams(new FormData(this))
-        })
-        .then(response => response.json())
-        .then(data => {
-          // After updating cart attributes, redirect to the brand page if available
-          if (brandLinks[brandHandle]) {
-            window.location.href = brandLinks[brandHandle];
-          }
-        })
-        .catch(error => {
-          console.error('Error updating cart attributes:', error);
-          // If AJAX fails, submit the form normally
-          form.submit();
-        });
-      });
-    });
-  });
-</script>
 
 <div class="brand-banner" style="background-color: {{ background_color }};">
   <div class="brand-banner__container page-width">
@@ -171,9 +116,7 @@
           {% endif %}
           
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
-            <form method="post" action="/cart/update" id="brand-form-{{ brand_handle }}" accept-charset="UTF-8" class="brand-banner__form">
-              <input type="hidden" name="attributes[selected_brand]" value="{{ brand_handle }}">
-              <button type="submit" class="brand-banner__link" aria-label="Select {{ brand_title }} brand">
+            <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
               {% if brand_logo != blank %}
                 {% assign logo_height = banner_height | minus: logo_padding | minus: logo_padding %}
                 {{ brand_logo | image_url: height: logo_height | image_tag: 
@@ -184,8 +127,7 @@
               {% else %}
                 <span class="brand-banner__name">{{ brand_title }}</span>
               {% endif %}
-              </button>
-            </form>
+            </a>
           </li>
         {% endif %}
       {% endfor %}
