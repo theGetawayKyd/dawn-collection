@@ -87,7 +87,11 @@
           {% assign brand_handle = brand.brand_handle %}
           {% assign brand_title = brand.title %}
           {% assign brand_logo = brand.logo %}
-          {% assign brand_link = brand.link %}
+          {% if brand.link contains 'shopify://shop_metaobject' or brand.link contains 'gid://' %}
+            {% assign brand_link = brand.link | url %}
+          {% else %}
+            {% assign brand_link = brand.link %}
+          {% endif %}
           
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
             <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
@@ -110,29 +114,27 @@
 </div>
 
 {% comment %} Debug information for metaobject access issues {% endcomment %}
+<!-- Debug parameter value: {{ show_debug }} -->
 {% if show_debug %}
-  <div class="brand-banner__debug">
-    <details>
-      <summary>Debug Info</summary>
-      <div class="brand-banner__debug-content">
-        <p>Selected Brand: {{ selected_brand | default: 'None' }}</p>
-        <p>Available Brands:</p>
-        <ul>
-          {% for brand in shop.metaobjects.brand.values %}
-            <li style="margin-bottom: 20px; border: 1px solid #ccc; padding: 10px;">
-              <strong>Brand Handle:</strong> {{ brand.brand_handle }}<br>
-              <strong>Title:</strong> {{ brand.title }}<br>
-              <strong>Logo (raw):</strong> {{ brand.logo }}<br>
-              <strong>Logo (image_url):</strong> {{ brand.logo | image_url }}<br>
-              <strong>Link (raw):</strong> {{ brand.link }}<br>
-              <strong>Link (url filter):</strong> {{ brand.link | url }}<br>
-              <strong>All Fields:</strong> 
-              <pre>{{ brand | json }}</pre>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </details>
+  <div class="brand-banner__debug" style="background-color: #f8f8f8; padding: 15px; margin-top: 20px; border: 1px solid #ddd;">
+    <h3>Brand Banner Debug Info</h3>
+    <p>Selected Brand: {{ selected_brand | default: 'None' }}</p>
+    <p>Debug enabled: {{ show_debug }}</p>
+    <p>Total brands found: {{ shop.metaobjects.brand.values.size }}</p>
+    
+    <h4>Raw brand data:</h4>
+    <div style="background-color: white; padding: 10px; border: 1px solid #ccc; overflow: auto; max-height: 300px;">
+      {% for brand in shop.metaobjects.brand.values %}
+        <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+          <p><strong>Brand #{{ forloop.index }}</strong></p>
+          <p>Handle: {{ brand.brand_handle }}</p>
+          <p>Title: {{ brand.title }}</p>
+          <p>Link: {{ brand.link }}</p>
+        </div>
+      {% else %}
+        <p><strong>No brands found in shop.metaobjects.brand.values</strong></p>
+      {% endfor %}
+    </div>
   </div>
 {% endif %}
 
