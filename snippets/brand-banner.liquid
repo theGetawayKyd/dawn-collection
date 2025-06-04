@@ -5,24 +5,7 @@
   It uses metaobjects to retrieve brand information.
 {% endcomment %}
 
-{% comment %} Check if this collection has a brand_handle metafield {% endcomment %}
-{% assign collection_brand = '' %}
-{% if collection.metafields.brand != blank and collection.metafields.brand.brand_handle != blank %}
-  {% assign collection_brand = collection.metafields.brand.brand_handle.value | default: '' %}
-{% endif %}
-
-{% comment %} Use the collection's brand metafield if available, otherwise use the cart attribute {% endcomment %}
 {% assign selected_brand = cart.attributes.selected_brand | default: '' %}
-
-{% comment %} If we have a collection brand but no selected brand, update the selected brand {% endcomment %}
-{% if collection_brand != blank and selected_brand == blank %}
-  {% assign selected_brand = collection_brand %}
-{% endif %}
-
-{% comment %} If we have a collection brand that doesn't match the selected brand, update the selected brand {% endcomment %}
-{% if collection_brand != blank and selected_brand != collection_brand %}
-  {% assign selected_brand = collection_brand %}
-{% endif %}
 {% assign banner_height = banner_height | default: 40 %}
 {% assign logo_padding = logo_padding | default: 5 %}
 {% assign text_color = text_color | default: '#000000' %}
@@ -158,32 +141,34 @@
   <div class="brand-banner__debug" style="background-color: #f8f8f8; padding: 15px; margin-top: 20px; border: 1px solid #ddd;">
     <h3>Brand Banner Debug Info</h3>
     <p>Selected Brand: {{ selected_brand | default: 'None' }}</p>
-    <p>Cart Attribute Brand: {{ cart.attributes.selected_brand | default: 'None' }}</p>
-    <p>Current Collection: {{ collection.title | default: 'None' }}</p>
-    <p>Collection Brand Metafield: {{ collection.metafields.brand.brand_handle.value | default: 'Not set' }}</p>
+    <p>Debug enabled: {{ show_debug }}</p>
+    <p>Total brands found: {{ shop.metaobjects.brand.values.size }}</p>
     
-    <h4>Metafield Debug:</h4>
-    <p>Raw metafield data:</p>
-    <ul>
-      {% for namespace in collection.metafields %}
-        <li>
-          <strong>Namespace: {{ namespace[0] }}</strong>
-          <ul>
-            {% for field in namespace[1] %}
-              <li>{{ field[0] }}:
-                {% if field[1].value != blank %}
-                  Value: {{ field[1].value }} (Type: {{ field[1].type }})
-                {% else %}
-                  {{ field[1] }}
-                {% endif %}
-              </li>
-            {% endfor %}
-          </ul>
-        </li>
+    {% assign first_brand = shop.metaobjects.brand.values | first %}
+    {% if first_brand %}
+      <h4>First Brand Link Structure:</h4>
+      <ul>
+        <li>brand.link: {{ first_brand.link }}</li>
+        <li>brand.link.type: {{ first_brand.link.type }}</li>
+        <li>brand.link.value: {{ first_brand.link.value }}</li>
+        <li>brand.link.value.url: {{ first_brand.link.value.url }}</li>
+      </ul>
+    {% endif %}
+    
+    <h4>Raw brand data:</h4>
+    <div style="background-color: white; padding: 10px; border: 1px solid #ccc; overflow: auto; max-height: 300px;">
+      {% for brand in shop.metaobjects.brand.values %}
+        <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+          <p><strong>Brand #{{ forloop.index }}</strong></p>
+          <p>Handle: {{ brand.brand_handle }}</p>
+          <p>Title: {{ brand.title }}</p>
+          <p>Sort Order: {{ brand.sort_order | default: 'Not set' }}</p>
+          <p>Link: {{ brand.link.value.url }}</p>
+        </div>
       {% else %}
-        <li>No metafields found for this collection</li>
+        <p><strong>No brands found in shop.metaobjects.brand.values</strong></p>
       {% endfor %}
-    </ul>
+    </div>
     </div>
   </div>
 {% endif %}
