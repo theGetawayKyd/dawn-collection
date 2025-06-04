@@ -42,7 +42,7 @@
           "type": "brand_banner",
           "settings": {
             "show_brand_banner": true,
-            "background_color": "#e41b1b",
+            "background_color": "#ab4e4e",
             "text_color": "#000000",
             "banner_height": 60,
             "logo_padding": 5,
@@ -54,8 +54,6 @@
         "brand_banner_FYq78e"
       ],
       "settings": {
-        "show_brand_banner": false,
-        "show_brand_debug": false,
         "logo_position": "middle-left",
         "mobile_logo_position": "center",
         "menu": "main-menu",
