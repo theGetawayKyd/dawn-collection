@@ -83,6 +83,8 @@
     <ul class="brand-banner__list">
       {% comment %} Access brand metaobjects using shop.metaobjects.brand.values {% endcomment %}
       {% for brand in shop.metaobjects.brand.values %}
+      {% brand.link %}
+      
         {% if brand.brand_handle != blank %}
           {% assign brand_handle = brand.brand_handle %}
           {% assign brand_title = brand.title %}
