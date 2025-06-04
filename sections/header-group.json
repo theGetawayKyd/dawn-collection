@@ -42,10 +42,10 @@
           "type": "brand_banner",
           "settings": {
             "show_brand_banner": true,
-            "background_color": "#ab4e4e",
+            "background_color": "#000000",
             "text_color": "#000000",
             "banner_height": 40,
-            "logo_padding": 5,
+            "logo_padding": 10,
             "show_debug": false
           }
         }
