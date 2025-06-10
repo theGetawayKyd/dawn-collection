@@ -146,7 +146,11 @@
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
             <a href="{{ brand_link }}" class="brand-banner__link" data-brand-handle="{{ brand_handle }}" aria-label="Visit {{ brand_title }} brand page">
               {% comment %} Determine which logo to display based on active state and default_logo_shade setting {% endcomment %}
-              {% assign is_active = selected_brand == brand_handle %}
+              {% if selected_brand == brand_handle %}
+                {% assign is_active = true %}
+              {% else %}
+                {% assign is_active = false %}
+              {% endif %}
               {% assign use_light_logo = false %}
               
               {% if default_logo_shade == 'light' %}
