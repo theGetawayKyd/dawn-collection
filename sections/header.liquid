@@ -139,10 +139,37 @@
   
   {% comment %} Find the brand metaobject that matches the selected brand {% endcomment %}
   {% assign brand_menu_handle = '' %}
+  {% assign brand_logo = blank %}
+  {% assign brand_link = routes.root_url %}
+  {% assign brand_title = shop.name %}
+  
   {% if selected_brand != blank %}
     {% for brand in shop.metaobjects.brand.values %}
-      {% if brand.brand_handle == selected_brand and brand.menu_handle != blank %}
-        {% assign brand_menu_handle = brand.menu_handle %}
+      {% if brand.brand_handle == selected_brand %}
+        {% comment %} Store brand menu handle if available {% endcomment %}
+        {% if brand.menu_handle != blank %}
+          {% assign brand_menu_handle = brand.menu_handle %}
+        {% endif %}
+        
+        {% comment %} Store brand logo if available {% endcomment %}
+        {% if brand.logo != blank %}
+          {% assign brand_logo = brand.logo %}
+        {% endif %}
+        
+        {% comment %} Store brand title {% endcomment %}
+        {% assign brand_title = brand.title %}
+        
+        {% comment %} Store brand link URL {% endcomment %}
+        {% if brand.link.value.url != blank %}
+          {% assign brand_link = brand.link.value.url %}
+        {% elsif brand.link.url != blank %}
+          {% assign brand_link = brand.link.url %}
+        {% elsif brand.link.value != blank %}
+          {% assign brand_link = brand.link.value %}
+        {% elsif brand.link != blank %}
+          {% assign brand_link = brand.link %}
+        {% endif %}
+        
         {% break %}
       {% endif %}
     {% endfor %}
@@ -177,8 +204,25 @@
       {%- if request.page_type == 'index' -%}
         <h1 class="header__heading">
       {%- endif -%}
-          <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset">
-            {%- if settings.logo != blank -%}
+          <a href="{{ brand_link }}" class="header__heading-link link link--text focus-inset">
+            {% comment %} Use brand logo if selected brand has a logo, otherwise use default store logo {% endcomment %}
+            {%- if selected_brand != blank and brand_logo != blank -%}
+              <div class="header__heading-logo-wrapper">
+                {%- assign logo_alt = brand_title | escape -%}
+                {%- assign logo_height = settings.logo_width | divided_by: brand_logo.aspect_ratio | default: settings.logo_width -%}
+                {% capture sizes %}(max-width: {{ settings.logo_width | times: 2 }}px) 50vw, {{ settings.logo_width }}px{% endcapture %}
+                {% capture widths %}{{ settings.logo_width }}, {{ settings.logo_width | times: 1.5 | round }}, {{ settings.logo_width | times: 2 }}{% endcapture %}
+                {{ brand_logo | image_url: width: 600 | image_tag:
+                  class: 'header__heading-logo motion-reduce',
+                  widths: widths,
+                  height: logo_height,
+                  width: settings.logo_width,
+                  alt: logo_alt,
+                  sizes: sizes,
+                  preload: true
+                }}
+              </div>
+            {%- elsif settings.logo != blank -%}
               <div class="header__heading-logo-wrapper">
                 {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
                 {%- assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio -%}
@@ -195,7 +239,7 @@
                 }}
               </div>
             {%- else -%}
-              <span class="h2">{{ shop.name }}</span>
+              <span class="h2">{{ brand_title | default: shop.name }}</span>
             {%- endif -%}
           </a>
       {%- if request.page_type == 'index' -%}
