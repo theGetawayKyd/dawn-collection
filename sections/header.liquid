@@ -132,18 +132,34 @@
   # are accessed in a single place
 -%}
 
-  {% comment %} Brand detection is now handled directly in theme.liquid {% endcomment %}
+  {% comment %} Brand detection needs to be duplicated in the header since section scope is different from layout scope {% endcomment %}
+  
+  {% liquid
+    # Get the selected brand from cart attributes or set it based on collection metafield
+    assign selected_brand = cart.attributes.selected_brand | default: ''
+    
+    # If we're on a collection page with a brand_handle metafield, use that as the selected brand
+    if collection.metafields.custom.brand_handle.value != blank
+      assign collection_brand_handle = collection.metafields.custom.brand_handle.value
+      
+      # Update selected_brand if the collection's brand_handle is different
+      if selected_brand != collection_brand_handle
+        assign selected_brand = collection_brand_handle
+      endif
+    endif
+  %}
   
   <div style="background: #ffe8e8; border: 1px solid #ffbbbb; padding: 10px; margin: 10px 0; font-family: monospace; font-size: 12px;">
     <strong>Header Debug:</strong><br>
-    selected_brand in header: {{ selected_brand | json }}<br>
+    selected_brand in header (after local detection): {{ selected_brand | json }}<br>
     cart.attributes.selected_brand in header: {{ cart.attributes.selected_brand | json }}<br>
+    collection.metafields.custom.brand_handle.value: {{ collection.metafields.custom.brand_handle.value | json }}<br>
   </div>
   
   {% comment %} Find the brand metaobject that matches the selected brand {% endcomment %}
   {% assign brand_menu_handle = '' %}
   {% assign brand_logo = blank %}
-  {% assign brand_link = routes.root_url %}
+  {% assign brand_url = routes.root_url %}
   {% assign brand_title = shop.name %}
   
   {% if selected_brand != blank %}

@@ -72,6 +72,44 @@
       Page template: {{ template | json }}<br>
     </div>
     
+    {% comment %}
+    Update cart attributes with selected_brand if it's different from the current cart attribute
+    This is done via AJAX to avoid page reloads
+    We skip this in the theme editor to avoid reload loops
+    {% endcomment %}
+    {% if selected_brand != blank and selected_brand != cart.attributes.selected_brand and request.design_mode != true %}
+      <script>
+        (function() {
+          // Only run this script once the page is fully loaded
+          document.addEventListener('DOMContentLoaded', function() {
+            // Don't run in Shopify theme editor to prevent reload loops
+            if (Shopify && Shopify.designMode) return;
+            
+            // Update cart attributes with the selected brand
+            fetch('/cart/update.js', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify({
+                attributes: {
+                  selected_brand: {{ selected_brand | json }}
+                }
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Cart attributes updated:', data);
+            })
+            .catch(error => {
+              console.error('Error updating cart attributes:', error);
+            });
+          });
+        })();
+      </script>
+    {% endif %}
+    
     {%- liquid
     %}
     
