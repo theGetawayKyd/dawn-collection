@@ -103,7 +103,7 @@
       
       {% for brand in sorted_brands %} 
 
-      <!--- debug for each: {{ brand.brand_handle }} | {{ collection.metafields.brand.brand_handle }}  --->
+      <!--- metaobject entry {{ brand.brand_handle }} | collection metafield {{ collection.metafields.brand.brand_handle }} --->
            
         {% if brand.brand_handle != blank %}
           {% assign brand_handle = brand.brand_handle %}
