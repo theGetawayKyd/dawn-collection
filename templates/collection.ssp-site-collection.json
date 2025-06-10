@@ -9,35 +9,39 @@
  */
 {
   "sections": {
-    "image_banner_EqWH4X": {
+    "image_banner_djELda": {
       "type": "image-banner",
       "blocks": {
-        "heading_qd3fUW": {
+        "heading_mXDGFk": {
           "type": "heading",
           "settings": {
-            "heading": "HMS MOTORSPORT",
-            "heading_size": "hxl"
+            "heading": "<strong>ENDURO 2x2</strong>",
+            "heading_size": "h0"
           }
         },
-        "text_7zWtPy": {
-          "type": "text",
+        "buttons_haVYd6": {
+          "type": "buttons",
           "settings": {
-            "text": "Experts in driver safety",
-            "text_style": "body"
+            "button_label_1": "Show Details",
+            "button_link_1": "shopify://products/sr-94041-0",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
           }
         }
       },
       "block_order": [
-        "heading_qd3fUW",
-        "text_7zWtPy"
+        "heading_mXDGFk",
+        "buttons_haVYd6"
       ],
       "name": "t:sections.image-banner.presets.name",
       "settings": {
-        "image": "shopify://shop_images/437_HMS-Website-Homepage-Background-March142023_1800.jpg",
+        "image": "shopify://shop_images/66_Schroth_Homepage_MainBackground2.jpg",
         "image_overlay_opacity": 0,
         "image_height": "medium",
         "image_behavior": "none",
-        "desktop_content_position": "top-center",
+        "desktop_content_position": "top-right",
         "desktop_content_alignment": "center",
         "show_text_box": false,
         "color_scheme": "",
@@ -76,7 +80,7 @@
     }
   },
   "order": [
-    "image_banner_EqWH4X",
+    "image_banner_djELda",
     "banner",
     "product-grid"
   ]
