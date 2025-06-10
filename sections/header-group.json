@@ -26,7 +26,8 @@
             "active_brand_bg_color": "#000000",
             "show_debug": false,
             "announcement_text": "Free shipping on all orders!",
-            "default_logo_shade": "light"
+            "default_logo_shade": "light",
+            "use_opposite_shade_for_active": false
           }
         }
       },
