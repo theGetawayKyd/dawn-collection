@@ -5,23 +5,39 @@
   It uses metaobjects to retrieve brand information.
 {% endcomment %}
 
-{% comment %} Get the selected brand from cart attributes or set it based on collection metafield {% endcomment %}
+{% comment %} Check for selected brand in cookie first (via JavaScript), then cart attributes, then collection {% endcomment %}
 {% assign selected_brand = cart.attributes.selected_brand | default: '' %}
 
 {% comment %} If we're on a collection page with a brand_handle metafield, use that as the selected brand {% endcomment %}
 {% if collection.metafields.custom.brand_handle.value != blank %}
   {% assign collection_brand_handle = collection.metafields.custom.brand_handle.value %}
+  {% assign selected_brand = collection_brand_handle %}
   
-  {% comment %} Update selected_brand if the collection's brand_handle is different {% endcomment %}
-  {% if selected_brand != collection_brand_handle %}
-    {% assign selected_brand = collection_brand_handle %}
-    
-    {% comment %} 
-      Redirect code removed to prevent page reloading
-      The selected_brand is still set for the current page, but won't persist across page loads
-      without the redirect mechanism
-    {% endcomment %}
-  {% endif %}
+  {% comment %} Add JavaScript to set cookie and update cart attributes without page reload {% endcomment %}
+  {% unless request.design_mode %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Get brand handle from the collection metafield
+        const brandHandle = {{ collection_brand_handle | json }};
+        
+        // Set cookie for 30 days
+        document.cookie = "selected_brand=" + brandHandle + "; path=/; max-age=2592000; SameSite=Lax";
+        
+        // Update cart attributes via AJAX (without page reload)
+        fetch('/cart/update.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            attributes: {
+              selected_brand: brandHandle
+            }
+          })
+        });
+      });
+    </script>
+  {% endunless %}
 {% endif %}
 
 
@@ -141,7 +157,7 @@
 
 
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
-            <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
+            <a href="{{ brand_link }}" class="brand-banner__link" data-brand-handle="{{ brand_handle }}" aria-label="Visit {{ brand_title }} brand page">
               {% if brand_logo != blank %}
                 {% assign logo_height = banner_height | minus: logo_padding | minus: logo_padding %}
                 {{ brand_logo | image_url: height: logo_height | image_tag: 
