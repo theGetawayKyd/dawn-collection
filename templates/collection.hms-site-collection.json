@@ -55,21 +55,43 @@
         "color_scheme": "scheme-1"
       }
     },
-    "product-grid": {
-      "type": "brand-collection-product-grid",
+    "collection_list_y9Hakt": {
+      "type": "collection-list",
+      "blocks": {
+        "featured_collection_M4m7yM": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "apparel"
+          }
+        },
+        "featured_collection_p7Qhyt": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "helmets"
+          }
+        },
+        "featured_collection_kDtzqi": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_M4m7yM",
+        "featured_collection_p7Qhyt",
+        "featured_collection_kDtzqi"
+      ],
+      "name": "t:sections.collection-list.presets.name",
       "settings": {
-        "show_debug": false,
-        "products_per_page": 16,
-        "columns_desktop": 4,
-        "image_ratio": "adapt",
-        "show_secondary_image": false,
-        "show_vendor": false,
-        "show_rating": false,
-        "enable_quick_add": false,
-        "enable_filtering": true,
-        "enable_sorting": true,
-        "collapse_on_larger_devices": false,
-        "columns_mobile": "2",
+        "title": "Collections",
+        "heading_size": "h1",
+        "image_ratio": "square",
+        "columns_desktop": 3,
+        "color_scheme": "",
+        "show_view_all": false,
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
         "padding_top": 36,
         "padding_bottom": 36
       }
@@ -78,6 +100,6 @@
   "order": [
     "image_banner_EqWH4X",
     "banner",
-    "product-grid"
+    "collection_list_y9Hakt"
   ]
 }
