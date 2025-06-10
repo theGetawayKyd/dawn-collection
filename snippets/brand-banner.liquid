@@ -5,11 +5,18 @@
   It uses metaobjects to retrieve brand information.
 {% endcomment %}
 
-{% comment %} Basic variables for brand banner {% endcomment %}
-{% assign detected_brand = '' %}
+{% comment %} Get the selected brand from cart attributes or set it based on collection metafield {% endcomment %}
 {% assign selected_brand = cart.attributes.selected_brand | default: '' %}
 
-<!--- Top level collection debug - Title: {{ collection.title | default: 'None' }} | Handle: {{ collection.handle | default: 'None' }} --->
+{% comment %} If we're on a collection page with a brand_handle metafield, use that as the selected brand {% endcomment %}
+{% if collection.metafields.custom.brand_handle.value != blank %}
+  {% assign collection_brand_handle = collection.metafields.custom.brand_handle.value %}
+  
+  {% comment %} Update selected_brand if the collection's brand_handle is different {% endcomment %}
+  {% if selected_brand != collection_brand_handle %}
+    {% assign selected_brand = collection_brand_handle %}
+  {% endif %}
+{% endif %}
 
 
 {% assign debug_info = '' %}
@@ -107,7 +114,7 @@
       
       {% for brand in sorted_brands %} 
         
-      <!--- Collection Title: {{ collection.metafields.custom.brand_handle.value }} --->
+      <!--- Brand: {{ brand.brand_handle }} | Collection Brand Handle: {{ collection.metafields.custom.brand_handle.value }} | Selected Brand: {{ selected_brand }} | Match?: {% if brand.brand_handle == selected_brand %}YES{% else %}NO{% endif %} --->
            
         {% if brand.brand_handle != blank %}
           {% assign brand_handle = brand.brand_handle %}
@@ -147,10 +154,8 @@
   </div>
 </div>
 
-{% comment %} Set selected_brand from detected_brand if no brand is selected in cart attributes {% endcomment %}
-{% if selected_brand == blank and detected_brand != blank %}
-  {% assign selected_brand = detected_brand %}
-{% endif %}
+{% comment %} Note: The cart.attributes.selected_brand is set via form submission elsewhere in the theme {% endcomment %}
+{% comment %} This is just a placeholder for where that would happen if we were implementing it here {% endcomment %}
 
 <style>
   .brand-banner__debug {
