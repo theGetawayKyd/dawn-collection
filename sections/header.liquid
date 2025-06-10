@@ -139,14 +139,31 @@
       
       # Get the brand link URL
       assign brand_link = ''
+      assign raw_link_value = ''
+      
+      # Capture all possible link values for debugging
+      assign link_value_url = brand.link.value.url | default: 'empty'
+      assign link_url = brand.link.url | default: 'empty'
+      assign link_value = brand.link.value | default: 'empty'
+      assign link_raw = brand.link | default: 'empty'
+      
+      # Store all values for debugging
+      assign raw_link_debug = brand_handle | append: ' links: value.url=' | append: link_value_url | append: ', url=' | append: link_url | append: ', value=' | append: link_value | append: ', raw=' | append: link_raw
+      assign brand_debug = brand_debug | append: raw_link_debug | append: '|'
+      
+      # Get the actual link to use
       if brand.link.value.url != blank
         assign brand_link = brand.link.value.url
+        assign raw_link_value = 'value.url: ' | append: brand_link
       elsif brand.link.url != blank
         assign brand_link = brand.link.url
+        assign raw_link_value = 'url: ' | append: brand_link
       elsif brand.link.value != blank
         assign brand_link = brand.link.value
+        assign raw_link_value = 'value: ' | append: brand_link
       else
         assign brand_link = brand.link
+        assign raw_link_value = 'raw: ' | append: brand_link
       endif
       
       # Clean up brand_link for comparison
@@ -197,6 +214,7 @@
         assign detected_brand = brand_handle
         break
       endif
+
     endfor
   endif
   
@@ -211,13 +229,19 @@
 -%}
 
   {% if show_brand_debug %}
-    <div style="background-color: #f8f8f8; padding: 10px; font-size: 12px; color: #333; text-align: left;">
+    <div style="background-color: #f8f8f8; padding: 10px; font-size: 12px; color: #333; text-align: left; max-height: 300px; overflow-y: auto;">
       <strong>Brand Debug:</strong><br>
       Selected Brand: "{{ selected_brand | default: 'None' }}"<br>
       Detected Brand: "{{ detected_brand | default: 'None' }}"<br>
       Current URL: "{{ current_url }}"<br>
       Cart Attribute: "{{ cart.attributes.selected_brand | default: 'None' }}"<br>
-      <strong>Brand Paths:</strong> {{ brand_debug }}
+      <strong>Raw Brand Links:</strong><br>
+      {% assign debug_entries = brand_debug | split: '|' %}
+      {% for entry in debug_entries %}
+        {% if entry != blank %}
+          {{ entry }}<br>
+        {% endif %}
+      {% endfor %}
     </div>
   {% endif %}
   
