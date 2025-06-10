@@ -23,8 +23,8 @@
     {% capture redirect_url %}{{ request.path }}?{{ request.querystring }}{% endcapture %}
     {% capture update_url %}/cart/update?attributes[selected_brand]={{ collection_brand_handle | url_encode }}&return_to={{ redirect_url | url_encode }}{% endcapture %}
     
-    {% comment %} Only redirect if this is the first page load, not an AJAX request {% endcomment %}
-    {% unless request.xhr %}
+    {% comment %} Only redirect if this is the first page load, not an AJAX request, and not in theme editor {% endcomment %}
+    {% unless request.xhr or request.design_mode %}
       <meta http-equiv="refresh" content="0;url={{ update_url }}">
     {% endunless %}
   {% endif %}
