@@ -103,7 +103,7 @@
       
       {% for brand in sorted_brands %} 
         
-      <!--- Brand: {{ brand.brand_handle }} | Collection Brand Handle: {{ collection.metafields.custom.brand_handle.value }} | Selected Brand: {{ selected_brand }} | Match?: {% if brand.brand_handle == selected_brand %}YES{% else %}NO{% endif %} --->
+
            
         {% if brand.brand_handle != blank %}
           {% assign brand_handle = brand.brand_handle %}
@@ -146,12 +146,4 @@
 {% comment %} Note: The cart.attributes.selected_brand is set via form submission elsewhere in the theme {% endcomment %}
 {% comment %} This is just a placeholder for where that would happen if we were implementing it here {% endcomment %}
 
-<style>
-  .brand-banner__debug {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-  }
-</style>
+
