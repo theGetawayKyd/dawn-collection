@@ -201,7 +201,8 @@
         active_brand_bg_color: block.settings.active_brand_bg_color,
         selected_brand: selected_brand,
         announcement_text: block.settings.announcement_text,
-        default_logo_shade: block.settings.default_logo_shade
+        default_logo_shade: block.settings.default_logo_shade,
+        use_opposite_shade_for_active: block.settings.use_opposite_shade_for_active
       %}
     {% endif %}
   {% endfor %}
@@ -839,7 +840,14 @@
             }
           ],
           "default": "light",
-          "info": "Choose whether to display light or dark monochrome logos by default. The active brand will use the opposite shade."
+          "info": "Choose whether to display light or dark monochrome logos by default."
+        },
+        {
+          "type": "checkbox",
+          "id": "use_opposite_shade_for_active",
+          "label": "Use opposite shade for active brand",
+          "default": true,
+          "info": "When enabled, the active brand will use the opposite shade of the default logo shade."
         }
       ]
     },

@@ -153,16 +153,17 @@
               {% endif %}
               {% assign use_light_logo = false %}
               
+              {% comment %} Determine which logo shade to use based on settings {% endcomment %}
               {% if default_logo_shade == 'light' %}
-                {% if is_active %}
-                  {% comment %} Active brand uses opposite of default shade {% endcomment %}
+                {% if is_active and use_opposite_shade_for_active %}
+                  {% comment %} Active brand uses opposite of default shade if enabled {% endcomment %}
                   {% assign use_light_logo = false %}
                 {% else %}
                   {% assign use_light_logo = true %}
                 {% endif %}
               {% else %}
-                {% if is_active %}
-                  {% comment %} Active brand uses opposite of default shade {% endcomment %}
+                {% if is_active and use_opposite_shade_for_active %}
+                  {% comment %} Active brand uses opposite of default shade if enabled {% endcomment %}
                   {% assign use_light_logo = true %}
                 {% else %}
                   {% assign use_light_logo = false %}
