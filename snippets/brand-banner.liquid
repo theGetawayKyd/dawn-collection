@@ -5,9 +5,9 @@
   It uses metaobjects to retrieve brand information.
 {% endcomment %}
 
+{% comment %} Basic variables for brand banner {% endcomment %}
 {% assign detected_brand = '' %}
-
-{% comment %} If no brand is selected in cart attributes, try to detect it from the URL {% endcomment %}
+{% assign selected_brand = cart.attributes.selected_brand | default: '' %}
 {% assign debug_info = '' %}
 {% assign banner_height = banner_height | default: 40 %}
 {% assign logo_padding = logo_padding | default: 5 %}
@@ -103,7 +103,7 @@
       
       {% for brand in sorted_brands %} 
 
-      <!--- metaobject entry {{ brand.brand_handle }} | collection metafield {{ collection.metafields.brand.brand_handle }} --->
+      <!--- Brand: {{ brand.brand_handle }} | Collection: {{ collection.handle }} | Match?: {% if brand.brand_handle == collection.handle %}YES{% else %}NO{% endif %} --->
            
         {% if brand.brand_handle != blank %}
           {% assign brand_handle = brand.brand_handle %}
@@ -120,6 +120,8 @@
           {% else %}
             {% assign brand_link = brand.link %}
           {% endif %}
+          
+
 
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
             <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
