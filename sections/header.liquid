@@ -132,17 +132,7 @@
   # are accessed in a single place
 -%}
 
-  {% comment %} Simple header debug - brand detection is now in brand-banner.liquid {% endcomment %}
-  {% assign show_brand_debug = false %}
-  {% if show_brand_debug %}
-    <div style="background-color: #f8f8f8; padding: 10px; font-size: 12px; color: #333; text-align: left;">
-      <strong>Header Debug:</strong><br>
-      Selected Brand from Cart: "{{ cart.attributes.selected_brand | default: 'None' }}"<br>
-      Current URL: "{{ request.path }}"<br>
-      Current Page Type: "{{ request.page_type }}"
-    </div>
-    {% endif %}
-  {% endif %}
+  {% comment %} Brand detection is handled in brand-banner.liquid {% endcomment %}
   
   {% for block in section.blocks %}
     {% if block.type == 'brand_banner' and block.settings.show_brand_banner %}
