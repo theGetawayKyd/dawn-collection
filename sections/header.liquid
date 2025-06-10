@@ -131,12 +131,17 @@
   assign current_url = request.path
   assign current_page_type = request.page_type
   assign detected_brand = ''
-  assign brand_debug = ''
+  assign brand_debug = 'Debug info: '
+  
+  # Add metaobject count to debug
+  assign brand_debug = brand_debug | append: 'Metaobject count: ' | append: shop.metaobjects.brand.values.size | append: ' | '
   
   # Check if we need to set the selected_brand based on the current URL
   if shop.metaobjects.brand.values.size > 0
+    assign brand_debug = brand_debug | append: 'Processing brands: '
     for brand in shop.metaobjects.brand.values
-      assign brand_handle = brand.brand_handle
+      assign brand_handle = brand.brand_handle | default: 'no-handle'
+      assign brand_debug = brand_debug | append: ' ' | append: brand_handle
       
       # Get the brand link
       assign brand_link = ''
@@ -256,14 +261,10 @@
       Selected Brand: "{{ selected_brand | default: 'None' }}"<br>
       Detected Brand: "{{ detected_brand | default: 'None' }}"<br>
       Current URL: "{{ current_url }}"<br>
+      Current Page Type: "{{ current_page_type }}"<br>
       Cart Attribute: "{{ cart.attributes.selected_brand | default: 'None' }}"<br>
       <strong>Raw Brand Links:</strong><br>
-      {% assign debug_entries = brand_debug | split: '|' %}
-      {% for entry in debug_entries %}
-        {% if entry != blank %}
-          {{ entry }}<br>
-        {% endif %}
-      {% endfor %}
+      {{ brand_debug | replace: '|', '<br>' }}
     </div>
   {% endif %}
   
