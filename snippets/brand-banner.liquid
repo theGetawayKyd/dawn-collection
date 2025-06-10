@@ -147,7 +147,7 @@
 
 
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
-            <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
+            <a href="{{ brand_link }}" class="brand-banner__link" data-brand-handle="{{ brand_handle }}" aria-label="Visit {{ brand_title }} brand page">
               {% if brand_logo != blank %}
                 {% assign logo_height = banner_height | minus: logo_padding | minus: logo_padding %}
                 {{ brand_logo | image_url: height: logo_height | image_tag: 
