@@ -16,17 +16,33 @@
   {% if selected_brand != collection_brand_handle %}
     {% assign selected_brand = collection_brand_handle %}
     
-    {% comment %} 
-      Create a URL that will update the cart attribute and redirect back to the current page
-      This is a server-side solution that doesn't require JavaScript
-    {% endcomment %}
-    {% capture redirect_url %}{{ request.path }}?{{ request.querystring }}{% endcapture %}
-    {% capture update_url %}/cart/update?attributes[selected_brand]={{ collection_brand_handle | url_encode }}&return_to={{ redirect_url | url_encode }}{% endcapture %}
-    
-    {% comment %} Only redirect if this is the first page load, not an AJAX request, and not in theme editor {% endcomment %}
-    {% unless request.xhr or request.design_mode %}
-      <meta http-equiv="refresh" content="0;url={{ update_url }}">
-    {% endunless %}
+    {% comment %} Use JavaScript to update cart attributes silently without page reload {% endcomment %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Store the current brand in sessionStorage to track changes
+        var storedBrand = sessionStorage.getItem('currentBrand');
+        var currentBrand = {{ collection_brand_handle | json }};
+        
+        // Only update if the brand has changed from what we've stored
+        if (storedBrand !== currentBrand) {
+          // Update sessionStorage with current brand
+          sessionStorage.setItem('currentBrand', currentBrand);
+          
+          // Update cart attributes via AJAX without page reload
+          fetch('/cart/update.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              attributes: {
+                selected_brand: currentBrand
+              }
+            })
+          });
+        }
+      });
+    </script>
   {% endif %}
 {% endif %}
 
