@@ -24,7 +24,8 @@
             "logo_padding": 10,
             "logo_alignment": "right",
             "active_brand_bg_color": "#ffffff",
-            "show_debug": false
+            "show_debug": false,
+            "announcement_text": "Free shipping on all orders!"
           }
         }
       },
@@ -38,8 +39,8 @@
         "menu_type_desktop": "dropdown",
         "sticky_header_type": "on-scroll-up",
         "show_line_separator": true,
-        "color_scheme": "scheme-1",
-        "menu_color_scheme": "",
+        "color_scheme": "scheme-4",
+        "menu_color_scheme": "scheme-4",
         "enable_country_selector": true,
         "enable_language_selector": true,
         "enable_customer_avatar": true,
