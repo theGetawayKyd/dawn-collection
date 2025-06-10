@@ -60,6 +60,19 @@
         endif
       endif
       # Brand detection logic - END
+    %}    
+    
+    <div style="background: #f8f8f8; border: 1px solid #ddd; padding: 10px; margin: 10px 0; font-family: monospace; font-size: 12px;">
+      <strong>Theme.liquid Brand Detection Debug:</strong><br>
+      Initial cart.attributes.selected_brand: {{ cart.attributes.selected_brand | json }}<br>
+      Collection metafield: {{ collection.metafields.custom.brand_handle.value | json }}<br>
+      Final selected_brand: {{ selected_brand | json }}<br>
+      Is on collection page? {{ collection.handle != blank }}<br>
+      Collection handle: {{ collection.handle | json }}<br>
+      Page template: {{ template | json }}<br>
+    </div>
+    
+    {%- liquid
     %}
     
     {%- if selected_brand != blank -%}
