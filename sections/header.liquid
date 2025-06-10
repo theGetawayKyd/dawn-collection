@@ -116,17 +116,63 @@
 
 <{{ header_tag }} {% if header_tag == 'sticky-header' %}data-sticky-type="{{ section.settings.sticky_header_type }}"{% endif %} class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
   {%- liquid
-    assign social_links = false
-    assign localization_forms = false
+  assign social_links = false
+  assign localization_forms = false
 
-    if settings.social_twitter_link != blank or settings.social_facebook_link != blank or settings.social_pinterest_link != blank or settings.social_instagram_link != blank or settings.social_youtube_link != blank or settings.social_vimeo_link != blank or settings.social_tiktok_link != blank or settings.social_tumblr_link != blank or settings.social_snapchat_link != blank
-      assign social_links = true
-    endif
+  if settings.social_twitter_link != blank or settings.social_facebook_link != blank or settings.social_pinterest_link != blank or settings.social_instagram_link != blank or settings.social_youtube_link != blank or settings.social_vimeo_link != blank or settings.social_tiktok_link != blank or settings.social_tumblr_link != blank or settings.social_snapchat_link != blank
+    assign social_links = true
+  endif
 
-    if localization.available_countries.size > 1 and section.settings.enable_country_selector or section.settings.enable_language_selector and localization.available_languages.size > 1
-      assign localization_forms = true
-    endif
-  -%}
+  if localization.available_countries.size > 1 and section.settings.enable_country_selector or section.settings.enable_language_selector and localization.available_languages.size > 1
+    assign localization_forms = true
+  endif
+  
+  # Brand detection logic - check if current URL matches any brand's link
+  assign current_url = request.path
+  assign detected_brand = ''
+  
+  # Check if we need to set the selected_brand based on the current URL
+  if shop.metaobjects.brand.values.size > 0
+    for brand in shop.metaobjects.brand.values
+      assign brand_handle = brand.brand_handle
+      
+      # Get the brand link URL
+      assign brand_link = ''
+      if brand.link.value.url != blank
+        assign brand_link = brand.link.value.url
+      elsif brand.link.url != blank
+        assign brand_link = brand.link.url
+      elsif brand.link.value != blank
+        assign brand_link = brand.link.value
+      else
+        assign brand_link = brand.link
+      endif
+      
+      # Extract path from brand_link (remove domain part if present)
+      if brand_link contains '://'
+        # Extract path from full URL
+        assign url_parts = brand_link | split: '/'
+        assign path_parts = url_parts | slice: 3, url_parts.size
+        assign brand_path = '/' | append: path_parts | join: '/'
+      else
+        # Already a path
+        assign brand_path = brand_link
+      endif
+      
+      # Check if current URL matches this brand's path
+      if current_url == brand_path or current_url contains brand_path
+        assign detected_brand = brand_handle
+        break
+      endif
+    endfor
+  endif
+  
+  # Set selected_brand from cart attributes or from detected URL
+  assign selected_brand = cart.attributes.selected_brand | default: ''
+  if selected_brand == blank and detected_brand != blank
+    assign selected_brand = detected_brand
+  endif
+-%}
 
   {% for block in section.blocks %}
     {% if block.type == 'brand_banner' and block.settings.show_brand_banner %}
