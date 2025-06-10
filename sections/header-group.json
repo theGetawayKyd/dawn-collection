@@ -25,7 +25,8 @@
             "logo_alignment": "right",
             "active_brand_bg_color": "#000000",
             "show_debug": false,
-            "announcement_text": "Free shipping on all orders!"
+            "announcement_text": "Free shipping on all orders!",
+            "default_logo_shade": "dark"
           }
         }
       },
