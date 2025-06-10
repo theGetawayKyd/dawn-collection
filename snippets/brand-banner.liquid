@@ -5,19 +5,7 @@
   It uses metaobjects to retrieve brand information.
 {% endcomment %}
 
-{% comment %}
-  Brand detection logic - detect the brand based on the current URL
-  This sets the selected_brand variable which is used to highlight the active brand
-{% endcomment %}
-
-{% assign current_url = request.path %}
-{% assign current_page_type = request.page_type %}
 {% assign detected_brand = '' %}
-
-{% comment %} First check if we already have a selected brand in cart attributes {% endcomment %}
-{% assign selected_brand = cart.attributes.selected_brand | default: '' %}
-
-<!--- debug: {{ selected_brand}} --->
 
 {% comment %} If no brand is selected in cart attributes, try to detect it from the URL {% endcomment %}
 {% assign debug_info = '' %}
@@ -113,7 +101,10 @@
         {% assign sorted_brands = shop.metaobjects.brand.values | sort: 'title' %}
       {% endif %}
       
-      {% for brand in sorted_brands %}      
+      {% for brand in sorted_brands %} 
+
+      <!--- debug: {{ brand.brand_handle }} --->
+           
         {% if brand.brand_handle != blank %}
           {% assign brand_handle = brand.brand_handle %}
           {% assign brand_title = brand.title %}
