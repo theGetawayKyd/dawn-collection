@@ -16,31 +16,21 @@
   {% if selected_brand != collection_brand_handle %}
     {% assign selected_brand = collection_brand_handle %}
     
-    {% comment %} Use JavaScript to update cart attributes silently without page reload {% endcomment %}
+    {% comment %} Use a simple AJAX request to update cart attributes for future page loads {% endcomment %}
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        // Store the current brand in sessionStorage to track changes
-        var storedBrand = sessionStorage.getItem('currentBrand');
-        var currentBrand = {{ collection_brand_handle | json }};
-        
-        // Only update if the brand has changed from what we've stored
-        if (storedBrand !== currentBrand) {
-          // Update sessionStorage with current brand
-          sessionStorage.setItem('currentBrand', currentBrand);
-          
-          // Update cart attributes via AJAX without page reload
-          fetch('/cart/update.js', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              attributes: {
-                selected_brand: currentBrand
-              }
-            })
-          });
-        }
+        // Update cart attributes via AJAX without page reload
+        fetch('/cart/update.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            attributes: {
+              selected_brand: {{ collection_brand_handle | json }}
+            }
+          })
+        });
       });
     </script>
   {% endif %}
