@@ -18,7 +18,7 @@
           "type": "brand_banner",
           "settings": {
             "show_brand_banner": true,
-            "background_color": "#dfdfdf",
+            "background_color": "#a3a3a3",
             "text_color": "#000000",
             "banner_height": 40,
             "logo_padding": 10,
