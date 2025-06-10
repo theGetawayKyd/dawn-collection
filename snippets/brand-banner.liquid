@@ -128,8 +128,7 @@
             {% assign brand_link = brand.link %}
           {% endif %}
 
-          <!-- Brand Link Debug: {{ brand_handle }} - {{ brand_link }} -->
-          
+                   
           {% comment %} Detect if this brand matches the current URL {% endcomment %}
           {% if detected_brand == blank %}
             {% comment %} Extract path from brand link for comparison {% endcomment %}
@@ -144,54 +143,10 @@
                   {% assign detected_brand = brand_handle %}
                 {% endif %}
               {% endif %}
-            
-            {% comment %} Handle product URLs {% endcomment %}
-            {% elsif brand_link contains '/products/' %}
-              {% assign parts = brand_link | split: '/products/' %}
-              {% if parts.size > 1 %}
-                {% assign product_handle = parts[1] | split: '?' | first | split: '#' | first %}
-                {% if current_page_type == 'product' and product.handle == product_handle %}
-                  {% assign detected_brand = brand_handle %}
-                {% endif %}
-              {% endif %}
-            
-            {% comment %} Handle page URLs {% endcomment %}
-            {% elsif brand_link contains '/pages/' %}
-              {% assign parts = brand_link | split: '/pages/' %}
-              {% if parts.size > 1 %}
-                {% assign page_handle = parts[1] | split: '?' | first | split: '#' | first %}
-                {% if current_page_type == 'page' and page.handle == page_handle %}
-                  {% assign detected_brand = brand_handle %}
-                {% endif %}
-              {% endif %}
-            
-            {% comment %} Direct path comparison for other URL types {% endcomment %}
-            {% else %}
-              {% if brand_link contains 'http' or brand_link contains 'https' %}
-                {% assign url_parts = brand_link | split: '://' %}
-                {% if url_parts.size > 1 %}
-                  {% assign domain_and_path = url_parts[1] | split: '/' %}
-                  {% assign brand_path = '/' %}
-                  {% for part in domain_and_path offset: 1 %}
-                    {% assign brand_path = brand_path | append: part | append: '/' %}
-                  {% endfor %}
-                  {% assign brand_path = brand_path | remove_last: '/' %}
-                {% endif %}
-              {% else %}
-                {% assign brand_path = brand_link %}
-              {% endif %}
-              
-              {% if brand_path != blank and brand_path != '/' %}
-                {% if brand_path[0] != '/' %}
-                  {% assign brand_path = '/' | append: brand_path %}
-                {% endif %}
-                
-                {% if current_url == brand_path %}
-                  {% assign detected_brand = brand_handle %}
-                {% endif %}
-              {% endif %}
             {% endif %}
           {% endif %}
+
+          <!-- Brand Link Debug: {{ brand_handle }} - {{ brand_link }} -- {{ detected_brand }} -->
           
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
             <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
