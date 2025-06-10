@@ -127,6 +127,8 @@
           {% else %}
             {% assign brand_link = brand.link %}
           {% endif %}
+
+          <!-- Brand Link Debug: {{ brand_handle }} - {{ brand_link }} -->
           
           {% comment %} Detect if this brand matches the current URL {% endcomment %}
           {% if detected_brand == blank %}
