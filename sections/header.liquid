@@ -130,6 +130,7 @@
   # Brand detection logic - check if current URL matches any brand's link
   assign current_url = request.path
   assign detected_brand = ''
+  assign brand_debug = ''
   
   # Check if we need to set the selected_brand based on the current URL
   if shop.metaobjects.brand.values.size > 0
@@ -148,19 +149,40 @@
         assign brand_link = brand.link
       endif
       
-      # Extract path from brand_link (remove domain part if present)
+      # Clean up brand_link for comparison
+      # First, normalize the URL by removing http:// or https:// and domain
+      assign brand_path = ''
+      
+      # If it's a full URL with protocol
       if brand_link contains '://'
-        # Extract path from full URL
-        assign url_parts = brand_link | split: '/'
-        assign path_parts = url_parts | slice: 3, url_parts.size
-        assign brand_path = '/' | append: path_parts | join: '/'
+        # Find position after domain
+        assign protocol_pos = brand_link | split: '://' | first | size | plus: 3
+        assign after_protocol = brand_link | slice: protocol_pos, brand_link.size
+        assign domain_end = after_protocol | split: '/' | first | size
+        
+        # Extract just the path part (everything after the domain)
+        if domain_end < after_protocol.size
+          assign path_start = protocol_pos | plus: domain_end
+          assign brand_path = brand_link | slice: path_start, brand_link.size
+        else
+          # URL has no path, just domain
+          assign brand_path = '/'
+        endif
       else
-        # Already a path
+        # It's already a path
         assign brand_path = brand_link
+        # Ensure it starts with a slash
+        if brand_path != blank and brand_path[0] != '/'
+          assign brand_path = '/' | append: brand_path
+        endif
       endif
       
-      # Check if current URL matches this brand's path
-      if current_url == brand_path or current_url contains brand_path
+      # For debugging
+      assign brand_debug = brand_debug | append: brand_handle | append: ':' | append: brand_path | append: '|'
+      
+      # Check if current URL matches or starts with this brand's path
+      # Also ensure brand_path is not just '/' to avoid matching everything
+      if brand_path != '/' and brand_path != blank and (current_url == brand_path or current_url contains brand_path)
         assign detected_brand = brand_handle
         break
       endif
@@ -178,12 +200,13 @@
 -%}
 
   {% if show_brand_debug %}
-    <div style="background-color: #f8f8f8; padding: 5px 10px; font-size: 12px; color: #333; text-align: center;">
-      <strong>Brand Debug:</strong> 
-      Selected Brand: "{{ selected_brand | default: 'None' }}" | 
-      Detected Brand: "{{ detected_brand | default: 'None' }}" | 
-      Current URL: {{ current_url }} | 
-      Cart Attribute: "{{ cart.attributes.selected_brand | default: 'None' }}"
+    <div style="background-color: #f8f8f8; padding: 10px; font-size: 12px; color: #333; text-align: left;">
+      <strong>Brand Debug:</strong><br>
+      Selected Brand: "{{ selected_brand | default: 'None' }}"<br>
+      Detected Brand: "{{ detected_brand | default: 'None' }}"<br>
+      Current URL: "{{ current_url }}"<br>
+      Cart Attribute: "{{ cart.attributes.selected_brand | default: 'None' }}"<br>
+      <strong>Brand Paths:</strong> {{ brand_debug }}
     </div>
   {% endif %}
   
