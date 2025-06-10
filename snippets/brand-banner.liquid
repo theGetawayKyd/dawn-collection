@@ -8,6 +8,10 @@
 {% comment %} Basic variables for brand banner {% endcomment %}
 {% assign detected_brand = '' %}
 {% assign selected_brand = cart.attributes.selected_brand | default: '' %}
+
+<!--- Top level collection debug - Title: {{ collection.title | default: 'None' }} | Handle: {{ collection.handle | default: 'None' }} --->
+
+
 {% assign debug_info = '' %}
 {% assign banner_height = banner_height | default: 40 %}
 {% assign logo_padding = logo_padding | default: 5 %}
@@ -103,7 +107,7 @@
       
       {% for brand in sorted_brands %} 
         
-      <!--- Brand: {{ brand.brand_handle }} | Collection Handle: {{ collection.metafield.brand_handle }} --->
+      <!--- Collection Title: {{ collection.title | default: 'None' }} --->
            
         {% if brand.brand_handle != blank %}
           {% assign brand_handle = brand.brand_handle %}
