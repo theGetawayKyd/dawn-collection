@@ -84,7 +84,7 @@
       ],
       "name": "t:sections.collection-list.presets.name",
       "settings": {
-        "title": "Collections",
+        "title": "PRODUCTS",
         "heading_size": "h1",
         "image_ratio": "square",
         "columns_desktop": 3,
