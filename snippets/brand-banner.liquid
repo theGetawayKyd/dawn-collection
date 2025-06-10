@@ -107,7 +107,7 @@
       
       {% for brand in sorted_brands %} 
         
-      <!--- Collection Title: {{ collection.title | default: 'None' }} --->
+      <!--- Collection Title: {{ collection.metafields.custom.brand_handle.value }} --->
            
         {% if brand.brand_handle != blank %}
           {% assign brand_handle = brand.brand_handle %}
