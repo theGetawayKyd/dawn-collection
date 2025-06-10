@@ -1,0 +1,37 @@
+{% comment %}
+  Brand Detection Snippet
+  
+  This snippet handles brand detection and sets the selected_brand variable.
+  It should be included at the beginning of the page, before the header.
+{% endcomment %}
+
+{% comment %} Get the selected brand from cart attributes or set it based on collection metafield {% endcomment %}
+{% assign selected_brand = cart.attributes.selected_brand | default: '' %}
+
+{% comment %} If we're on a collection page with a brand_handle metafield, use that as the selected brand {% endcomment %}
+{% if collection.metafields.custom.brand_handle.value != blank %}
+  {% assign collection_brand_handle = collection.metafields.custom.brand_handle.value %}
+  
+  {% comment %} Update selected_brand if the collection's brand_handle is different {% endcomment %}
+  {% if selected_brand != collection_brand_handle %}
+    {% assign selected_brand = collection_brand_handle %}
+    
+    {% comment %} Use a simple AJAX request to update cart attributes for future page loads {% endcomment %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Update cart attributes via AJAX without page reload
+        fetch('/cart/update.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            attributes: {
+              selected_brand: {{ collection_brand_handle | json }}
+            }
+          })
+        });
+      });
+    </script>
+  {% endif %}
+{% endif %}

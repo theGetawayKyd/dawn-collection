@@ -132,10 +132,7 @@
   # are accessed in a single place
 -%}
 
-  {% comment %} Brand detection is handled in brand-banner.liquid {% endcomment %}
-  
-  {% comment %} Get the selected brand from cart attributes {% endcomment %}
-  {% assign selected_brand = cart.attributes.selected_brand | default: '' %}
+  {% comment %} Brand detection is now handled in brand-detection.liquid which is included at the beginning of the page {% endcomment %}
   
   {% comment %} Find the brand metaobject that matches the selected brand {% endcomment %}
   {% assign brand_menu_handle = '' %}
