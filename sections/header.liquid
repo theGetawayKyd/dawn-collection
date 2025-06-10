@@ -134,7 +134,7 @@
   assign brand_debug = 'Debug info: '
   
   # Add metaobject count to debug
-  assign brand_debug = brand_debug | append: 'Metaobject count: ' | append: shop.metaobjects.brand.values.size | append: ' | '
+  assign metaobject_count = shop.metaobjects.brand.values.size
   
   # Check if we need to set the selected_brand based on the current URL
   if shop.metaobjects.brand.values.size > 0
@@ -256,16 +256,24 @@
 -%}
 
   {% if show_brand_debug %}
-    <div style="background-color: #f8f8f8; padding: 10px; font-size: 12px; color: #333; text-align: left; max-height: 300px; overflow-y: auto;">
-      <strong>Brand Debug:</strong><br>
+    <div style="background-color: #f8f8f8; padding: 10px; font-size: 12px; color: #333; text-align: left;">
+      <strong>Basic Debug:</strong><br>
+      Metaobject Count: {{ metaobject_count }}<br>
       Selected Brand: "{{ selected_brand | default: 'None' }}"<br>
       Detected Brand: "{{ detected_brand | default: 'None' }}"<br>
       Current URL: "{{ current_url }}"<br>
       Current Page Type: "{{ current_page_type }}"<br>
-      Cart Attribute: "{{ cart.attributes.selected_brand | default: 'None' }}"<br>
-      <strong>Raw Brand Links:</strong><br>
-      {{ brand_debug | replace: '|', '<br>' }}
+      Cart Attribute: "{{ cart.attributes.selected_brand | default: 'None' }}"
     </div>
+    
+    {% if metaobject_count > 0 %}
+      <div style="background-color: #f0f0f0; padding: 10px; font-size: 12px; color: #333; text-align: left; margin-top: 5px;">
+        <strong>Brand Handles:</strong><br>
+        {% for brand in shop.metaobjects.brand.values %}
+          {{ brand.brand_handle | default: 'no-handle' }}<br>
+        {% endfor %}
+      </div>
+    {% endif %}
   {% endif %}
   
   {% for block in section.blocks %}
