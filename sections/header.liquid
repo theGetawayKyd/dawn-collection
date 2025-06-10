@@ -134,54 +134,8 @@
 
   {% comment %} Brand detection is handled in brand-banner.liquid {% endcomment %}
   
-  {% comment %} Add JavaScript to get selected brand from cookie {% endcomment %}
+  {% comment %} Get the selected brand from cart attributes {% endcomment %}
   {% assign selected_brand = cart.attributes.selected_brand | default: '' %}
-  
-  <script>
-    // Function to get cookie value by name
-    function getCookie(name) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
-      return '';
-    }
-    
-    // Get selected brand from cookie and make it available to Liquid via a global variable
-    document.addEventListener('DOMContentLoaded', function() {
-      window.selectedBrandFromCookie = getCookie('selected_brand');
-      const currentBrand = {{ selected_brand | json }};
-      
-      // If we have a brand from cookie and it's different from cart attributes, update the cart and UI
-      if (window.selectedBrandFromCookie && window.selectedBrandFromCookie !== currentBrand) {
-        // Update cart attributes via AJAX
-        fetch('/cart/update.js', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            attributes: {
-              selected_brand: window.selectedBrandFromCookie
-            }
-          })
-        });
-        
-        // Update brand banner highlighting
-        document.querySelectorAll('.brand-banner__item').forEach(item => {
-          item.classList.remove('brand-banner__item--active');
-        });
-        
-        document.querySelectorAll('.brand-banner__item').forEach(item => {
-          const link = item.querySelector('a');
-          if (link && link.getAttribute('data-brand-handle') === window.selectedBrandFromCookie) {
-            item.classList.add('brand-banner__item--active');
-          }
-        });
-      }
-    });
-  </script>
-  
-  {% comment %} The selected_brand from cart attributes will be used for server-side rendering {% endcomment %}
   
   {% comment %} Find the brand metaobject that matches the selected brand {% endcomment %}
   {% assign brand_menu_handle = '' %}
