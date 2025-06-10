@@ -181,11 +181,20 @@
       assign brand_debug = brand_debug | append: brand_handle | append: ':' | append: brand_path | append: '|'
       
       # Check if current URL matches or starts with this brand's path
-      # Also ensure brand_path is not just '/' to avoid matching everything
-      if brand_path != '/' and brand_path != blank and (current_url == brand_path or current_url contains brand_path)
-        assign detected_brand = brand_handle
-        break
-      endif
+      # Break down complex condition into simpler nested if statements
+      {% assign is_valid_path = false %}
+      {% if brand_path != '/' %}
+        {% if brand_path != blank %}
+          {% if current_url == brand_path or current_url contains brand_path %}
+            {% assign is_valid_path = true %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+      
+      {% if is_valid_path %}
+        {% assign detected_brand = brand_handle %}
+        {% break %}
+      {% endif %}
     endfor
   endif
   
