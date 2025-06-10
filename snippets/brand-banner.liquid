@@ -17,6 +17,8 @@
 {% comment %} First check if we already have a selected brand in cart attributes {% endcomment %}
 {% assign selected_brand = cart.attributes.selected_brand | default: '' %}
 
+{{ selected_brand}}
+
 {% comment %} If no brand is selected in cart attributes, try to detect it from the URL {% endcomment %}
 {% assign debug_info = '' %}
 {% assign banner_height = banner_height | default: 40 %}
