@@ -127,152 +127,20 @@
     assign localization_forms = true
   endif
   
-  # Brand detection logic - check if current URL matches any brand's link
-  assign current_url = request.path
-  assign current_page_type = request.page_type
-  assign detected_brand = ''
-  assign brand_debug = 'Debug info: '
-  
-  # Add metaobject count to debug
-  assign metaobject_count = shop.metaobjects.brand.values.size
-  
-  # Check if we need to set the selected_brand based on the current URL
-  if shop.metaobjects.brand.values.size > 0
-    assign brand_debug = brand_debug | append: 'Processing brands: '
-    for brand in shop.metaobjects.brand.values
-      assign brand_handle = brand.brand_handle | default: 'no-handle'
-      assign brand_debug = brand_debug | append: ' ' | append: brand_handle
-      
-      # Get the brand link
-      assign brand_link = ''
-      
-      # Try different approaches to get the URL (same as in brand-banner.liquid)
-      if brand.link.value.url != blank
-        assign brand_link = brand.link.value.url
-      elsif brand.link.url != blank
-        assign brand_link = brand.link.url
-      elsif brand.link.value != blank
-        assign brand_link = brand.link.value
-      else
-        assign brand_link = brand.link
-      endif
-      
-      # Get the path part of the URL for comparison
-      assign brand_path = ''
-      
-      # Handle collection links specifically
-      if brand_link contains '/collections/'
-        # Extract collection handle
-        assign parts = brand_link | split: '/collections/'
-        if parts.size > 1
-          assign collection_handle = parts[1] | split: '/' | first
-          
-          # If we're on a collection page, check if it matches
-          if current_page_type == 'collection' and collection_handle == collection.handle
-            assign detected_brand = brand_handle
-            assign brand_debug = brand_debug | append: brand_handle | append: ': MATCHED collection=' | append: collection_handle | append: '|'
-            break
-          endif
-          
-          assign brand_debug = brand_debug | append: brand_handle | append: ': collection=' | append: collection_handle | append: '|'
-        endif
-      # Handle product links
-      elsif brand_link contains '/products/'
-        # Extract product handle
-        assign parts = brand_link | split: '/products/'
-        if parts.size > 1
-          assign product_handle = parts[1] | split: '/' | first
-          
-          # If we're on a product page, check if it matches
-          if current_page_type == 'product' and product_handle == product.handle
-            assign detected_brand = brand_handle
-            assign brand_debug = brand_debug | append: brand_handle | append: ': MATCHED product=' | append: product_handle | append: '|'
-            break
-          endif
-          
-          assign brand_debug = brand_debug | append: brand_handle | append: ': product=' | append: product_handle | append: '|'
-        endif
-      # Handle page links
-      elsif brand_link contains '/pages/'
-        # Extract page handle
-        assign parts = brand_link | split: '/pages/'
-        if parts.size > 1
-          assign page_handle = parts[1] | split: '/' | first
-          
-          # If we're on a page, check if it matches
-          if current_page_type == 'page' and page_handle == page.handle
-            assign detected_brand = brand_handle
-            assign brand_debug = brand_debug | append: brand_handle | append: ': MATCHED page=' | append: page_handle | append: '|'
-            break
-          endif
-          
-          assign brand_debug = brand_debug | append: brand_handle | append: ': page=' | append: page_handle | append: '|'
-        endif
-      # For other URLs, try direct path comparison
-      else
-        # Extract path from URL if it's a full URL
-        if brand_link contains '://'
-          assign url_parts = brand_link | split: '/'
-          # Skip protocol and domain (first 3 parts)
-          if url_parts.size > 3
-            assign path_parts = ''
-            for i in (3..url_parts.size)
-              if url_parts[i] != blank
-                assign path_parts = path_parts | append: '/' | append: url_parts[i]
-              endif
-            endfor
-            assign brand_path = path_parts
-          endif
-        else
-          # It's already a path
-          assign brand_path = brand_link
-        endif
-        
-        # Ensure path starts with a slash
-        if brand_path != blank and brand_path[0] != '/'
-          assign brand_path = '/' | append: brand_path
-        endif
-        
-        # Compare paths
-        if brand_path != blank and brand_path != '/' and current_url == brand_path
-          assign detected_brand = brand_handle
-          assign brand_debug = brand_debug | append: brand_handle | append: ': MATCHED path=' | append: brand_path | append: '|'
-          break
-        endif
-        
-        assign brand_debug = brand_debug | append: brand_handle | append: ': path=' | append: brand_path | append: '|'
-      endif
-    endfor
-  endif
-  
-  # Set selected_brand from cart attributes or from detected URL
-  assign selected_brand = cart.attributes.selected_brand | default: ''
-  if selected_brand == blank and detected_brand != blank
-    assign selected_brand = detected_brand
-  endif
-  
-  # Debug information
-  assign show_brand_debug = true
+  # Brand detection is now handled in brand-banner.liquid
+  # This ensures we don't duplicate the logic and that the metaobjects
+  # are accessed in a single place
 -%}
 
+  {% comment %} Simple header debug - brand detection is now in brand-banner.liquid {% endcomment %}
+  {% assign show_brand_debug = false %}
   {% if show_brand_debug %}
     <div style="background-color: #f8f8f8; padding: 10px; font-size: 12px; color: #333; text-align: left;">
-      <strong>Basic Debug:</strong><br>
-      Metaobject Count: {{ metaobject_count }}<br>
-      Selected Brand: "{{ selected_brand | default: 'None' }}"<br>
-      Detected Brand: "{{ detected_brand | default: 'None' }}"<br>
-      Current URL: "{{ current_url }}"<br>
-      Current Page Type: "{{ current_page_type }}"<br>
-      Cart Attribute: "{{ cart.attributes.selected_brand | default: 'None' }}"
+      <strong>Header Debug:</strong><br>
+      Selected Brand from Cart: "{{ cart.attributes.selected_brand | default: 'None' }}"<br>
+      Current URL: "{{ request.path }}"<br>
+      Current Page Type: "{{ request.page_type }}"
     </div>
-    
-    {% if metaobject_count > 0 %}
-      <div style="background-color: #f0f0f0; padding: 10px; font-size: 12px; color: #333; text-align: left; margin-top: 5px;">
-        <strong>Brand Handles:</strong><br>
-        {% for brand in shop.metaobjects.brand.values %}
-          {{ brand.brand_handle | default: 'no-handle' }}<br>
-        {% endfor %}
-      </div>
     {% endif %}
   {% endif %}
   

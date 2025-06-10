@@ -5,7 +5,20 @@
   It uses metaobjects to retrieve brand information.
 {% endcomment %}
 
+{% comment %}
+  Brand detection logic - detect the brand based on the current URL
+  This sets the selected_brand variable which is used to highlight the active brand
+{% endcomment %}
+
+{% assign current_url = request.path %}
+{% assign current_page_type = request.page_type %}
+{% assign detected_brand = '' %}
+
+{% comment %} First check if we already have a selected brand in cart attributes {% endcomment %}
 {% assign selected_brand = cart.attributes.selected_brand | default: '' %}
+
+{% comment %} If no brand is selected in cart attributes, try to detect it from the URL {% endcomment %}
+{% assign debug_info = '' %}
 {% assign banner_height = banner_height | default: 40 %}
 {% assign logo_padding = logo_padding | default: 5 %}
 {% assign text_color = text_color | default: '#000000' %}
@@ -115,6 +128,69 @@
             {% assign brand_link = brand.link %}
           {% endif %}
           
+          {% comment %} Detect if this brand matches the current URL {% endcomment %}
+          {% if detected_brand == blank %}
+            {% comment %} Extract path from brand link for comparison {% endcomment %}
+            {% assign brand_path = '' %}
+            
+            {% comment %} Handle collection URLs {% endcomment %}
+            {% if brand_link contains '/collections/' %}
+              {% assign parts = brand_link | split: '/collections/' %}
+              {% if parts.size > 1 %}
+                {% assign collection_handle = parts[1] | split: '?' | first | split: '#' | first %}
+                {% if current_page_type == 'collection' and collection.handle == collection_handle %}
+                  {% assign detected_brand = brand_handle %}
+                {% endif %}
+              {% endif %}
+            
+            {% comment %} Handle product URLs {% endcomment %}
+            {% elsif brand_link contains '/products/' %}
+              {% assign parts = brand_link | split: '/products/' %}
+              {% if parts.size > 1 %}
+                {% assign product_handle = parts[1] | split: '?' | first | split: '#' | first %}
+                {% if current_page_type == 'product' and product.handle == product_handle %}
+                  {% assign detected_brand = brand_handle %}
+                {% endif %}
+              {% endif %}
+            
+            {% comment %} Handle page URLs {% endcomment %}
+            {% elsif brand_link contains '/pages/' %}
+              {% assign parts = brand_link | split: '/pages/' %}
+              {% if parts.size > 1 %}
+                {% assign page_handle = parts[1] | split: '?' | first | split: '#' | first %}
+                {% if current_page_type == 'page' and page.handle == page_handle %}
+                  {% assign detected_brand = brand_handle %}
+                {% endif %}
+              {% endif %}
+            
+            {% comment %} Direct path comparison for other URL types {% endcomment %}
+            {% else %}
+              {% if brand_link contains 'http' or brand_link contains 'https' %}
+                {% assign url_parts = brand_link | split: '://' %}
+                {% if url_parts.size > 1 %}
+                  {% assign domain_and_path = url_parts[1] | split: '/' %}
+                  {% assign brand_path = '/' %}
+                  {% for part in domain_and_path offset: 1 %}
+                    {% assign brand_path = brand_path | append: part | append: '/' %}
+                  {% endfor %}
+                  {% assign brand_path = brand_path | remove_last: '/' %}
+                {% endif %}
+              {% else %}
+                {% assign brand_path = brand_link %}
+              {% endif %}
+              
+              {% if brand_path != blank and brand_path != '/' %}
+                {% if brand_path[0] != '/' %}
+                  {% assign brand_path = '/' | append: brand_path %}
+                {% endif %}
+                
+                {% if current_url == brand_path %}
+                  {% assign detected_brand = brand_handle %}
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% endif %}
+          
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
             <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
               {% if brand_logo != blank %}
@@ -135,8 +211,23 @@
   </div>
 </div>
 
-{% comment %} Debug information for metaobject access issues {% endcomment %}
-<!-- Debug parameter value: {{ show_debug }} -->
+{% comment %} Set selected_brand from detected_brand if no brand is selected in cart attributes {% endcomment %}
+{% if selected_brand == blank and detected_brand != blank %}
+  {% assign selected_brand = detected_brand %}
+{% endif %}
+
+{% comment %} Debug information {% endcomment %}
+{% if show_debug %}
+  <div style="background-color: #f8f8f8; padding: 10px; font-size: 12px; color: #333; text-align: left;">
+    <strong>Brand Banner Debug:</strong><br>
+    Metaobject Count: {{ shop.metaobjects.brand.values.size }}<br>
+    Selected Brand: "{{ selected_brand | default: 'None' }}"<br>
+    Detected Brand: "{{ detected_brand | default: 'None' }}"<br>
+    Current URL: "{{ current_url }}"<br>
+    Current Page Type: "{{ current_page_type }}"<br>
+    Cart Attribute: "{{ cart.attributes.selected_brand | default: 'None' }}"
+  </div>
+{% endif %}
 {% if show_debug %}
   <div class="brand-banner__debug" style="background-color: #f8f8f8; padding: 15px; margin-top: 20px; border: 1px solid #ddd;">
     <h3>Brand Banner Debug Info</h3>
