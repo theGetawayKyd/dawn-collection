@@ -5,6 +5,13 @@
   It should be included at the beginning of the page, before the header.
 {% endcomment %}
 
+<!-- DEBUG: Brand Detection Start -->
+<div style="background: #f8f8f8; border: 1px solid #ddd; padding: 10px; margin: 10px 0; font-family: monospace; font-size: 12px;">
+  <strong>Brand Detection Debug:</strong><br>
+  Initial cart.attributes.selected_brand: {{ cart.attributes.selected_brand | json }}<br>
+  Initial selected_brand: {{ selected_brand | json }}<br>
+</div>
+
 {% comment %} Get the selected brand from cart attributes or set it based on collection metafield {% endcomment %}
 {% assign selected_brand = cart.attributes.selected_brand | default: '' %}
 
@@ -12,11 +19,22 @@
 {% if collection.metafields.custom.brand_handle.value != blank %}
   {% assign collection_brand_handle = collection.metafields.custom.brand_handle.value %}
   
+  <div style="background: #e8f4ff; border: 1px solid #bbd8ff; padding: 10px; margin: 10px 0; font-family: monospace; font-size: 12px;">
+    <strong>Collection Brand Debug:</strong><br>
+    collection.metafields.custom.brand_handle.value: {{ collection.metafields.custom.brand_handle.value | json }}<br>
+    collection_brand_handle: {{ collection_brand_handle | json }}<br>
+    selected_brand before update: {{ selected_brand | json }}<br>
+    Different from cart.attributes? {{ selected_brand != collection_brand_handle }}<br>
+  </div>
+  
   {% comment %} Update selected_brand if the collection's brand_handle is different {% endcomment %}
   {% if selected_brand != collection_brand_handle %}
     {% assign selected_brand = collection_brand_handle %}
     
-    DEBUG: {{ selected_brand }}
+    <div style="background: #e8ffe8; border: 1px solid #bbffbb; padding: 10px; margin: 10px 0; font-family: monospace; font-size: 12px;">
+      <strong>Selected Brand Updated:</strong><br>
+      New selected_brand: {{ selected_brand | json }}<br>
+    </div>
 
     {% comment %} Use a simple AJAX request to update cart attributes for future page loads {% endcomment %}
     <script>
@@ -37,3 +55,11 @@
     </script>
   {% endif %}
 {% endif %}
+
+<div style="background: #fff8e8; border: 1px solid #ffddaa; padding: 10px; margin: 10px 0; font-family: monospace; font-size: 12px;">
+  <strong>Final Brand Detection State:</strong><br>
+  Final selected_brand: {{ selected_brand | json }}<br>
+  Is on collection page? {{ collection.handle != blank }}<br>
+  Collection handle: {{ collection.handle | json }}<br>
+  Page template: {{ template | json }}<br>
+</div>

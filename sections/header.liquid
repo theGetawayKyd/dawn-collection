@@ -134,6 +134,11 @@
 
   {% comment %} Brand detection is now handled in brand-detection.liquid which is included at the beginning of the page {% endcomment %}
   
+  <div style="background: #ffe8e8; border: 1px solid #ffbbbb; padding: 10px; margin: 10px 0; font-family: monospace; font-size: 12px;">
+    <strong>Header Debug:</strong><br>
+    selected_brand in header: {{ selected_brand | json }}<br>
+  </div>
+  
   {% comment %} Find the brand metaobject that matches the selected brand {% endcomment %}
   {% assign brand_menu_handle = '' %}
   {% assign brand_logo = blank %}
