@@ -16,11 +16,11 @@
   {% if selected_brand != collection_brand_handle %}
     {% assign selected_brand = collection_brand_handle %}
     
-    {% comment %} Add a small JavaScript function to update cart attributes without page reload {% endcomment %}
+    {% comment %} Add a small JavaScript function to update cart attributes and reload the page {% endcomment %}
     {% unless request.design_mode %}
       <script>
         document.addEventListener('DOMContentLoaded', function() {
-          // Update cart attributes via AJAX (without page reload)
+          // Update cart attributes via AJAX and reload the page after completion
           fetch('/cart/update.js', {
             method: 'POST',
             headers: {
@@ -31,6 +31,11 @@
                 selected_brand: {{ collection_brand_handle | json }}
               }
             })
+          }).then(function() {
+            // Only reload if we're not in the theme editor
+            if (!Shopify.designMode) {
+              window.location.reload();
+            }
           });
         });
       </script>
