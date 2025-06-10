@@ -200,7 +200,8 @@
         logo_alignment: block.settings.logo_alignment,
         active_brand_bg_color: block.settings.active_brand_bg_color,
         selected_brand: selected_brand,
-        announcement_text: block.settings.announcement_text
+        announcement_text: block.settings.announcement_text,
+        default_logo_shade: block.settings.default_logo_shade
       %}
     {% endif %}
   {% endfor %}
@@ -822,6 +823,23 @@
           "label": "Announcement text",
           "default": "Free shipping on all orders!",
           "info": "Text to display in the announcement bar on the left side of the brand banner"
+        },
+        {
+          "type": "select",
+          "id": "default_logo_shade",
+          "label": "Default Logo Shade",
+          "options": [
+            {
+              "value": "light",
+              "label": "Light"
+            },
+            {
+              "value": "dark",
+              "label": "Dark"
+            }
+          ],
+          "default": "light",
+          "info": "Choose whether to display light or dark monochrome logos by default. The active brand will use the opposite shade."
         }
       ]
     },

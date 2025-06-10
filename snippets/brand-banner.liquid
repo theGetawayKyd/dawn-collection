@@ -145,9 +145,43 @@
 
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
             <a href="{{ brand_link }}" class="brand-banner__link" data-brand-handle="{{ brand_handle }}" aria-label="Visit {{ brand_title }} brand page">
-              {% if brand_logo != blank %}
+              {% comment %} Determine which logo to display based on active state and default_logo_shade setting {% endcomment %}
+              {% assign is_active = selected_brand == brand_handle %}
+              {% assign use_light_logo = false %}
+              
+              {% if default_logo_shade == 'light' %}
+                {% if is_active %}
+                  {% comment %} Active brand uses opposite of default shade {% endcomment %}
+                  {% assign use_light_logo = false %}
+                {% else %}
+                  {% assign use_light_logo = true %}
+                {% endif %}
+              {% else %}
+                {% if is_active %}
+                  {% comment %} Active brand uses opposite of default shade {% endcomment %}
+                  {% assign use_light_logo = true %}
+                {% else %}
+                  {% assign use_light_logo = false %}
+                {% endif %}
+              {% endif %}
+              
+              {% if use_light_logo %}
+                {% if brand.monochrome_logo_light != blank %}
+                  {% assign logo_to_display = brand.monochrome_logo_light %}
+                {% else %}
+                  {% assign logo_to_display = brand_logo %}
+                {% endif %}
+              {% else %}
+                {% if brand.monochrome_logo_dark != blank %}
+                  {% assign logo_to_display = brand.monochrome_logo_dark %}
+                {% else %}
+                  {% assign logo_to_display = brand_logo %}
+                {% endif %}
+              {% endif %}
+              
+              {% if logo_to_display != blank %}
                 {% assign logo_height = banner_height | minus: logo_padding | minus: logo_padding %}
-                {{ brand_logo | image_url: height: logo_height | image_tag: 
+                {{ logo_to_display | image_url: height: logo_height | image_tag: 
                   alt: brand_title,
                   class: 'brand-banner__logo',
                   loading: 'lazy'
