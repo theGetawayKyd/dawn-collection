@@ -2,12 +2,17 @@
   Renders a standard dropdown style menu for the header.
 
   Usage:
-  {% render 'header-dropdown-menu' %}
+  {% render 'header-dropdown-menu', menu: menu_object %}
+
+  Parameters:
+  - menu: The menu object to render. If not provided, defaults to section.settings.menu.
 {% endcomment %}
+
+{% assign menu = menu | default: section.settings.menu %}
 
 <nav class="header__inline-menu">
   <ul class="list-menu list-menu--inline" role="list">
-    {%- for link in section.settings.menu.links -%}
+    {%- for link in menu.links -%}
       <li>
         {%- if link.links != blank -%}
           <header-menu>
