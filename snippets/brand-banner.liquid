@@ -128,17 +128,6 @@
             {% assign brand_link = brand.link %}
           {% endif %}
 
-                   
-          {% comment %} Detect if this brand matches the current collection {% endcomment %}
-          {% if detected_brand == blank and current_page_type == 'collection' %}
-            {% comment %} Compare brand_handle directly with collection.handle {% endcomment %}
-            {% if collection.handle == brand_handle %}
-              {% assign detected_brand = brand_handle %}
-            {% endif %}
-          {% endif %}
-
-          {{ brand_handle }} - {{ detected_brand }}
-          
           <li class="brand-banner__item{% if selected_brand == brand_handle %} brand-banner__item--active{% endif %}">
             <a href="{{ brand_link }}" class="brand-banner__link" aria-label="Visit {{ brand_title }} brand page">
               {% if brand_logo != blank %}
@@ -162,54 +151,6 @@
 {% comment %} Set selected_brand from detected_brand if no brand is selected in cart attributes {% endcomment %}
 {% if selected_brand == blank and detected_brand != blank %}
   {% assign selected_brand = detected_brand %}
-{% endif %}
-
-{% comment %} Debug information {% endcomment %}
-{% if show_debug %}
-  <div style="background-color: #f8f8f8; padding: 10px; font-size: 12px; color: #333; text-align: left;">
-    <strong>Brand Banner Debug:</strong><br>
-    Metaobject Count: {{ shop.metaobjects.brand.values.size }}<br>
-    Selected Brand: "{{ selected_brand | default: 'None' }}"<br>
-    Detected Brand: "{{ detected_brand | default: 'None' }}"<br>
-    Current URL: "{{ current_url }}"<br>
-    Current Page Type: "{{ current_page_type }}"<br>
-    Cart Attribute: "{{ cart.attributes.selected_brand | default: 'None' }}"
-  </div>
-{% endif %}
-{% if show_debug %}
-  <div class="brand-banner__debug" style="background-color: #f8f8f8; padding: 15px; margin-top: 20px; border: 1px solid #ddd;">
-    <h3>Brand Banner Debug Info</h3>
-    <p>Selected Brand: {{ selected_brand | default: 'None' }}</p>
-    <p>Debug enabled: {{ show_debug }}</p>
-    <p>Total brands found: {{ shop.metaobjects.brand.values.size }}</p>
-    
-    {% assign first_brand = shop.metaobjects.brand.values | first %}
-    {% if first_brand %}
-      <h4>First Brand Link Structure:</h4>
-      <ul>
-        <li>brand.link: {{ first_brand.link }}</li>
-        <li>brand.link.type: {{ first_brand.link.type }}</li>
-        <li>brand.link.value: {{ first_brand.link.value }}</li>
-        <li>brand.link.value.url: {{ first_brand.link.value.url }}</li>
-      </ul>
-    {% endif %}
-    
-    <h4>Raw brand data:</h4>
-    <div style="background-color: white; padding: 10px; border: 1px solid #ccc; overflow: auto; max-height: 300px;">
-      {% for brand in shop.metaobjects.brand.values %}
-        <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
-          <p><strong>Brand #{{ forloop.index }}</strong></p>
-          <p>Handle: {{ brand.brand_handle }}</p>
-          <p>Title: {{ brand.title }}</p>
-          <p>Sort Order: {{ brand.sort_order | default: 'Not set' }}</p>
-          <p>Link: {{ brand.link.value.url }}</p>
-        </div>
-      {% else %}
-        <p><strong>No brands found in shop.metaobjects.brand.values</strong></p>
-      {% endfor %}
-    </div>
-    </div>
-  </div>
 {% endif %}
 
 <style>
