@@ -172,8 +172,21 @@
   if selected_brand == blank and detected_brand != blank
     assign selected_brand = detected_brand
   endif
+  
+  # Debug information
+  assign show_brand_debug = true
 -%}
 
+  {% if show_brand_debug %}
+    <div style="background-color: #f8f8f8; padding: 5px 10px; font-size: 12px; color: #333; text-align: center;">
+      <strong>Brand Debug:</strong> 
+      Selected Brand: "{{ selected_brand | default: 'None' }}" | 
+      Detected Brand: "{{ detected_brand | default: 'None' }}" | 
+      Current URL: {{ current_url }} | 
+      Cart Attribute: "{{ cart.attributes.selected_brand | default: 'None' }}"
+    </div>
+  {% endif %}
+  
   {% for block in section.blocks %}
     {% if block.type == 'brand_banner' and block.settings.show_brand_banner %}
       {% render 'brand-banner', 
