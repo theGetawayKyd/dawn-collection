@@ -103,7 +103,7 @@
       
       {% for brand in sorted_brands %} 
         
-      <!--- Brand: {{ brand.brand_handle }} | Collections: {{ collections }} --->
+      <!--- Brand: {{ brand.brand_handle }} | Collection Handle: {{ collection.handle }} | Collection Metafield: {{ collection.metafields.brand.brand_handle.value }} | Collection Metafield Alt: {{ collection.metafield.brand.brand_handle }} --->
            
         {% if brand.brand_handle != blank %}
           {% assign brand_handle = brand.brand_handle %}
