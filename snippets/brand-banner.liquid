@@ -129,20 +129,11 @@
           {% endif %}
 
                    
-          {% comment %} Detect if this brand matches the current URL {% endcomment %}
-          {% if detected_brand == blank %}
-            {% comment %} Extract path from brand link for comparison {% endcomment %}
-            {% assign brand_path = '' %}
-            
-            {% comment %} Handle collection URLs {% endcomment %}
-            {% if brand_link contains '/collections/' %}
-              {% assign parts = brand_link | split: '/collections/' %}
-              {% if parts.size > 1 %}
-                {% assign collection_handle = parts[1] | split: '?' | first | split: '#' | first %}
-                {% if current_page_type == 'collection' and collection.handle == collection_handle %}
-                  {% assign detected_brand = brand_handle %}
-                {% endif %}
-              {% endif %}
+          {% comment %} Detect if this brand matches the current collection {% endcomment %}
+          {% if detected_brand == blank and current_page_type == 'collection' %}
+            {% comment %} Compare brand_handle directly with collection.handle {% endcomment %}
+            {% if collection.handle == brand_handle %}
+              {% assign detected_brand = brand_handle %}
             {% endif %}
           {% endif %}
 
