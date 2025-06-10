@@ -199,7 +199,8 @@
         background_color: block.settings.background_color,
         logo_alignment: block.settings.logo_alignment,
         active_brand_bg_color: block.settings.active_brand_bg_color,
-        selected_brand: selected_brand
+        selected_brand: selected_brand,
+        announcement_text: block.settings.announcement_text
       %}
     {% endif %}
   {% endfor %}
@@ -814,6 +815,13 @@
           "label": "Show debug information",
           "default": false,
           "info": "Display debugging information for brand metaobjects"
+        },
+        {
+          "type": "text",
+          "id": "announcement_text",
+          "label": "Announcement text",
+          "default": "Free shipping on all orders!",
+          "info": "Text to display in the announcement bar on the left side of the brand banner"
         }
       ]
     },
