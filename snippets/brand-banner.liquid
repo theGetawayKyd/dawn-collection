@@ -24,11 +24,7 @@
     align-items: center;
   }
   
-  @media screen and (max-width: 749px) {
-    .brand-banner {
-      display: none; /* Hide the brand banner only on mobile */
-    }
-  }
+  /* No longer hiding the entire brand banner on mobile */
   
   .brand-banner__container {
     width: 100%;
@@ -52,6 +48,10 @@
       flex: 1 1 100%;
       text-align: center;
       padding: 0;
+    }
+    
+    .brand-banner__container {
+      justify-content: center;
     }
   }
   
