@@ -27,7 +27,8 @@
             "show_debug": false,
             "announcement_text": "Free shipping on all orders!",
             "default_logo_shade": "light",
-            "use_opposite_shade_for_active": false
+            "use_opposite_shade_for_active": false,
+            "use_brand_fonts": true
           }
         }
       },
@@ -38,7 +39,7 @@
         "logo_position": "middle-left",
         "mobile_logo_position": "center",
         "menu": "main-menu",
-        "menu_type_desktop": "dropdown",
+        "menu_type_desktop": "mega",
         "sticky_header_type": "on-scroll-up",
         "show_line_separator": true,
         "color_scheme": "scheme-4",
