@@ -1,0 +1,60 @@
+{% comment %}
+  Dynamic brand-specific font styles
+  Usage: Include in theme.liquid head section
+  Requires: selected_brand variable to be set
+{% endcomment %}
+
+{% if selected_brand != blank and use_brand_fonts %}
+  {% assign brand_heading_font = '' %}
+  {% assign brand_body_font = '' %}
+  {% assign brand_heading_weight = '' %}
+  {% assign brand_body_weight = '' %}
+  
+  {% for brand in shop.metaobjects.brand.values %}
+    {% if brand.brand_handle == selected_brand %}
+      {% if brand.heading_font_family != blank %}
+        {% assign brand_heading_font = brand.heading_font_family %}
+      {% endif %}
+      
+      {% if brand.body_font_family != blank %}
+        {% assign brand_body_font = brand.body_font_family %}
+      {% endif %}
+      
+      {% if brand.heading_font_weight != blank %}
+        {% assign brand_heading_weight = brand.heading_font_weight %}
+      {% endif %}
+      
+      {% if brand.body_font_weight != blank %}
+        {% assign brand_body_weight = brand.body_font_weight %}
+      {% endif %}
+      
+      {% break %}
+    {% endif %}
+  {% endfor %}
+  
+  <style>
+    {% if brand_heading_font != blank %}
+    /* Brand-specific heading font family */
+    h1, h2, h3, h4, h5, h6,
+    .h1, .h2, .h3, .h4, .h5, .h6,
+    .header__heading,
+    .title {
+      font-family: {{ brand_heading_font }};
+      {% if brand_heading_weight != blank %}font-weight: {{ brand_heading_weight }};{% endif %}
+    }
+    {% endif %}
+    
+    {% if brand_body_font != blank %}
+    /* Brand-specific body font family */
+    body,
+    p,
+    .body-font,
+    .button,
+    .product__title,
+    .price {
+      font-family: {{ brand_body_font }};
+      {% if brand_body_weight != blank %}font-weight: {{ brand_body_weight }};{% endif %}
+    }
+    {% endif %}
+  </style>
+{% endif %}

@@ -1,0 +1,23 @@
+{% comment %}
+  Dynamic brand-specific font loading
+  Usage: Include in theme.liquid head section
+  Requires: selected_brand variable to be set
+{% endcomment %}
+
+{% if selected_brand != blank and use_brand_fonts %}
+  {% assign brand_font_url = '' %}
+  
+  {% for brand in shop.metaobjects.brand.values %}
+    {% if brand.brand_handle == selected_brand and brand.font_url != blank %}
+      {% assign brand_font_url = brand.font_url %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+  
+  {% if brand_font_url != blank %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="{{ brand_font_url }}" rel="stylesheet">
+    <link rel="preload" href="{{ brand_font_url }}" as="style">
+  {% endif %}
+{% endif %}

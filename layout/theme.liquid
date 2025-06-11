@@ -27,6 +27,10 @@
     {% endif %}
 
     {% render 'meta-tags' %}
+    
+    {% comment %}Brand-specific font handling{% endcomment %}
+    {% render 'brand-font-loader', selected_brand: selected_brand, use_brand_fonts: true %}
+    {% render 'brand-fonts', selected_brand: selected_brand, use_brand_fonts: true %}
 
     <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
