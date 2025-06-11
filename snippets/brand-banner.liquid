@@ -114,51 +114,52 @@
     transform: rotate(180deg);
   }
   
+  /* Dropdown drawer that descends from header */
   .brand-banner__drawer {
-    position: fixed;
-    top: 0;
-    right: 0;
+    position: absolute;
+    top: 100%; /* Position below the header */
+    left: 0;
     width: 100%;
-    height: 100vh;
     z-index: 1000;
     visibility: hidden;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
   }
   
   .brand-banner__drawer.active {
     visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
   }
   
   .brand-banner__drawer-overlay {
-    position: absolute;
+    position: fixed;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     top: 0;
     left: 0;
     background: rgba(var(--color-foreground), 0.5);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+    z-index: 999;
   }
   
   .brand-banner__drawer.active .brand-banner__drawer-overlay {
     opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0s linear 0s;
   }
   
   .brand-banner__drawer-inner {
-    position: absolute;
-    top: 0;
-    right: 0;
+    position: relative;
     width: 100%;
-    max-width: 400px;
-    height: 100%;
     background: var(--gradient-background);
-    box-shadow: var(--drawer-shadow-horizontal-offset) var(--drawer-shadow-vertical-offset) var(--drawer-shadow-blur-radius) rgba(var(--color-shadow), var(--drawer-shadow-opacity));
-    transform: translateX(100%);
-    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(var(--color-shadow), 0.1);
+    max-height: 80vh;
     overflow-y: auto;
-  }
-  
-  .brand-banner__drawer.active .brand-banner__drawer-inner {
-    transform: translateX(0);
   }
   
   .brand-banner__drawer-header {
@@ -501,13 +502,24 @@
     // Find the header logo link to use as the toggle
     const headerLogoLink = document.querySelector('.header__heading-link');
     
+    // Function to position the drawer below the header logo
+    function positionDrawer() {
+      if (!isMobile() || !headerLogoLink) return;
+      
+      const headerRect = headerLogoLink.getBoundingClientRect();
+      const headerHeight = document.querySelector('header').offsetHeight;
+      
+      // Position the drawer below the header
+      brandDrawer.style.top = `${headerHeight}px`;
+    }
+    
     // Function to open the drawer
     function openDrawer() {
+      positionDrawer();
       brandDrawer.classList.add('active');
       if (headerLogoLink) {
         headerLogoLink.setAttribute('aria-expanded', 'true');
       }
-      document.body.classList.add('overflow-hidden');
     }
     
     // Function to close the drawer
@@ -516,7 +528,6 @@
       if (headerLogoLink) {
         headerLogoLink.setAttribute('aria-expanded', 'false');
       }
-      document.body.classList.remove('overflow-hidden');
     }
     
     // Check if we're on mobile
