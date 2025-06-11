@@ -89,6 +89,136 @@
     border-bottom: 2px solid var(--color-primary);
   }
   
+  /* Mobile styles */
+  .brand-banner__mobile-toggle {
+    display: none;
+    align-items: center;
+    cursor: pointer;
+    padding: 0 10px;
+  }
+  
+  .brand-banner__mobile-toggle-icon {
+    width: 12px;
+    height: 12px;
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+  }
+  
+  .brand-banner__mobile-toggle-icon.open {
+    transform: rotate(180deg);
+  }
+  
+  .brand-banner__drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 1000;
+    visibility: hidden;
+  }
+  
+  .brand-banner__drawer.active {
+    visibility: visible;
+  }
+  
+  .brand-banner__drawer-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(var(--color-foreground), 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .brand-banner__drawer.active .brand-banner__drawer-overlay {
+    opacity: 1;
+  }
+  
+  .brand-banner__drawer-inner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 400px;
+    height: 100%;
+    background: var(--gradient-background);
+    box-shadow: var(--drawer-shadow-horizontal-offset) var(--drawer-shadow-vertical-offset) var(--drawer-shadow-blur-radius) rgba(var(--color-shadow), var(--drawer-shadow-opacity));
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    overflow-y: auto;
+  }
+  
+  .brand-banner__drawer.active .brand-banner__drawer-inner {
+    transform: translateX(0);
+  }
+  
+  .brand-banner__drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(var(--color-foreground), 0.08);
+  }
+  
+  .brand-banner__drawer-heading {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+  
+  .brand-banner__drawer-close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+  
+  .brand-banner__drawer-list {
+    list-style: none;
+    margin: 0;
+    padding: 1rem 0;
+  }
+  
+  .brand-banner__drawer-item {
+    padding: 0.75rem 1.5rem;
+  }
+  
+  .brand-banner__drawer-item--active {
+    background-color: {{ active_brand_bg_color }};
+  }
+  
+  .brand-banner__drawer-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: rgb(var(--color-foreground));
+  }
+  
+  .brand-banner__drawer-logo {
+    height: 30px;
+    margin-right: 10px;
+  }
+  
+  @media screen and (max-width: 749px) {
+    .brand-banner__list-container {
+      display: none;
+    }
+    
+    .brand-banner__mobile-toggle {
+      display: flex;
+    }
+    
+    .brand-banner__container {
+      justify-content: center;
+    }
+    
+    .brand-banner__announcement {
+      display: none;
+    }
+  }
+  
   .brand-banner__logo {
     height: calc({{ banner_height }}px - {{ logo_padding | times: 2 }}px);
   }
@@ -104,6 +234,69 @@
     <div class="brand-banner__announcement">
       {{ announcement_text }}
     </div>
+    
+    {% comment %} Mobile toggle button - only shows on mobile {% endcomment %}
+    <div class="brand-banner__mobile-toggle" aria-expanded="false" aria-controls="BrandDrawer">
+      {% comment %} Find the active brand to display in mobile view {% endcomment %}
+      {% assign active_brand_found = false %}
+      {% assign active_brand_logo = blank %}
+      {% assign active_brand_title = 'Select Brand' %}
+      
+      {% for brand in shop.metaobjects.brand.values %}
+        {% if brand.brand_handle != blank and selected_brand == brand.brand_handle %}
+          {% assign active_brand_found = true %}
+          {% assign active_brand_title = brand.title %}
+          
+          {% comment %} Determine which logo to display based on active state and default_logo_shade setting {% endcomment %}
+          {% assign use_light_logo = false %}
+          
+          {% if default_logo_shade == 'light' %}
+            {% if use_opposite_shade_for_active %}
+              {% assign use_light_logo = false %}
+            {% else %}
+              {% assign use_light_logo = true %}
+            {% endif %}
+          {% else %}
+            {% if use_opposite_shade_for_active %}
+              {% assign use_light_logo = true %}
+            {% else %}
+              {% assign use_light_logo = false %}
+            {% endif %}
+          {% endif %}
+          
+          {% if use_light_logo %}
+            {% if brand.monochrome_logo_light != blank %}
+              {% assign active_brand_logo = brand.monochrome_logo_light %}
+            {% else %}
+              {% assign active_brand_logo = brand.logo %}
+            {% endif %}
+          {% else %}
+            {% if brand.monochrome_logo_dark != blank %}
+              {% assign active_brand_logo = brand.monochrome_logo_dark %}
+            {% else %}
+              {% assign active_brand_logo = brand.logo %}
+            {% endif %}
+          {% endif %}
+          
+          {% break %}
+        {% endif %}
+      {% endfor %}
+      
+      {% if active_brand_logo != blank %}
+        {{ active_brand_logo | image_url: height: 30 | image_tag: 
+          alt: active_brand_title,
+          class: 'brand-banner__logo',
+          loading: 'lazy'
+        }}
+      {% else %}
+        <span class="brand-banner__name">{{ active_brand_title }}</span>
+      {% endif %}
+      
+      <svg class="brand-banner__mobile-toggle-icon" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10.9,3.1l-4.4,4.4L2.1,3.1C1.9,2.9,1.5,2.9,1.3,3.1c-0.2,0.2-0.2,0.5,0,0.7l5,5c0.2,0.2,0.5,0.2,0.7,0l5-5c0.2-0.2,0.2-0.5,0-0.7C11.4,2.9,11.1,2.9,10.9,3.1z" fill="currentColor"/>
+      </svg>
+    </div>
+    
     <div class="brand-banner__list-container">
       <ul class="brand-banner__list">
       {% comment %} Access brand metaobjects using shop.metaobjects.brand.values {% endcomment %}
@@ -203,6 +396,143 @@
     </div>
   </div>
 </div>
+
+{% comment %} Brand Drawer for Mobile View {% endcomment %}
+<div id="BrandDrawer" class="brand-banner__drawer">
+  <div class="brand-banner__drawer-overlay"></div>
+  <div class="brand-banner__drawer-inner">
+    <div class="brand-banner__drawer-header">
+      <h2 class="brand-banner__drawer-heading">Select Brand</h2>
+      <button class="brand-banner__drawer-close" aria-label="Close brand menu">
+        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15.1,3.1l-4,4l4,4c0.3,0.3,0.3,0.7,0,0.9c-0.3,0.3-0.7,0.3-0.9,0l-4-4l-4,4c-0.3,0.3-0.7,0.3-0.9,0 c-0.3-0.3-0.3-0.7,0-0.9l4-4l-4-4c-0.3-0.3-0.3-0.7,0-0.9c0.3-0.3,0.7-0.3,0.9,0l4,4l4-4c0.3-0.3,0.7-0.3,0.9,0 C15.3,2.4,15.3,2.8,15.1,3.1z" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+    
+    <ul class="brand-banner__drawer-list">
+      {% for brand in sorted_brands %}
+        {% if brand.brand_handle != blank %}
+          {% assign brand_handle = brand.brand_handle %}
+          {% assign brand_title = brand.title %}
+          {% assign brand_logo = brand.logo %}
+          
+          {% comment %} Try different approaches to get the URL {% endcomment %}
+          {% if brand.link.value.url != blank %}
+            {% assign brand_link = brand.link.value.url %}
+          {% elsif brand.link.url != blank %}
+            {% assign brand_link = brand.link.url %}
+          {% elsif brand.link.value != blank %}
+            {% assign brand_link = brand.link.value %}
+          {% else %}
+            {% assign brand_link = brand.link %}
+          {% endif %}
+          
+          {% comment %} Determine which logo to display based on active state and default_logo_shade setting {% endcomment %}
+          {% if selected_brand == brand_handle %}
+            {% assign is_active = true %}
+          {% else %}
+            {% assign is_active = false %}
+          {% endif %}
+          {% assign use_light_logo = false %}
+          
+          {% comment %} Determine which logo shade to use based on settings {% endcomment %}
+          {% if default_logo_shade == 'light' %}
+            {% if is_active and use_opposite_shade_for_active %}
+              {% comment %} Active brand uses opposite of default shade if enabled {% endcomment %}
+              {% assign use_light_logo = false %}
+            {% else %}
+              {% assign use_light_logo = true %}
+            {% endif %}
+          {% else %}
+            {% if is_active and use_opposite_shade_for_active %}
+              {% comment %} Active brand uses opposite of default shade if enabled {% endcomment %}
+              {% assign use_light_logo = true %}
+            {% else %}
+              {% assign use_light_logo = false %}
+            {% endif %}
+          {% endif %}
+          
+          {% if use_light_logo %}
+            {% if brand.monochrome_logo_light != blank %}
+              {% assign logo_to_display = brand.monochrome_logo_light %}
+            {% else %}
+              {% assign logo_to_display = brand_logo %}
+            {% endif %}
+          {% else %}
+            {% if brand.monochrome_logo_dark != blank %}
+              {% assign logo_to_display = brand.monochrome_logo_dark %}
+            {% else %}
+              {% assign logo_to_display = brand_logo %}
+            {% endif %}
+          {% endif %}
+          
+          <li class="brand-banner__drawer-item{% if selected_brand == brand_handle %} brand-banner__drawer-item--active{% endif %}">
+            <a href="{{ brand_link }}" class="brand-banner__drawer-link" data-brand-handle="{{ brand_handle }}" aria-label="Visit {{ brand_title }} brand page">
+              {% if logo_to_display != blank %}
+                {{ logo_to_display | image_url: height: 30 | image_tag: 
+                  alt: brand_title,
+                  class: 'brand-banner__drawer-logo',
+                  loading: 'lazy'
+                }}
+              {% endif %}
+              <span>{{ brand_title }}</span>
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% comment %} JavaScript for brand drawer functionality {% endcomment %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileToggle = document.querySelector('.brand-banner__mobile-toggle');
+    const brandDrawer = document.getElementById('BrandDrawer');
+    const brandDrawerOverlay = document.querySelector('.brand-banner__drawer-overlay');
+    const brandDrawerClose = document.querySelector('.brand-banner__drawer-close');
+    const toggleIcon = document.querySelector('.brand-banner__mobile-toggle-icon');
+    
+    // Function to open the drawer
+    function openDrawer() {
+      brandDrawer.classList.add('active');
+      mobileToggle.setAttribute('aria-expanded', 'true');
+      toggleIcon.classList.add('open');
+      document.body.classList.add('overflow-hidden');
+    }
+    
+    // Function to close the drawer
+    function closeDrawer() {
+      brandDrawer.classList.remove('active');
+      mobileToggle.setAttribute('aria-expanded', 'false');
+      toggleIcon.classList.remove('open');
+      document.body.classList.remove('overflow-hidden');
+    }
+    
+    // Toggle drawer when clicking the mobile toggle button
+    mobileToggle.addEventListener('click', function() {
+      if (brandDrawer.classList.contains('active')) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    });
+    
+    // Close drawer when clicking the overlay
+    brandDrawerOverlay.addEventListener('click', closeDrawer);
+    
+    // Close drawer when clicking the close button
+    brandDrawerClose.addEventListener('click', closeDrawer);
+    
+    // Close drawer when pressing Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape' && brandDrawer.classList.contains('active')) {
+        closeDrawer();
+      }
+    });
+  });
+</script>
 
 {% comment %} Note: The cart.attributes.selected_brand is set via form submission elsewhere in the theme {% endcomment %}
 {% comment %} This is just a placeholder for where that would happen if we were implementing it here {% endcomment %}
