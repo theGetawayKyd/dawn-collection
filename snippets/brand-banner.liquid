@@ -112,7 +112,7 @@
   
   /* Dropdown drawer that descends from header */
   .brand-banner__drawer {
-    position: fixed;
+    position: absolute;
     top: 0; /* Will be set dynamically by JavaScript */
     left: 0;
     width: 100%;
@@ -452,24 +452,32 @@
     
     // Find the header logo link to use as the toggle
     const headerLogoLink = document.querySelector('.header__heading-link');
+    const header = document.querySelector('header');
     
     // Function to position the drawer below the header
     function positionDrawer() {
-      const headerHeight = document.querySelector('header').offsetHeight;
+      // Move the drawer to be a child of the body element for proper positioning
+      if (brandDrawer.parentElement !== document.body) {
+        document.body.appendChild(brandDrawer);
+      }
+      
       // Position the drawer below the header
-      brandDrawer.style.top = `${headerHeight}px`;
+      const headerRect = header.getBoundingClientRect();
+      const headerBottom = headerRect.bottom + window.scrollY;
+      brandDrawer.style.top = headerBottom + 'px';
     }
     
-    // Call positionDrawer on page load
+    // Call positionDrawer on page load and window resize
     positionDrawer();
-    
-    // Also call positionDrawer on window resize
     window.addEventListener('resize', positionDrawer);
+    window.addEventListener('scroll', positionDrawer);
     
     // Function to open the drawer
     function openDrawer() {
-      positionDrawer();
+      positionDrawer(); // Ensure correct positioning before opening
       brandDrawer.classList.add('active');
+      brandDrawerOverlay.style.opacity = '1';
+      brandDrawerOverlay.style.visibility = 'visible';
       if (headerLogoLink) {
         headerLogoLink.setAttribute('aria-expanded', 'true');
       }
@@ -478,6 +486,8 @@
     // Function to close the drawer
     function closeDrawer() {
       brandDrawer.classList.remove('active');
+      brandDrawerOverlay.style.opacity = '0';
+      brandDrawerOverlay.style.visibility = 'hidden';
       if (headerLogoLink) {
         headerLogoLink.setAttribute('aria-expanded', 'false');
       }
