@@ -158,8 +158,15 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.5rem;
+    padding: 1rem 1.5rem;
     border-bottom: 1px solid rgba(var(--color-foreground), 0.08);
+  }
+  
+  .brand-banner__drawer-heading-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
   }
   
   .brand-banner__drawer-heading {
@@ -174,35 +181,62 @@
     padding: 0.5rem;
   }
   
-  .brand-banner__drawer-list {
+  .brand-banner__drawer-content {
+    padding: 1.5rem;
+  }
+  
+  .brand-banner__drawer-logos-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .brand-banner__drawer-logos {
+    display: flex;
+    flex-wrap: nowrap;
     list-style: none;
     margin: 0;
-    padding: 1rem 0;
+    padding: 0;
+    gap: 1.5rem;
   }
   
-  .brand-banner__drawer-item {
-    padding: 0.75rem 1.5rem;
+  .brand-banner__drawer-logo-item {
+    flex: 0 0 auto;
+    text-align: center;
   }
   
-  .brand-banner__drawer-item--active {
-    background-color: {{ active_brand_bg_color }};
+  .brand-banner__drawer-logo-item--active {
+    position: relative;
   }
   
-  .brand-banner__drawer-link {
+  .brand-banner__drawer-logo-item--active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 2px;
+    background-color: var(--color-primary);
+  }
+  
+  .brand-banner__drawer-logo-link {
     display: flex;
+    flex-direction: column;
     align-items: center;
     text-decoration: none;
     color: rgb(var(--color-foreground));
   }
   
   .brand-banner__drawer-logo {
-    height: 30px;
-    margin-right: 10px;
+    height: 40px;
+    width: auto;
+    margin-bottom: 0.5rem;
+    object-fit: contain;
   }
   
-  @media screen and (max-width: 989px) {
-    .brand-banner__list-container {
-      display: none;
+  .brand-banner__drawer-name {
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
     }
   }
   
@@ -327,86 +361,61 @@
   <div class="brand-banner__drawer-overlay"></div>
   <div class="brand-banner__drawer-inner">
     <div class="brand-banner__drawer-header">
-      <h2 class="brand-banner__drawer-heading">Select Brand</h2>
-      <button class="brand-banner__drawer-close" aria-label="Close brand menu">
-        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-          <path d="M15.1,3.1l-4,4l4,4c0.3,0.3,0.3,0.7,0,0.9c-0.3,0.3-0.7,0.3-0.9,0l-4-4l-4,4c-0.3,0.3-0.7,0.3-0.9,0 c-0.3-0.3-0.3-0.7,0-0.9l4-4l-4-4c-0.3-0.3-0.3-0.7,0-0.9c0.3-0.3,0.7-0.3,0.9,0l4,4l4-4c0.3-0.3,0.7-0.3,0.9,0 C15.3,2.4,15.3,2.8,15.1,3.1z" fill="currentColor"/>
-        </svg>
-      </button>
+      <div class="brand-banner__drawer-heading-container">
+        <h2 class="brand-banner__drawer-heading">Select Brand</h2>
+        <button class="brand-banner__drawer-close" aria-label="Close brand menu">
+          <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.1,3.1l-4,4l4,4c0.3,0.3,0.3,0.7,0,0.9c-0.3,0.3-0.7,0.3-0.9,0l-4-4l-4,4c-0.3,0.3-0.7,0.3-0.9,0 c-0.3-0.3-0.3-0.7,0-0.9l4-4l-4-4c-0.3-0.3-0.3-0.7,0-0.9c0.3-0.3,0.7-0.3,0.9,0l4,4l4-4c0.3-0.3,0.7-0.3,0.9,0 C15.3,2.4,15.3,2.8,15.1,3.1z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
     </div>
-    
-    <ul class="brand-banner__drawer-list">
-      {% for brand in sorted_brands %}
-        {% if brand.brand_handle != blank %}
-          {% assign brand_handle = brand.brand_handle %}
-          {% assign brand_title = brand.title %}
-          {% assign brand_logo = brand.logo %}
-          
-          {% comment %} Try different approaches to get the URL {% endcomment %}
-          {% if brand.link.value.url != blank %}
-            {% assign brand_link = brand.link.value.url %}
-          {% elsif brand.link.url != blank %}
-            {% assign brand_link = brand.link.url %}
-          {% elsif brand.link.value != blank %}
-            {% assign brand_link = brand.link.value %}
-          {% else %}
-            {% assign brand_link = brand.link %}
-          {% endif %}
-          
-          {% comment %} Determine which logo to display based on active state and default_logo_shade setting {% endcomment %}
-          {% if selected_brand == brand_handle %}
-            {% assign is_active = true %}
-          {% else %}
-            {% assign is_active = false %}
-          {% endif %}
-          {% assign use_light_logo = false %}
-          
-          {% comment %} Determine which logo shade to use based on settings {% endcomment %}
-          {% if default_logo_shade == 'light' %}
-            {% if is_active and use_opposite_shade_for_active %}
-              {% comment %} Active brand uses opposite of default shade if enabled {% endcomment %}
-              {% assign use_light_logo = false %}
-            {% else %}
-              {% assign use_light_logo = true %}
-            {% endif %}
-          {% else %}
-            {% if is_active and use_opposite_shade_for_active %}
-              {% comment %} Active brand uses opposite of default shade if enabled {% endcomment %}
-              {% assign use_light_logo = true %}
-            {% else %}
-              {% assign use_light_logo = false %}
-            {% endif %}
-          {% endif %}
-          
-          {% if use_light_logo %}
-            {% if brand.monochrome_logo_light != blank %}
-              {% assign logo_to_display = brand.monochrome_logo_light %}
-            {% else %}
-              {% assign logo_to_display = brand_logo %}
-            {% endif %}
-          {% else %}
-            {% if brand.monochrome_logo_dark != blank %}
-              {% assign logo_to_display = brand.monochrome_logo_dark %}
-            {% else %}
-              {% assign logo_to_display = brand_logo %}
-            {% endif %}
-          {% endif %}
-          
-          <li class="brand-banner__drawer-item{% if selected_brand == brand_handle %} brand-banner__drawer-item--active{% endif %}">
-            <a href="{{ brand_link }}" class="brand-banner__drawer-link" data-brand-handle="{{ brand_handle }}" aria-label="Visit {{ brand_title }} brand page">
-              {% if logo_to_display != blank %}
-                {{ logo_to_display | image_url: height: 30 | image_tag: 
-                  alt: brand_title,
-                  class: 'brand-banner__drawer-logo',
-                  loading: 'lazy'
-                }}
+    <div class="brand-banner__drawer-content">
+      <div class="brand-banner__drawer-logos-container">
+        <ul class="brand-banner__drawer-logos">
+          {% for brand in sorted_brands %}
+            {% if brand.brand_handle != blank %}
+              {% assign brand_handle = brand.brand_handle %}
+              {% assign brand_title = brand.title %}
+              {% assign brand_logo = brand.logo %}
+              
+              {% comment %} Try different approaches to get the URL {% endcomment %}
+              {% if brand.link.value.url != blank %}
+                {% assign brand_link = brand.link.value.url %}
+              {% elsif brand.link.url != blank %}
+                {% assign brand_link = brand.link.url %}
+              {% elsif brand.link.value != blank %}
+                {% assign brand_link = brand.link.value %}
+              {% else %}
+                {% assign brand_link = brand.link %}
               {% endif %}
-              <span>{{ brand_title }}</span>
-            </a>
-          </li>
-        {% endif %}
-      {% endfor %}
-    </ul>
+              
+              {% comment %} Determine if this is the active brand {% endcomment %}
+              {% if selected_brand == brand_handle %}
+                {% assign is_active = true %}
+              {% else %}
+                {% assign is_active = false %}
+              {% endif %}
+              
+              <li class="brand-banner__drawer-logo-item{% if is_active %} brand-banner__drawer-logo-item--active{% endif %}">
+                <a href="{{ brand_link }}" class="brand-banner__drawer-logo-link" data-brand-handle="{{ brand_handle }}" aria-label="Visit {{ brand_title }} brand page">
+                  {% if brand_logo != blank %}
+                    {{ brand_logo | image_url: height: 40 | image_tag: 
+                      alt: brand_title,
+                      class: 'brand-banner__drawer-logo',
+                      loading: 'lazy'
+                    }}
+                    <span class="brand-banner__drawer-name">{{ brand_title }}</span>
+                  {% else %}
+                    <span class="brand-banner__drawer-name">{{ brand_title }}</span>
+                  {% endif %}
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
 
