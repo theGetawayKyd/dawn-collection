@@ -46,6 +46,15 @@
     white-space: nowrap;
   }
   
+  /* Make announcement bar full width on mobile and tablet */
+  @media screen and (max-width: 989px) {
+    .brand-banner__announcement {
+      flex: 1 1 100%;
+      text-align: center;
+      padding: 0;
+    }
+  }
+  
   .brand-banner__list-container {
     flex: 0 1 auto;
     overflow-x: auto;
@@ -219,10 +228,6 @@
     
     .brand-banner__container {
       justify-content: center;
-    }
-    
-    .brand-banner__announcement {
-      display: none;
     }
   }
   
