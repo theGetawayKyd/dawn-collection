@@ -20,8 +20,14 @@
 <style>
   .brand-banner {
     height: {{ banner_height }}px;
-    display: none; /* Hide the brand banner completely */
+    display: flex;
     align-items: center;
+  }
+  
+  @media screen and (max-width: 749px) {
+    .brand-banner {
+      display: none; /* Hide the brand banner only on mobile */
+    }
   }
   
   .brand-banner__container {
@@ -513,31 +519,63 @@
       document.body.classList.remove('overflow-hidden');
     }
     
-    // Toggle drawer when clicking the header logo
-    if (headerLogoLink) {
-      headerLogoLink.addEventListener('click', function(event) {
-        event.preventDefault(); // Prevent navigation
-        
-        if (brandDrawer.classList.contains('active')) {
-          closeDrawer();
-        } else {
-          openDrawer();
-        }
-      });
+    // Check if we're on mobile
+    function isMobile() {
+      return window.innerWidth <= 749;
+    }
+    
+    // Create and add the dropdown icon to the header logo
+    function addDropdownToLogo() {
+      if (!isMobile()) return; // Only add on mobile
       
-      // Add a visual indicator that the logo is clickable
-      headerLogoLink.style.cursor = 'pointer';
+      // Remove any existing dropdown icons first
+      const existingIcons = document.querySelectorAll('.brand-dropdown-icon-container');
+      existingIcons.forEach(icon => icon.remove());
       
-      // Add dropdown icon next to logo
       const logoWrapper = document.querySelector('.header__heading-logo-wrapper');
       if (logoWrapper) {
         const dropdownIcon = document.createElement('div');
+        dropdownIcon.className = 'brand-dropdown-icon-container';
         dropdownIcon.innerHTML = `<svg class="brand-dropdown-icon" width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" style="margin-left: 8px; vertical-align: middle;">
           <path d="M10.9,3.1l-4.4,4.4L2.1,3.1C1.9,2.9,1.5,2.9,1.3,3.1c-0.2,0.2-0.2,0.5,0,0.7l5,5c0.2,0.2,0.5,0.2,0.7,0l5-5c0.2-0.2,0.2-0.5,0-0.7C11.4,2.9,11.1,2.9,10.9,3.1z" fill="currentColor"/>
         </svg>`;
         dropdownIcon.style.display = 'inline-block';
         logoWrapper.parentNode.insertBefore(dropdownIcon, logoWrapper.nextSibling);
       }
+    }
+    
+    // Handle logo click based on screen size
+    if (headerLogoLink) {
+      headerLogoLink.addEventListener('click', function(event) {
+        // Only prevent navigation and toggle drawer on mobile
+        if (isMobile()) {
+          event.preventDefault(); // Prevent navigation
+          
+          if (brandDrawer.classList.contains('active')) {
+            closeDrawer();
+          } else {
+            openDrawer();
+          }
+        }
+      });
+      
+      // Initial setup
+      if (isMobile()) {
+        headerLogoLink.style.cursor = 'pointer';
+        addDropdownToLogo();
+      }
+      
+      // Update on window resize
+      window.addEventListener('resize', function() {
+        if (isMobile()) {
+          headerLogoLink.style.cursor = 'pointer';
+          addDropdownToLogo();
+        } else {
+          headerLogoLink.style.cursor = '';
+          const icons = document.querySelectorAll('.brand-dropdown-icon-container');
+          icons.forEach(icon => icon.remove());
+        }
+      });
     }
     
     // Close drawer when clicking the overlay
@@ -557,17 +595,19 @@
 
 <style>
   /* Additional styles for the header logo dropdown functionality */
-  .header__heading-link {
-    display: flex;
-    align-items: center;
-  }
-  
-  .brand-dropdown-icon {
-    transition: transform 0.3s ease;
-  }
-  
-  .header__heading-link[aria-expanded="true"] .brand-dropdown-icon {
-    transform: rotate(180deg);
+  @media screen and (max-width: 749px) {
+    .header__heading-link {
+      display: flex;
+      align-items: center;
+    }
+    
+    .brand-dropdown-icon {
+      transition: transform 0.3s ease;
+    }
+    
+    .header__heading-link[aria-expanded="true"] + .brand-dropdown-icon-container .brand-dropdown-icon {
+      transform: rotate(180deg);
+    }
   }
 </style>
 
