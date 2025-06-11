@@ -9,6 +9,8 @@
   {% assign brand_body_font = '' %}
   {% assign brand_heading_weight = '' %}
   {% assign brand_body_weight = '' %}
+  {% assign brand_heading_style = '' %}
+  {% assign brand_body_style = '' %}
   
   {% for brand in shop.metaobjects.brand.values %}
     {% if brand.brand_handle == selected_brand %}
@@ -28,6 +30,14 @@
         {% assign brand_body_weight = brand.body_font_weight %}
       {% endif %}
       
+      {% if brand.heading_font_style != blank %}
+        {% assign brand_heading_style = brand.heading_font_style %}
+      {% endif %}
+      
+      {% if brand.body_font_style != blank %}
+        {% assign brand_body_style = brand.body_font_style %}
+      {% endif %}
+      
       {% break %}
     {% endif %}
   {% endfor %}
@@ -41,6 +51,7 @@
     .title {
       font-family: {{ brand_heading_font }};
       {% if brand_heading_weight != blank %}font-weight: {{ brand_heading_weight }};{% endif %}
+      {% if brand_heading_style != blank %}font-style: {{ brand_heading_style }};{% endif %}
     }
     {% endif %}
     
@@ -54,6 +65,7 @@
     .price {
       font-family: {{ brand_body_font }};
       {% if brand_body_weight != blank %}font-weight: {{ brand_body_weight }};{% endif %}
+      {% if brand_body_style != blank %}font-style: {{ brand_body_style }};{% endif %}
     }
     {% endif %}
   </style>
