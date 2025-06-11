@@ -151,7 +151,6 @@
   
   .brand-banner__drawer-inner {
     position: relative;
-    background-color: rgb(var(--color-background));
     box-shadow: 0 4px 6px rgba(var(--color-foreground), 0.1);
     max-height: 80vh;
     overflow-y: auto;
@@ -346,7 +345,7 @@
 {% comment %} Brand Drawer for Mobile View {% endcomment %}
 <div id="BrandDrawer" class="brand-banner__drawer">
   <div class="brand-banner__drawer-overlay"></div>
-  <div class="brand-banner__drawer-inner">
+  <div class="brand-banner__drawer-inner color-{{ section.settings.color_scheme }} gradient">
     <div class="brand-banner__drawer-content">
       <div class="brand-banner__drawer-logos-container">
         <ul class="brand-banner__drawer-logos">
