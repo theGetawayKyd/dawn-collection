@@ -4,8 +4,6 @@
   Requires: selected_brand variable to be set
 {% endcomment %}
 
-<!--- use brand fonts? {{ use_brand_fonts }} -->
-<!--- selected brand? {{ selected_brand }} -->
 
 {% if selected_brand != blank and use_brand_fonts %}
   {% assign brand_heading_font = '' %}
@@ -45,8 +43,6 @@
     {% endif %}
   {% endfor %}
   
-  /* TESTING {{ brand_heading_font }} | {{ brand_body_font }} */
-
 
   <style>
     {% if brand_heading_font != blank %}
@@ -61,8 +57,6 @@
     }
     {% endif %}
     
-   
-
     {% if brand_body_font != blank %}
     /* Brand-specific body font family */
     body,
