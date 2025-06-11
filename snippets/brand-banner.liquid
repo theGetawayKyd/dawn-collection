@@ -53,6 +53,10 @@
     .brand-banner__container {
       justify-content: center;
     }
+    
+    .brand-banner__list-container {
+      display: none;
+    }
   }
   
   .brand-banner__list-container {
@@ -188,6 +192,12 @@
   .brand-banner__drawer-logos-container {
     width: 100%;
     overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+  
+  .brand-banner__drawer-logos-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
   }
   
   .brand-banner__drawer-logos {
@@ -228,7 +238,8 @@
   }
   
   .brand-banner__drawer-logo {
-    height: 40px;
+    max-width: 100px;
+    max-height: 40px;
     width: auto;
     margin-bottom: 0.5rem;
     object-fit: contain;
@@ -400,7 +411,7 @@
               <li class="brand-banner__drawer-logo-item{% if is_active %} brand-banner__drawer-logo-item--active{% endif %}">
                 <a href="{{ brand_link }}" class="brand-banner__drawer-logo-link" data-brand-handle="{{ brand_handle }}" aria-label="Visit {{ brand_title }} brand page">
                   {% if brand_logo != blank %}
-                    {{ brand_logo | image_url: height: 40 | image_tag: 
+                    {{ brand_logo | image_url | image_tag: 
                       alt: brand_title,
                       class: 'brand-banner__drawer-logo',
                       loading: 'lazy'
