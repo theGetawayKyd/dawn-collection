@@ -104,24 +104,7 @@
     border-bottom: 2px solid var(--color-primary);
   }
   
-  /* Mobile styles */
-  .brand-banner__mobile-toggle {
-    display: none;
-    align-items: center;
-    cursor: pointer;
-    padding: 0 10px;
-  }
-  
-  .brand-banner__mobile-toggle-icon {
-    width: 12px;
-    height: 12px;
-    margin-left: 8px;
-    transition: transform 0.3s ease;
-  }
-  
-  .brand-banner__mobile-toggle-icon.open {
-    transform: rotate(180deg);
-  }
+  /* Mobile styles removed */
   
   /* Dropdown drawer that descends from header */
   .brand-banner__drawer {
@@ -217,17 +200,9 @@
     margin-right: 10px;
   }
   
-  @media screen and (max-width: 749px) {
+  @media screen and (max-width: 989px) {
     .brand-banner__list-container {
       display: none;
-    }
-    
-    .brand-banner__mobile-toggle {
-      display: flex;
-    }
-    
-    .brand-banner__container {
-      justify-content: center;
     }
   }
   
@@ -245,68 +220,6 @@
   <div class="brand-banner__container page-width">
     <div class="brand-banner__announcement">
       {{ announcement_text }}
-    </div>
-    
-    {% comment %} Mobile toggle button - only shows on mobile {% endcomment %}
-    <div class="brand-banner__mobile-toggle" aria-expanded="false" aria-controls="BrandDrawer">
-      {% comment %} Find the active brand to display in mobile view {% endcomment %}
-      {% assign active_brand_found = false %}
-      {% assign active_brand_logo = blank %}
-      {% assign active_brand_title = 'Select Brand' %}
-      
-      {% for brand in shop.metaobjects.brand.values %}
-        {% if brand.brand_handle != blank and selected_brand == brand.brand_handle %}
-          {% assign active_brand_found = true %}
-          {% assign active_brand_title = brand.title %}
-          
-          {% comment %} Determine which logo to display based on active state and default_logo_shade setting {% endcomment %}
-          {% assign use_light_logo = false %}
-          
-          {% if default_logo_shade == 'light' %}
-            {% if use_opposite_shade_for_active %}
-              {% assign use_light_logo = false %}
-            {% else %}
-              {% assign use_light_logo = true %}
-            {% endif %}
-          {% else %}
-            {% if use_opposite_shade_for_active %}
-              {% assign use_light_logo = true %}
-            {% else %}
-              {% assign use_light_logo = false %}
-            {% endif %}
-          {% endif %}
-          
-          {% if use_light_logo %}
-            {% if brand.monochrome_logo_light != blank %}
-              {% assign active_brand_logo = brand.monochrome_logo_light %}
-            {% else %}
-              {% assign active_brand_logo = brand.logo %}
-            {% endif %}
-          {% else %}
-            {% if brand.monochrome_logo_dark != blank %}
-              {% assign active_brand_logo = brand.monochrome_logo_dark %}
-            {% else %}
-              {% assign active_brand_logo = brand.logo %}
-            {% endif %}
-          {% endif %}
-          
-          {% break %}
-        {% endif %}
-      {% endfor %}
-      
-      {% if active_brand_logo != blank %}
-        {{ active_brand_logo | image_url: height: 30 | image_tag: 
-          alt: active_brand_title,
-          class: 'brand-banner__logo',
-          loading: 'lazy'
-        }}
-      {% else %}
-        <span class="brand-banner__name">{{ active_brand_title }}</span>
-      {% endif %}
-      
-      <svg class="brand-banner__mobile-toggle-icon" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10.9,3.1l-4.4,4.4L2.1,3.1C1.9,2.9,1.5,2.9,1.3,3.1c-0.2,0.2-0.2,0.5,0,0.7l5,5c0.2,0.2,0.5,0.2,0.7,0l5-5c0.2-0.2,0.2-0.5,0-0.7C11.4,2.9,11.1,2.9,10.9,3.1z" fill="currentColor"/>
-      </svg>
     </div>
     
     <div class="brand-banner__list-container">
@@ -500,6 +413,7 @@
 {% comment %} JavaScript for brand drawer functionality {% endcomment %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Get drawer elements
     const brandDrawer = document.getElementById('BrandDrawer');
     const brandDrawerOverlay = document.querySelector('.brand-banner__drawer-overlay');
     const brandDrawerClose = document.querySelector('.brand-banner__drawer-close');
@@ -507,13 +421,9 @@
     // Find the header logo link to use as the toggle
     const headerLogoLink = document.querySelector('.header__heading-link');
     
-    // Function to position the drawer below the header logo
+    // Function to position the drawer below the header
     function positionDrawer() {
-      if (!isMobile() || !headerLogoLink) return;
-      
-      const headerRect = headerLogoLink.getBoundingClientRect();
       const headerHeight = document.querySelector('header').offsetHeight;
-      
       // Position the drawer below the header
       brandDrawer.style.top = `${headerHeight}px`;
     }
@@ -535,36 +445,16 @@
       }
     }
     
-    // Check if we're on mobile
-    function isMobile() {
-      return window.innerWidth <= 749;
-    }
-    
-    // Create and add the dropdown icon to the header logo
-    function addDropdownToLogo() {
-      if (!isMobile()) return; // Only add on mobile
-      
-      // Remove any existing dropdown icons first
-      const existingIcons = document.querySelectorAll('.brand-dropdown-icon-container');
-      existingIcons.forEach(icon => icon.remove());
-      
-      const logoWrapper = document.querySelector('.header__heading-logo-wrapper');
-      if (logoWrapper) {
-        const dropdownIcon = document.createElement('div');
-        dropdownIcon.className = 'brand-dropdown-icon-container';
-        dropdownIcon.innerHTML = `<svg class="brand-dropdown-icon" width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" style="margin-left: 8px; vertical-align: middle;">
-          <path d="M10.9,3.1l-4.4,4.4L2.1,3.1C1.9,2.9,1.5,2.9,1.3,3.1c-0.2,0.2-0.2,0.5,0,0.7l5,5c0.2,0.2,0.5,0.2,0.7,0l5-5c0.2-0.2,0.2-0.5,0-0.7C11.4,2.9,11.1,2.9,10.9,3.1z" fill="currentColor"/>
-        </svg>`;
-        dropdownIcon.style.display = 'inline-block';
-        logoWrapper.parentNode.insertBefore(dropdownIcon, logoWrapper.nextSibling);
-      }
+    // Check if we're on mobile or tablet
+    function isMobileOrTablet() {
+      return window.innerWidth <= 989;
     }
     
     // Handle logo click based on screen size
     if (headerLogoLink) {
       headerLogoLink.addEventListener('click', function(event) {
-        // Only prevent navigation and toggle drawer on mobile
-        if (isMobile()) {
+        // Only prevent navigation and toggle drawer on mobile/tablet
+        if (isMobileOrTablet()) {
           event.preventDefault(); // Prevent navigation
           
           if (brandDrawer.classList.contains('active')) {
@@ -576,20 +466,16 @@
       });
       
       // Initial setup
-      if (isMobile()) {
+      if (isMobileOrTablet()) {
         headerLogoLink.style.cursor = 'pointer';
-        addDropdownToLogo();
       }
       
       // Update on window resize
       window.addEventListener('resize', function() {
-        if (isMobile()) {
+        if (isMobileOrTablet()) {
           headerLogoLink.style.cursor = 'pointer';
-          addDropdownToLogo();
         } else {
           headerLogoLink.style.cursor = '';
-          const icons = document.querySelectorAll('.brand-dropdown-icon-container');
-          icons.forEach(icon => icon.remove());
         }
       });
     }
@@ -609,23 +495,7 @@
   });
 </script>
 
-<style>
-  /* Additional styles for the header logo dropdown functionality */
-  @media screen and (max-width: 749px) {
-    .header__heading-link {
-      display: flex;
-      align-items: center;
-    }
-    
-    .brand-dropdown-icon {
-      transition: transform 0.3s ease;
-    }
-    
-    .header__heading-link[aria-expanded="true"] + .brand-dropdown-icon-container .brand-dropdown-icon {
-      transform: rotate(180deg);
-    }
-  }
-</style>
+
 
 {% comment %} Note: The cart.attributes.selected_brand is set via form submission elsewhere in the theme {% endcomment %}
 {% comment %} This is just a placeholder for where that would happen if we were implementing it here {% endcomment %}
