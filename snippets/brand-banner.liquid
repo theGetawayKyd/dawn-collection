@@ -151,26 +151,18 @@
   
   .brand-banner__drawer-inner {
     position: relative;
-    width: 100%;
-    background: var(--gradient-background);
-    box-shadow: 0 4px 8px rgba(var(--color-shadow), 0.1);
+    background-color: rgb(var(--color-background));
+    box-shadow: 0 4px 6px rgba(var(--color-foreground), 0.1);
     max-height: 80vh;
     overflow-y: auto;
   }
   
   .brand-banner__drawer-close {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    z-index: 10;
+    display: none; /* Hide the close button */
   }
   
   .brand-banner__drawer-content {
-    padding: 2.5rem 1.5rem 1.5rem;
+    padding: 1.5rem;
   }
   
   .brand-banner__drawer-logos-container {
@@ -355,11 +347,6 @@
 <div id="BrandDrawer" class="brand-banner__drawer">
   <div class="brand-banner__drawer-overlay"></div>
   <div class="brand-banner__drawer-inner">
-    <button class="brand-banner__drawer-close" aria-label="Close brand menu">
-      <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-        <path d="M15.1,3.1l-4,4l4,4c0.3,0.3,0.3,0.7,0,0.9c-0.3,0.3-0.7,0.3-0.9,0l-4-4l-4,4c-0.3,0.3-0.7,0.3-0.9,0 c-0.3-0.3-0.3-0.7,0-0.9l4-4l-4-4c-0.3-0.3-0.3-0.7,0-0.9c0.3-0.3,0.7-0.3,0.9,0l4,4l4-4c0.3-0.3,0.7-0.3,0.9,0 C15.3,2.4,15.3,2.8,15.1,3.1z" fill="currentColor"/>
-      </svg>
-    </button>
     <div class="brand-banner__drawer-content">
       <div class="brand-banner__drawer-logos-container">
         <ul class="brand-banner__drawer-logos">
@@ -448,7 +435,6 @@
     // Get drawer elements
     const brandDrawer = document.getElementById('BrandDrawer');
     const brandDrawerOverlay = document.querySelector('.brand-banner__drawer-overlay');
-    const brandDrawerClose = document.querySelector('.brand-banner__drawer-close');
     
     // Find the header logo link to use as the toggle
     const headerLogoLink = document.querySelector('.header__heading-link');
@@ -501,10 +487,8 @@
     // Handle logo click based on screen size
     if (headerLogoLink) {
       headerLogoLink.addEventListener('click', function(event) {
-        // Only prevent navigation and toggle drawer on mobile/tablet
         if (isMobileOrTablet()) {
-          event.preventDefault(); // Prevent navigation
-          
+          event.preventDefault();
           if (brandDrawer.classList.contains('active')) {
             closeDrawer();
           } else {
@@ -513,12 +497,12 @@
         }
       });
       
-      // Initial setup
+      // Set cursor style based on screen size
       if (isMobileOrTablet()) {
         headerLogoLink.style.cursor = 'pointer';
       }
       
-      // Update on window resize
+      // Update cursor style on window resize
       window.addEventListener('resize', function() {
         if (isMobileOrTablet()) {
           headerLogoLink.style.cursor = 'pointer';
@@ -528,11 +512,8 @@
       });
     }
     
-    // Close drawer when clicking the overlay
+    // Close drawer when clicking on overlay
     brandDrawerOverlay.addEventListener('click', closeDrawer);
-    
-    // Close drawer when clicking the close button
-    brandDrawerClose.addEventListener('click', closeDrawer);
     
     // Close drawer when pressing Escape key
     document.addEventListener('keydown', function(event) {
