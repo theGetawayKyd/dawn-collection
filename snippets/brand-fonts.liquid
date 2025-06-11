@@ -44,13 +44,23 @@
   {% endfor %}
   
 
-  <style>
+  <style id="brand-specific-fonts">
     {% if brand_heading_font != blank %}
     /* Brand-specific heading font family */
-    h1, h2, h3, h4, h5, h6,
-    .h1, .h2, .h3, .h4, .h5, .h6,
-    .header__heading,
-    .title {
+    html body h1, 
+    html body h2, 
+    html body h3, 
+    html body h4, 
+    html body h5, 
+    html body h6,
+    html body .h1, 
+    html body .h2, 
+    html body .h3, 
+    html body .h4, 
+    html body .h5, 
+    html body .h6,
+    html body .header__heading,
+    html body .title {
       font-family: {{ brand_heading_font }};
       {% if brand_heading_weight != blank %}font-weight: {{ brand_heading_weight }};{% endif %}
       {% if brand_heading_style != blank %}font-style: {{ brand_heading_style }};{% endif %}
@@ -59,12 +69,12 @@
     
     {% if brand_body_font != blank %}
     /* Brand-specific body font family */
-    body,
-    p,
-    .body-font,
-    .button,
-    .product__title,
-    .price {
+    html body,
+    html body p,
+    html body .body-font,
+    html body .button,
+    html body .product__title,
+    html body .price {
       font-family: {{ brand_body_font }};
       {% if brand_body_weight != blank %}font-weight: {{ brand_body_weight }};{% endif %}
       {% if brand_body_style != blank %}font-style: {{ brand_body_style }};{% endif %}

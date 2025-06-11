@@ -62,9 +62,7 @@
       # Brand detection logic - END
     %}
     
-    {% comment %}Brand-specific font handling{% endcomment %}
-    {% render 'brand-font-loader', selected_brand: selected_brand, use_brand_fonts: true %}
-    {% render 'brand-fonts', selected_brand: selected_brand, use_brand_fonts: true %}    
+    {% comment %}Brand detection logic - END{% endcomment %}
     
 
     
@@ -345,6 +343,10 @@
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
     <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
+    
+    {% comment %}Brand-specific font handling - loaded after base CSS{% endcomment %}
+    {% render 'brand-font-loader', selected_brand: selected_brand, use_brand_fonts: true %}
+    {% render 'brand-fonts', selected_brand: selected_brand, use_brand_fonts: true %}
 
     {%- if settings.cart_type == 'drawer' -%}
       {{ 'component-cart-drawer.css' | asset_url | stylesheet_tag }}
