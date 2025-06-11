@@ -25,7 +25,7 @@
             "logo_alignment": "right",
             "active_brand_bg_color": "#000000",
             "show_debug": false,
-            "announcement_text": "Free shipping on all orders!",
+            "announcement_text": "Free shipping on most orders over $100!",
             "default_logo_shade": "light",
             "use_opposite_shade_for_active": false,
             "use_brand_fonts": true
