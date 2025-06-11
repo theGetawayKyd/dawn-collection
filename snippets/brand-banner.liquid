@@ -158,35 +158,19 @@
     overflow-y: auto;
   }
   
-  .brand-banner__drawer-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid rgba(var(--color-foreground), 0.08);
-  }
-  
-  .brand-banner__drawer-heading-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-  }
-  
-  .brand-banner__drawer-heading {
-    margin: 0;
-    font-size: 1.2rem;
-  }
-  
   .brand-banner__drawer-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
     background: transparent;
     border: none;
     cursor: pointer;
     padding: 0.5rem;
+    z-index: 10;
   }
   
   .brand-banner__drawer-content {
-    padding: 1.5rem;
+    padding: 2.5rem 1.5rem 1.5rem;
   }
   
   .brand-banner__drawer-logos-container {
@@ -371,16 +355,11 @@
 <div id="BrandDrawer" class="brand-banner__drawer">
   <div class="brand-banner__drawer-overlay"></div>
   <div class="brand-banner__drawer-inner">
-    <div class="brand-banner__drawer-header">
-      <div class="brand-banner__drawer-heading-container">
-        <h2 class="brand-banner__drawer-heading">Select Brand</h2>
-        <button class="brand-banner__drawer-close" aria-label="Close brand menu">
-          <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15.1,3.1l-4,4l4,4c0.3,0.3,0.3,0.7,0,0.9c-0.3,0.3-0.7,0.3-0.9,0l-4-4l-4,4c-0.3,0.3-0.7,0.3-0.9,0 c-0.3-0.3-0.3-0.7,0-0.9l4-4l-4-4c-0.3-0.3-0.3-0.7,0-0.9c0.3-0.3,0.7-0.3,0.9,0l4,4l4-4c0.3-0.3,0.7-0.3,0.9,0 C15.3,2.4,15.3,2.8,15.1,3.1z" fill="currentColor"/>
-          </svg>
-        </button>
-      </div>
-    </div>
+    <button class="brand-banner__drawer-close" aria-label="Close brand menu">
+      <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15.1,3.1l-4,4l4,4c0.3,0.3,0.3,0.7,0,0.9c-0.3,0.3-0.7,0.3-0.9,0l-4-4l-4,4c-0.3,0.3-0.7,0.3-0.9,0 c-0.3-0.3-0.3-0.7,0-0.9l4-4l-4-4c-0.3-0.3-0.3-0.7,0-0.9c0.3-0.3,0.7-0.3,0.9,0l4,4l4-4c0.3-0.3,0.7-0.3,0.9,0 C15.3,2.4,15.3,2.8,15.1,3.1z" fill="currentColor"/>
+      </svg>
+    </button>
     <div class="brand-banner__drawer-content">
       <div class="brand-banner__drawer-logos-container">
         <ul class="brand-banner__drawer-logos">
