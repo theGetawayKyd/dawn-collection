@@ -204,9 +204,10 @@
     display: flex;
     flex-wrap: nowrap;
     list-style: none;
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
     gap: 1.5rem;
+    justify-content: center;
   }
   
   .brand-banner__drawer-logo-item {
@@ -240,13 +241,13 @@
   .brand-banner__drawer-logo {
     max-width: 100px;
     width: auto;
-    margin-bottom: 0.5rem;
     object-fit: contain;
   }
   
   .brand-banner__drawer-name {
     font-size: 0.8rem;
     margin-top: 0.25rem;
+    display: none;
     }
   }
   
@@ -407,16 +408,48 @@
                 {% assign is_active = false %}
               {% endif %}
               
+              {% comment %} Determine which logo shade to use based on settings {% endcomment %}
+              {% assign use_light_logo = false %}
+              {% if default_logo_shade == 'light' %}
+                {% if is_active and use_opposite_shade_for_active %}
+                  {% comment %} Active brand uses opposite of default shade if enabled {% endcomment %}
+                  {% assign use_light_logo = false %}
+                {% else %}
+                  {% assign use_light_logo = true %}
+                {% endif %}
+              {% else %}
+                {% if is_active and use_opposite_shade_for_active %}
+                  {% comment %} Active brand uses opposite of default shade if enabled {% endcomment %}
+                  {% assign use_light_logo = true %}
+                {% else %}
+                  {% assign use_light_logo = false %}
+                {% endif %}
+              {% endif %}
+              
+              {% comment %} Select the appropriate logo based on shade settings {% endcomment %}
+              {% if use_light_logo %}
+                {% if brand.monochrome_logo_light != blank %}
+                  {% assign logo_to_display = brand.monochrome_logo_light %}
+                {% else %}
+                  {% assign logo_to_display = brand_logo %}
+                {% endif %}
+              {% else %}
+                {% if brand.monochrome_logo_dark != blank %}
+                  {% assign logo_to_display = brand.monochrome_logo_dark %}
+                {% else %}
+                  {% assign logo_to_display = brand_logo %}
+                {% endif %}
+              {% endif %}
+              
               <li class="brand-banner__drawer-logo-item{% if is_active %} brand-banner__drawer-logo-item--active{% endif %}">
                 <a href="{{ brand_link }}" class="brand-banner__drawer-logo-link" data-brand-handle="{{ brand_handle }}" aria-label="Visit {{ brand_title }} brand page">
-                  {% if brand_logo != blank %}
+                  {% if logo_to_display != blank %}
                     {% assign logo_height = banner_height | minus: logo_padding | minus: logo_padding %}
-                    {{ brand_logo | image_url: height: logo_height | image_tag: 
+                    {{ logo_to_display | image_url: height: logo_height | image_tag: 
                       alt: brand_title,
                       class: 'brand-banner__drawer-logo',
                       loading: 'lazy'
                     }}
-                    <span class="brand-banner__drawer-name">{{ brand_title }}</span>
                   {% else %}
                     <span class="brand-banner__drawer-name">{{ brand_title }}</span>
                   {% endif %}
