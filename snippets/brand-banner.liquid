@@ -112,8 +112,8 @@
   
   /* Dropdown drawer that descends from header */
   .brand-banner__drawer {
-    position: absolute;
-    top: 100%; /* Position below the header */
+    position: fixed;
+    top: 0; /* Will be set dynamically by JavaScript */
     left: 0;
     width: 100%;
     z-index: 1000;
@@ -459,6 +459,12 @@
       // Position the drawer below the header
       brandDrawer.style.top = `${headerHeight}px`;
     }
+    
+    // Call positionDrawer on page load
+    positionDrawer();
+    
+    // Also call positionDrawer on window resize
+    window.addEventListener('resize', positionDrawer);
     
     // Function to open the drawer
     function openDrawer() {
