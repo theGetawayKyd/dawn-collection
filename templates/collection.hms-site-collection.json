@@ -75,12 +75,75 @@
           "settings": {
             "collection": "harnesses"
           }
+        },
+        "featured_collection_Wzwgyi": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "fhr-devices"
+          }
+        },
+        "featured_collection_EGpXxw": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "seats"
+          }
+        },
+        "featured_collection_r7DHLz": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "car-equipment"
+          }
+        },
+        "featured_collection_FNC4fF": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "hydration-and-cooling"
+          }
+        },
+        "featured_collection_f7rzB9": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "racecom"
+          }
+        },
+        "featured_collection_bLM9Eq": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "trac-com-intercoms"
+          }
+        },
+        "featured_collection_TYTcja": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "fire-supression"
+          }
+        },
+        "featured_collection_RQfzpp": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "data-acquisition-devices"
+          }
+        },
+        "featured_collection_GAbRLX": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "discounted-items"
+          }
         }
       },
       "block_order": [
         "featured_collection_M4m7yM",
         "featured_collection_p7Qhyt",
-        "featured_collection_kDtzqi"
+        "featured_collection_kDtzqi",
+        "featured_collection_Wzwgyi",
+        "featured_collection_EGpXxw",
+        "featured_collection_r7DHLz",
+        "featured_collection_FNC4fF",
+        "featured_collection_f7rzB9",
+        "featured_collection_bLM9Eq",
+        "featured_collection_TYTcja",
+        "featured_collection_RQfzpp",
+        "featured_collection_GAbRLX"
       ],
       "name": "t:sections.collection-list.presets.name",
       "settings": {
