@@ -11,26 +11,6 @@
   "sections": {
     "image_banner_EqWH4X": {
       "type": "image-banner",
-      "blocks": {
-        "heading_qd3fUW": {
-          "type": "heading",
-          "settings": {
-            "heading": "HMS MOTORSPORT",
-            "heading_size": "hxl"
-          }
-        },
-        "text_7zWtPy": {
-          "type": "text",
-          "settings": {
-            "text": "Experts in driver safety",
-            "text_style": "body"
-          }
-        }
-      },
-      "block_order": [
-        "heading_qd3fUW",
-        "text_7zWtPy"
-      ],
       "name": "t:sections.image-banner.presets.name",
       "settings": {
         "image": "shopify://shop_images/68_Apparel_Background-2022-v4_1800.jpg",
@@ -61,93 +41,30 @@
         "featured_collection_M4m7yM": {
           "type": "featured_collection",
           "settings": {
-            "collection": "apparel"
+            "collection": "racing-suits"
           }
         },
         "featured_collection_p7Qhyt": {
           "type": "featured_collection",
           "settings": {
-            "collection": "helmets"
+            "collection": ""
           }
         },
         "featured_collection_kDtzqi": {
           "type": "featured_collection",
           "settings": {
-            "collection": "harnesses"
-          }
-        },
-        "featured_collection_Wzwgyi": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "fhr-devices"
-          }
-        },
-        "featured_collection_EGpXxw": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "seats"
-          }
-        },
-        "featured_collection_r7DHLz": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "car-equipment"
-          }
-        },
-        "featured_collection_FNC4fF": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "hydration-and-cooling"
-          }
-        },
-        "featured_collection_f7rzB9": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "racecom"
-          }
-        },
-        "featured_collection_bLM9Eq": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "trac-com-intercoms"
-          }
-        },
-        "featured_collection_TYTcja": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "fire-supression"
-          }
-        },
-        "featured_collection_RQfzpp": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "data-acquisition-devices"
-          }
-        },
-        "featured_collection_GAbRLX": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "discounted-items"
+            "collection": ""
           }
         }
       },
       "block_order": [
         "featured_collection_M4m7yM",
         "featured_collection_p7Qhyt",
-        "featured_collection_kDtzqi",
-        "featured_collection_Wzwgyi",
-        "featured_collection_EGpXxw",
-        "featured_collection_r7DHLz",
-        "featured_collection_FNC4fF",
-        "featured_collection_f7rzB9",
-        "featured_collection_bLM9Eq",
-        "featured_collection_TYTcja",
-        "featured_collection_RQfzpp",
-        "featured_collection_GAbRLX"
+        "featured_collection_kDtzqi"
       ],
       "name": "t:sections.collection-list.presets.name",
       "settings": {
-        "title": "PRODUCTS",
+        "title": "Apparel",
         "heading_size": "h1",
         "image_ratio": "square",
         "columns_desktop": 3,
