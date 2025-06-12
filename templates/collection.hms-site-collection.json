@@ -158,11 +158,82 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
+    },
+    "featured_product_d8nmmx": {
+      "type": "featured-product",
+      "blocks": {
+        "text_BaTm3Y": {
+          "type": "text",
+          "settings": {
+            "text": "{{ section.settings.product.vendor }}",
+            "text_style": "uppercase"
+          }
+        },
+        "title_dJGELN": {
+          "type": "title",
+          "settings": {
+            "heading_size": "h1"
+          }
+        },
+        "price_LfMAVk": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker_pVnxEp": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
+        },
+        "quantity_selector_3XJxXT": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons_mATacm": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true
+          }
+        },
+        "share_bdzXza": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        }
+      },
+      "block_order": [
+        "text_BaTm3Y",
+        "title_dJGELN",
+        "price_LfMAVk",
+        "variant_picker_pVnxEp",
+        "quantity_selector_3XJxXT",
+        "buy_buttons_mATacm",
+        "share_bdzXza"
+      ],
+      "name": "t:sections.featured-product.presets.name",
+      "settings": {
+        "product": "sr-42603b-sfi",
+        "color_scheme": "",
+        "secondary_background": false,
+        "media_size": "medium",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": false,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
     }
   },
   "order": [
     "image_banner_EqWH4X",
     "banner",
-    "collection_list_y9Hakt"
+    "collection_list_y9Hakt",
+    "featured_product_d8nmmx"
   ]
 }
