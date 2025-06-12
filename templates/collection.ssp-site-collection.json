@@ -59,6 +59,40 @@
         "color_scheme": "scheme-1"
       }
     },
+    "collection_list_4E3EKw": {
+      "type": "collection-list",
+      "blocks": {
+        "featured_collection_xRpaLc": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "fia-harnesses"
+          }
+        },
+        "featured_collection_wYy8dW": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "sfi-harnesses"
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_xRpaLc",
+        "featured_collection_wYy8dW"
+      ],
+      "name": "t:sections.collection-list.presets.name",
+      "settings": {
+        "title": "Collections",
+        "heading_size": "h1",
+        "image_ratio": "square",
+        "columns_desktop": 2,
+        "color_scheme": "",
+        "show_view_all": false,
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
     "product-grid": {
       "type": "brand-collection-product-grid",
       "settings": {
@@ -82,6 +116,7 @@
   "order": [
     "image_banner_djELda",
     "banner",
+    "collection_list_4E3EKw",
     "product-grid"
   ]
 }
