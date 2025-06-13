@@ -18,7 +18,7 @@
           "type": "brand_banner",
           "settings": {
             "show_brand_banner": true,
-            "background_color": "#595959",
+            "background_color": "#d9d9d9",
             "text_color": "#d1d1d1",
             "banner_height": 40,
             "logo_padding": 10,
@@ -26,7 +26,7 @@
             "active_brand_bg_color": "#000000",
             "show_debug": false,
             "announcement_text": "Free shipping on most orders over $100!",
-            "default_logo_shade": "light",
+            "default_logo_shade": "dark",
             "use_opposite_shade_for_active": false,
             "use_brand_fonts": true
           }

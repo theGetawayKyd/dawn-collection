@@ -15,7 +15,7 @@
         "collection-0": {
           "type": "collection",
           "settings": {
-            "collection": "fhr-devices"
+            "collection": "data-acquisition-devices"
           }
         },
         "product": {
