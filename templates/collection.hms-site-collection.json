@@ -31,7 +31,6 @@
         "heading_qd3fUW",
         "text_7zWtPy"
       ],
-      "name": "t:sections.image-banner.presets.name",
       "settings": {
         "image": "shopify://shop_images/437_HMS-Website-Homepage-Background-March142023_1800.jpg",
         "image_overlay_opacity": 0,
@@ -64,16 +63,16 @@
             "collection": "apparel"
           }
         },
-        "featured_collection_p7Qhyt": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "helmets"
-          }
-        },
         "featured_collection_kDtzqi": {
           "type": "featured_collection",
           "settings": {
             "collection": "harnesses"
+          }
+        },
+        "featured_collection_p7Qhyt": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "helmets"
           }
         },
         "featured_collection_Wzwgyi": {
@@ -133,8 +132,8 @@
       },
       "block_order": [
         "featured_collection_M4m7yM",
-        "featured_collection_p7Qhyt",
         "featured_collection_kDtzqi",
+        "featured_collection_p7Qhyt",
         "featured_collection_Wzwgyi",
         "featured_collection_EGpXxw",
         "featured_collection_r7DHLz",
@@ -145,7 +144,6 @@
         "featured_collection_RQfzpp",
         "featured_collection_GAbRLX"
       ],
-      "name": "t:sections.collection-list.presets.name",
       "settings": {
         "title": "PRODUCTS",
         "heading_size": "h1",
@@ -213,7 +211,6 @@
         "buy_buttons_mATacm",
         "share_bdzXza"
       ],
-      "name": "t:sections.featured-product.presets.name",
       "settings": {
         "product": "sr-42603b-sfi",
         "color_scheme": "",
